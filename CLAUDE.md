@@ -87,6 +87,10 @@ original está mal, se corrige el original.
   el mock **solo en componentes cliente** (`Rating`, `ReviewList`, `/orders`,
   `/compare`). Un componente servidor ve únicamente el mock, así que cualquier
   pantalla que deba reflejar lo que hizo el usuario tiene que ser cliente.
+- **El proveedor de la demo es fijo.** La sesión no guarda a qué proveedor
+  representa el rol "proveedor": todas las pantallas de `/supplier` usan
+  `DEMO_SUPPLIER_ID` (`src/lib/session.ts`). Es una constante justamente para que
+  el día que haya cuentas reales se reemplace en un solo lugar.
 - **Sin guardas de rol.** Cualquier rol llega a cualquier ruta: es un prototipo y
   hay que poder recorrer las tres experiencias sin fricción. El rol activo decide
   qué muestra el menú del header y a dónde redirige al entrar, nada más.

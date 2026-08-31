@@ -22,6 +22,8 @@ export const roleHome: Record<Role, string> = {
   admin: "/admin",
 };
 
+export const DEMO_SUPPLIER_ID = "techperu";
+
 const STORAGE_KEY = "tecnolink-session";
 
 let session: Session | null = null;

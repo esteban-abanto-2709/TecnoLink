@@ -12,6 +12,11 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-012] Bandeja y respuesta de cotizaciones (2026-08-31 14:28)
+Panel del proveedor con sus métricas y bandeja que lista las solicitudes recibidas y
+permite responderlas con precio, vigencia, condiciones y observaciones. La respuesta se
+guarda como superposición, así que también alcanza a las cotizaciones de ejemplo.
+
 ## [RM-011] Solicitud de cotización (2026-08-31 13:49)
 Formulario de solicitud con cantidad y requerimiento desde la ficha de cualquier equipo o
 servicio, y pantalla de cotizaciones con el estado de cada una y la respuesta del

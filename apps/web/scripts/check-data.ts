@@ -93,6 +93,15 @@ for (const quote of quotes) {
   assert.ok(itemIds.has(quote.itemId), `${quote.id}: ítem inexistente`);
   assert.ok(getSupplier(quote.supplierId), `${quote.id}: proveedor inexistente`);
   assert.ok(quote.quantity > 0, `${quote.id}: cantidad inválida`);
+
+  const item =
+    products.find((product) => product.id === quote.itemId) ??
+    services.find((service) => service.id === quote.itemId);
+  assert.equal(
+    item?.supplierId,
+    quote.supplierId,
+    `${quote.id}: está dirigida a un proveedor distinto al del ítem, así que no aparecería en su bandeja`
+  );
   assert.equal(
     quote.status === "sent",
     quote.answer === undefined,

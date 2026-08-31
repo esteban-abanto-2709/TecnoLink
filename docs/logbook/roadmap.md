@@ -15,13 +15,6 @@ que permita recorrer las experiencias de usuario completas. Todo en `apps/web`. 
 tareas están ordenadas para que el camino del cliente (buscar → ver → comprar) quede
 recorrible lo antes posible; el resto se cuelga de ahí.
 
-## [RM-012] Bandeja y respuesta de cotizaciones — HU-09, HU-17
-- **Objetivo:** el lado proveedor del mismo flujo, con el formato estandarizado que
-  hace comparables las propuestas.
-- **Hecho cuando:** la bandeja lista solicitudes con su estado y se responde con precio,
-  vigencia, condiciones y observaciones.
-- **Fecha:** 2026-08-31 · **Estado:** Abierto
-
 ## [RM-013] Publicaciones del proveedor — HU-15, HU-16
 - **Objetivo:** publicar y editar productos y servicios.
 - **Hecho cuando:** el formulario valida los campos obligatorios, la lista de

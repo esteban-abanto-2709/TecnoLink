@@ -515,6 +515,16 @@ export const quotes: Quote[] = [
     requestedOn: "2026-08-29",
   },
   {
+    id: "cot-004",
+    itemId: "epson-l3250",
+    supplierId: "techperu",
+    quantity: 3,
+    requirement:
+      "Tres impresoras para un estudio contable en Jesús María. Necesito factura y entrega esta semana.",
+    status: "sent",
+    requestedOn: "2026-08-30",
+  },
+  {
     id: "cot-003",
     itemId: "epson-l3250",
     supplierId: "techperu",

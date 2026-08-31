@@ -5,16 +5,23 @@ import { useSyncExternalStore } from "react";
 import { quotes as mockQuotes } from "@/data/catalog";
 import type { Quote, QuoteStatus } from "@/data/types";
 
+export type QuoteAnswer = NonNullable<Quote["answer"]>;
+
 export const quoteStatusLabels: Record<QuoteStatus, string> = {
   sent: "Enviada",
   answered: "Respondida",
   expired: "Vencida",
 };
 
-const STORAGE_KEY = "tecnolink-quotes";
-const EMPTY: Quote[] = [];
+type QuoteState = {
+  own: Quote[];
+  answers: Record<string, QuoteAnswer>;
+};
 
-let own: Quote[] = EMPTY;
+const STORAGE_KEY = "tecnolink-quotes";
+const EMPTY: QuoteState = { own: [], answers: {} };
+
+let state: QuoteState = EMPTY;
 const listeners = new Set<() => void>();
 
 if (typeof window !== "undefined") {
@@ -22,15 +29,17 @@ if (typeof window !== "undefined") {
   if (stored) {
     try {
       const parsed: unknown = JSON.parse(stored);
-      if (Array.isArray(parsed)) own = parsed as Quote[];
+      if (parsed && typeof parsed === "object" && "own" in parsed) {
+        state = parsed as QuoteState;
+      }
     } catch {
       window.localStorage.removeItem(STORAGE_KEY);
     }
   }
 }
 
-function update(next: Quote[]) {
-  own = next;
+function update(next: QuoteState) {
+  state = next;
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   for (const listener of listeners) listener();
 }
@@ -42,11 +51,11 @@ function subscribe(listener: () => void) {
   };
 }
 
-function getSnapshot(): Quote[] {
-  return own;
+function getSnapshot(): QuoteState {
+  return state;
 }
 
-function getServerSnapshot(): Quote[] {
+function getServerSnapshot(): QuoteState {
   return EMPTY;
 }
 
@@ -80,11 +89,27 @@ export function requestQuote(input: {
     requestedOn: today(),
   };
 
-  update([quote, ...own]);
+  update({ ...state, own: [quote, ...state.own] });
   return quote;
 }
 
+export function answerQuote(id: string, answer: QuoteAnswer) {
+  update({ ...state, answers: { ...state.answers, [id]: answer } });
+}
+
+function applyAnswers(quotes: Quote[], answers: QuoteState["answers"]): Quote[] {
+  return quotes.map((quote) => {
+    const answer = answers[quote.id];
+    if (!answer) return quote;
+    return { ...quote, status: "answered" as const, answer };
+  });
+}
+
 export function useQuotes(): Quote[] {
-  const mine = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-  return [...mine, ...mockQuotes];
+  const current = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot
+  );
+  return applyAnswers([...current.own, ...mockQuotes], current.answers);
 }
