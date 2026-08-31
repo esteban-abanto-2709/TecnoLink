@@ -1,9 +1,8 @@
-import Link from "next/link";
 import { SearchX } from "lucide-react";
 
+import { ButtonLink } from "@/components/button-link";
 import { ItemCard } from "@/components/item-card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { getCategory, searchCatalog } from "@/data/catalog";
 
 function first(value: string | string[] | undefined): string | undefined {
@@ -38,9 +37,9 @@ export default async function Page({ searchParams }: PageProps<"/search">) {
           ) : null}
 
           {filtered ? (
-            <Button variant="ghost" size="sm" render={<Link href="/search" />}>
+            <ButtonLink href="/search" variant="ghost" size="sm">
               Limpiar búsqueda
-            </Button>
+            </ButtonLink>
           ) : null}
         </div>
       </header>
@@ -59,9 +58,9 @@ export default async function Page({ searchParams }: PageProps<"/search">) {
             No encontramos equipos ni servicios para esa búsqueda. Prueba con
             menos palabras o revisa el catálogo completo.
           </p>
-          <Button variant="outline" render={<Link href="/search" />}>
+          <ButtonLink href="/search" variant="outline">
             Ver todo el catálogo
-          </Button>
+          </ButtonLink>
         </div>
       )}
     </main>

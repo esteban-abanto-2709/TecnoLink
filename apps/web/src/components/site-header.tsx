@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Link2, Search, ShoppingCart } from "lucide-react";
 
+import { ButtonLink } from "@/components/button-link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -31,23 +32,23 @@ export function SiteHeader() {
         </form>
 
         <nav className="ml-auto flex items-center gap-1">
-          <Button variant="ghost" size="sm" render={<Link href="/compare" />}>
+          <ButtonLink href="/compare" variant="ghost" size="sm">
             Comparar
-          </Button>
-          <Button
+          </ButtonLink>
+          <ButtonLink
+            href="/cart"
             variant="ghost"
             size="icon-sm"
             aria-label="Carrito"
-            render={<Link href="/cart" />}
           >
             <ShoppingCart />
-          </Button>
-          <Button variant="ghost" size="sm" render={<Link href="/login" />}>
+          </ButtonLink>
+          <ButtonLink href="/login" variant="ghost" size="sm">
             Ingresar
-          </Button>
-          <Button size="sm" render={<Link href="/register" />}>
+          </ButtonLink>
+          <ButtonLink href="/register" size="sm">
             Crear cuenta
-          </Button>
+          </ButtonLink>
         </nav>
       </div>
     </header>
