@@ -1,4 +1,5 @@
 import type {
+  CatalogItem,
   Category,
   Order,
   PointsMovement,
@@ -634,4 +635,66 @@ export function ratingFor(targetId: string): number | null {
 
 export function pointsBalance(): number {
   return pointsMovements.reduce((sum, movement) => sum + movement.points, 0);
+}
+
+export function catalogItems(): CatalogItem[] {
+  return [
+    ...products.map((product) => ({
+      id: product.id,
+      kind: "product" as const,
+      name: product.name,
+      categoryId: product.categoryId,
+      supplierId: product.supplierId,
+      price: product.price,
+      description: product.description,
+    })),
+    ...services.map((service) => ({
+      id: service.id,
+      kind: "service" as const,
+      name: service.name,
+      categoryId: service.categoryId,
+      supplierId: service.supplierId,
+      price: service.price,
+      pricing: service.pricing,
+      description: service.description,
+    })),
+  ];
+}
+
+function normalize(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase();
+}
+
+function words(value: string): string[] {
+  return normalize(value)
+    .split(/[^a-z0-9]+/)
+    .filter(Boolean);
+}
+
+function haystack(item: CatalogItem): string[] {
+  const brand = getProduct(item.id)?.brand ?? "";
+  const category = getCategory(item.categoryId)?.name ?? "";
+  const supplier = getSupplier(item.supplierId)?.name ?? "";
+  return words([item.name, item.description, brand, category, supplier].join(" "));
+}
+
+export type CatalogQuery = {
+  query?: string;
+  categoryId?: string;
+};
+
+export function searchCatalog({ query, categoryId }: CatalogQuery): CatalogItem[] {
+  const terms = words(query ?? "");
+
+  return catalogItems().filter((item) => {
+    if (categoryId && item.categoryId !== categoryId) return false;
+    if (terms.length === 0) return true;
+    const found = haystack(item);
+    return terms.every((term) =>
+      found.some((word) => word.startsWith(term))
+    );
+  });
 }

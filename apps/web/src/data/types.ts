@@ -39,6 +39,17 @@ export type Service = {
   coverage: string;
 };
 
+export type CatalogItem = {
+  id: string;
+  kind: CategoryKind;
+  name: string;
+  categoryId: string;
+  supplierId: string;
+  price: number;
+  pricing?: ServicePricing;
+  description: string;
+};
+
 export type Review = {
   id: string;
   targetId: string;

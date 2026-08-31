@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 
 import {
+  catalogItems,
   categories,
   getCategory,
   getSupplier,
@@ -11,6 +12,7 @@ import {
   quotes,
   ratingFor,
   reviews,
+  searchCatalog,
   services,
   suppliers,
 } from "../src/data/catalog.ts";
@@ -120,5 +122,41 @@ assert.match(
 );
 assert.match(formatServicePrice(60, "hourly"), /por hora/);
 assert.match(formatServicePrice(450, "from"), /^Desde/);
+
+assert.equal(
+  catalogItems().length,
+  products.length + services.length,
+  "catalogItems no une productos y servicios"
+);
+assert.equal(
+  searchCatalog({}).length,
+  products.length + services.length,
+  "una búsqueda vacía debe devolver todo el catálogo"
+);
+assert.equal(
+  searchCatalog({ query: "camaras" }).length,
+  1,
+  "la búsqueda debe ignorar tildes: camaras vs cámaras"
+);
+assert.equal(
+  searchCatalog({ query: "LAPTOP LENOVO" }).length,
+  1,
+  "la búsqueda debe ignorar mayúsculas y exigir todos los términos"
+);
+assert.equal(
+  searchCatalog({ query: "16" }).length,
+  1,
+  "la búsqueda debe conservar los dígitos del término"
+);
+assert.equal(
+  searchCatalog({ categoryId: "laptops" }).length,
+  4,
+  "el filtro por categoría no devuelve las laptops"
+);
+assert.equal(
+  searchCatalog({ query: "hp", categoryId: "printers" }).length,
+  1,
+  "el término y la categoría deben combinarse"
+);
 
 console.log("Datos mock verificados.");

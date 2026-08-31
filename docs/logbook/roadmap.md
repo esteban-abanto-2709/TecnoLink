@@ -15,14 +15,9 @@ que permita recorrer las experiencias de usuario completas. Todo en `apps/web`. 
 tareas están ordenadas para que el camino del cliente (buscar → ver → comprar) quede
 recorrible lo antes posible; el resto se cuelga de ahí.
 
-## [RM-004] Inicio y búsqueda — HU-03
-- **Objetivo:** la portada con categorías destacadas y el buscador por texto.
-- **Hecho cuando:** escribir un término lleva a resultados coincidentes y se puede
-  limpiar la búsqueda.
-- **Fecha:** 2026-08-31 · **Estado:** Abierto
-
 ## [RM-005] Resultados y filtros — HU-04
-- **Objetivo:** la lista de resultados con filtros por categoría, precio y tipo.
+- **Objetivo:** sumar a la pantalla de resultados los filtros por precio y por tipo
+  (producto o servicio); el de categoría ya funciona desde RM-004.
 - **Hecho cuando:** los filtros se combinan entre sí, actualizan la lista y el estado
   se refleja en la URL.
 - **Fecha:** 2026-08-31 · **Estado:** Abierto
