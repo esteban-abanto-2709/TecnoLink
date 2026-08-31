@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-002] Shell de navegación y mapa de rutas (2026-08-31 12:35)
+Header con buscador y accesos, y footer que hace de mapa a las 21 rutas del prototipo.
+Cada pantalla pendiente existe con un estado vacío que dice qué RM la construye.
+
 ## [RM-001] Instalar shadcn/ui y fijar el sistema visual base (2026-08-31 12:29)
 shadcn/ui con preset `base-nova` (primitivos Base UI, íconos lucide) sobre Tailwind v4,
 y paleta propia en oklch —azul de marca, ámbar de acento— con tipografías Plus Jakarta

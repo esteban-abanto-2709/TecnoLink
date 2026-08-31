@@ -15,13 +15,6 @@ que permita recorrer las experiencias de usuario completas. Todo en `apps/web`. 
 tareas están ordenadas para que el camino del cliente (buscar → ver → comprar) quede
 recorrible lo antes posible; el resto se cuelga de ahí.
 
-## [RM-002] Shell de navegación y mapa de rutas
-- **Objetivo:** el esqueleto navegable: header con buscador y acceso, footer, y todas
-  las rutas del prototipo existiendo aunque estén vacías.
-- **Hecho cuando:** se puede llegar por URL y por click a cada pantalla del informe;
-  ninguna da 404. Las pendientes muestran un estado vacío honesto.
-- **Fecha:** 2026-08-31 · **Estado:** Abierto
-
 ## [RM-003] Datos mock del catálogo
 - **Objetivo:** una única fuente de datos falsos (productos, servicios, proveedores,
   categorías, reseñas, cotizaciones) que alimente todas las pantallas, para que no se
