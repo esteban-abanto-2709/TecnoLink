@@ -158,7 +158,7 @@ export default async function Page({ searchParams }: PageProps<"/search">) {
         </aside>
 
         {results.length > 0 ? (
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="grid content-start gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {results.map((item) => (
               <ItemCard key={item.id} item={item} />
             ))}

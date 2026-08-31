@@ -4,7 +4,7 @@ import { ChevronRight, FileText, MapPin } from "lucide-react";
 
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { ButtonLink } from "@/components/button-link";
-import { CategoryIcon } from "@/components/category-icon";
+import { ItemThumb } from "@/components/item-thumb";
 import { Rating } from "@/components/rating";
 import { ReviewList } from "@/components/review-list";
 import { SupplierCard } from "@/components/supplier-card";
@@ -55,12 +55,12 @@ export default async function Page({ params }: PageProps<"/services/[id]">) {
       <div className="mt-6 grid gap-10 lg:grid-cols-[1fr_320px]">
         <div className="space-y-10">
           <div className="grid gap-8 sm:grid-cols-2">
-            <div className="grid aspect-square place-items-center rounded-xl border border-border bg-muted">
-              <CategoryIcon
-                categoryId={service.categoryId}
-                className="size-16 text-muted-foreground"
-              />
-            </div>
+            <ItemThumb
+              categoryId={service.categoryId}
+              label={category?.name}
+              className="aspect-square rounded-xl border border-border"
+              iconClassName="size-16"
+            />
 
             <div className="space-y-4">
               {category ? (

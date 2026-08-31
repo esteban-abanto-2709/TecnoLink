@@ -1,10 +1,10 @@
 import Link from "next/link";
 
-import { CategoryIcon } from "@/components/category-icon";
 import { CompareToggle } from "@/components/compare-toggle";
+import { ItemThumb } from "@/components/item-thumb";
 import { Rating } from "@/components/rating";
 import { Badge } from "@/components/ui/badge";
-import { getCategory, getSupplier } from "@/data/catalog";
+import { getCategory, getProduct, getSupplier } from "@/data/catalog";
 import type { CatalogItem } from "@/data/types";
 import { formatPrice, formatServicePrice } from "@/lib/format";
 
@@ -17,6 +17,7 @@ export function ItemCard({ item }: ItemCardProps) {
     item.kind === "product" ? `/products/${item.id}` : `/services/${item.id}`;
   const category = getCategory(item.categoryId);
   const supplier = getSupplier(item.supplierId);
+  const brand = getProduct(item.id)?.brand;
   const price = item.pricing
     ? formatServicePrice(item.price, item.pricing)
     : formatPrice(item.price);
@@ -33,12 +34,11 @@ export function ItemCard({ item }: ItemCardProps) {
         href={href}
         className="group flex flex-1 flex-col overflow-hidden rounded-xl border border-border bg-card transition-colors hover:border-primary/40"
       >
-      <div className="grid aspect-video place-items-center bg-muted">
-        <CategoryIcon
-          categoryId={item.categoryId}
-          className="size-8 text-muted-foreground"
-        />
-      </div>
+      <ItemThumb
+        categoryId={item.categoryId}
+        label={brand ?? category?.name}
+        className="aspect-video"
+      />
 
       <div className="flex flex-1 flex-col gap-2 p-4">
         {category ? (
