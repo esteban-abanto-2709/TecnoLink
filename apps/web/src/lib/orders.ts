@@ -77,7 +77,10 @@ export function placeOrder(lines: CartLine[], total: number): Order {
   return order;
 }
 
+export function useOwnOrders(): Order[] {
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+}
+
 export function useOrders(): Order[] {
-  const own = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-  return [...own, ...mockOrders];
+  return [...useOwnOrders(), ...mockOrders];
 }

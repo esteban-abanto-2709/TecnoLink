@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 
 import {
+  benefits,
   catalogItems,
   categories,
   getCategory,
@@ -128,6 +129,27 @@ for (const order of orders) {
 assert.equal(ratingFor("lenovo-ideapad-3"), 4.7, "promedio de reseñas incorrecto");
 assert.equal(ratingFor("motorola-g84"), null, "un ítem sin reseñas debe dar null");
 assert.equal(pointsBalance(), 191, "el saldo de puntos no cuadra");
+
+assertUniqueIds("benefits", benefits);
+for (const benefit of benefits) {
+  assert.ok(benefit.cost > 0, `${benefit.id}: costo inválido`);
+}
+
+for (const movement of pointsMovements) {
+  if (movement.benefitId === undefined) continue;
+  const benefit = benefits.find((item) => item.id === movement.benefitId);
+  assert.ok(benefit, `${movement.id}: canjea un beneficio inexistente`);
+  assert.equal(
+    movement.points,
+    -benefit.cost,
+    `${movement.id}: el canje no descuenta exactamente el costo del beneficio`
+  );
+}
+
+assert.ok(
+  benefits.some((benefit) => benefit.cost <= pointsBalance()),
+  "con el saldo de ejemplo no se puede canjear ningún beneficio: la pantalla abriría sin nada que hacer"
+);
 
 assert.match(
   formatDate("2026-07-14"),

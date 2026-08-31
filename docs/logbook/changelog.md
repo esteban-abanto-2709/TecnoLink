@@ -12,6 +12,11 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-014] Fidelización (2026-08-31 14:35)
+Pantalla de puntos con saldo, movimientos y catálogo de beneficios separando disponibles
+de usados, con canje real. Los movimientos de compra se derivan de los pedidos, así que
+no hay una segunda fuente de verdad para los puntos.
+
 ## [RM-013] Publicaciones del proveedor (2026-08-31 14:32)
 Alta y edición de equipos y servicios con un solo formulario que cambia de campos según
 el tipo, y lista de publicaciones que refleja los cambios. Las ediciones sobre datos de

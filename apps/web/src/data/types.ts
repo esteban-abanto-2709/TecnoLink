@@ -97,5 +97,12 @@ export type PointsMovement = {
   date: string;
   description: string;
   points: number;
-  used: boolean;
+  benefitId?: string;
+};
+
+export type Benefit = {
+  id: string;
+  name: string;
+  description: string;
+  cost: number;
 };

@@ -15,12 +15,6 @@ que permita recorrer las experiencias de usuario completas. Todo en `apps/web`. 
 tareas están ordenadas para que el camino del cliente (buscar → ver → comprar) quede
 recorrible lo antes posible; el resto se cuelga de ahí.
 
-## [RM-014] Fidelización — HU-13, HU-14
-- **Objetivo:** los puntos que deja cada compra y la pantalla donde se consultan.
-- **Hecho cuando:** una compra simulada suma puntos, el saldo se actualiza, y la
-  pantalla muestra movimientos y beneficios separando disponibles de usados.
-- **Fecha:** 2026-08-31 · **Estado:** Abierto
-
 ## [RM-015] Administración — HU-18, HU-19
 - **Objetivo:** el panel del administrador sobre categorías y proveedores.
 - **Hecho cuando:** se listan, crean, editan y desactivan categorías validando

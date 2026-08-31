@@ -1,4 +1,5 @@
 import type {
+  Benefit,
   CatalogItem,
   Category,
   CategoryKind,
@@ -578,34 +579,66 @@ export const orders: Order[] = [
   },
 ];
 
+export const benefits: Benefit[] = [
+  {
+    id: "priority-quotes",
+    name: "Respuesta prioritaria a tus cotizaciones",
+    description:
+      "Tus solicitudes se muestran primero en la bandeja del proveedor durante un mes.",
+    cost: 150,
+  },
+  {
+    id: "free-shipping",
+    name: "Envío gratis en tu próxima compra",
+    description: "Cubre el envío dentro de Lima Metropolitana, sin monto mínimo.",
+    cost: 150,
+  },
+  {
+    id: "coupon-50",
+    name: "Cupón de S/ 50 de descuento",
+    description: "Se aplica sobre compras mayores a S/ 300.",
+    cost: 500,
+  },
+  {
+    id: "extended-warranty",
+    name: "Garantía extendida de 6 meses",
+    description:
+      "Extiende la garantía del proveedor en un equipo que ya compraste.",
+    cost: 800,
+  },
+  {
+    id: "maintenance",
+    name: "Mantenimiento preventivo gratis",
+    description: "Una visita técnica a domicilio sin costo, coordinada contigo.",
+    cost: 1200,
+  },
+];
+
 export const pointsMovements: PointsMovement[] = [
   {
     id: "pts-001",
     date: "2026-08-18",
     description: "Compra ord-001",
     points: 74,
-    used: false,
   },
   {
     id: "pts-002",
     date: "2026-07-20",
-    description: "Cupón de descuento canjeado",
+    description: "Canje: Envío gratis en tu próxima compra",
     points: -150,
-    used: true,
+    benefitId: "free-shipping",
   },
   {
     id: "pts-003",
     date: "2026-07-14",
     description: "Compra ord-002",
     points: 217,
-    used: false,
   },
   {
     id: "pts-004",
     date: "2026-06-01",
     description: "Bono por primera reseña publicada",
     points: 50,
-    used: false,
   },
 ];
 
