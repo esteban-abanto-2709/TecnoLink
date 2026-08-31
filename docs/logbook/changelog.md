@@ -12,6 +12,11 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-009] Comparador de equipos (2026-08-31 13:20)
+Selección de hasta 4 equipos desde tarjetas y fichas, con contador en el header, y tabla
+que enfrenta precio, marca, proveedor, calificación y especificaciones resaltando las
+filas que difieren.
+
 ## [RM-008] Acceso simulado (2026-08-31 13:12)
 Registro e inicio de sesión con validación nativa, y sesión en un store igual al del
 carrito. El menú del header muestra los accesos del rol activo y permite cambiarlo.

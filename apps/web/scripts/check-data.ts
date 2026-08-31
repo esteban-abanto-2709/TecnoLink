@@ -128,6 +128,24 @@ assert.match(
 assert.match(formatServicePrice(60, "hourly"), /por hora/);
 assert.match(formatServicePrice(450, "from"), /^Desde/);
 
+for (const category of categories.filter((item) => item.kind === "product")) {
+  const inCategory = products.filter(
+    (product) => product.categoryId === category.id
+  );
+  for (const product of inCategory) {
+    for (const other of inCategory) {
+      if (product.id === other.id) continue;
+      const shared = Object.keys(product.specs).filter((key) =>
+        Object.hasOwn(other.specs, key)
+      );
+      assert.ok(
+        shared.length >= 2,
+        `${product.id} y ${other.id} están en la misma categoría pero casi no comparten especificaciones: el comparador quedaría vacío`
+      );
+    }
+  }
+}
+
 assert.equal(
   catalogItems().length,
   products.length + services.length,

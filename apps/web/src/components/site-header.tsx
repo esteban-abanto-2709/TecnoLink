@@ -3,6 +3,7 @@ import { Link2, Search, ShoppingCart } from "lucide-react";
 
 import { ButtonLink } from "@/components/button-link";
 import { CartCount } from "@/components/cart-count";
+import { CompareCount } from "@/components/compare-count";
 import { UserMenu } from "@/components/user-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,6 +37,7 @@ export function SiteHeader() {
         <nav className="ml-auto flex items-center gap-1">
           <ButtonLink href="/compare" variant="ghost" size="sm">
             Comparar
+            <CompareCount />
           </ButtonLink>
           <ButtonLink
             href="/cart"

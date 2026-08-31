@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronRight, FileText, Scale } from "lucide-react";
+import { ChevronRight, FileText } from "lucide-react";
 
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { ButtonLink } from "@/components/button-link";
 import { CategoryIcon } from "@/components/category-icon";
+import { CompareToggle } from "@/components/compare-toggle";
 import { Rating } from "@/components/rating";
 import { ReviewList } from "@/components/review-list";
 import { SupplierCard } from "@/components/supplier-card";
@@ -116,13 +117,7 @@ export default async function Page({ params }: PageProps<"/products/[id]">) {
                 <FileText />
                 Solicitar cotización
               </ButtonLink>
-              <ButtonLink
-                href={`/compare?items=${product.id}`}
-                variant="outline"
-              >
-                <Scale />
-                Comparar
-              </ButtonLink>
+              <CompareToggle productId={product.id} label="Comparar" />
             </div>
           </div>
 

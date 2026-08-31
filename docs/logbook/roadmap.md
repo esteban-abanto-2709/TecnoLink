@@ -15,12 +15,6 @@ que permita recorrer las experiencias de usuario completas. Todo en `apps/web`. 
 tareas están ordenadas para que el camino del cliente (buscar → ver → comprar) quede
 recorrible lo antes posible; el resto se cuelga de ahí.
 
-## [RM-009] Comparador de equipos — HU-07
-- **Objetivo:** comparar dos o más equipos atributo por atributo.
-- **Hecho cuando:** se seleccionan equipos desde el catálogo, se ven en columnas y las
-  diferencias quedan resaltadas.
-- **Fecha:** 2026-08-31 · **Estado:** Abierto
-
 ## [RM-010] Perfil de proveedor y reseñas — HU-10, HU-11, HU-12
 - **Objetivo:** la vista pública del proveedor y el sistema de reseñas.
 - **Hecho cuando:** el perfil muestra datos, oferta publicada y valoración promedio; se

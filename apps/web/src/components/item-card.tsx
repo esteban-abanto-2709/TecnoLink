@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { CategoryIcon } from "@/components/category-icon";
+import { CompareToggle } from "@/components/compare-toggle";
 import { Rating } from "@/components/rating";
 import { Badge } from "@/components/ui/badge";
 import { getCategory, getSupplier } from "@/data/catalog";
@@ -21,10 +22,17 @@ export function ItemCard({ item }: ItemCardProps) {
     : formatPrice(item.price);
 
   return (
-    <Link
-      href={href}
-      className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card transition-colors hover:border-primary/40"
-    >
+    <div className="relative flex">
+      {item.kind === "product" ? (
+        <div className="absolute right-2 top-2 z-10">
+          <CompareToggle productId={item.id} />
+        </div>
+      ) : null}
+
+      <Link
+        href={href}
+        className="group flex flex-1 flex-col overflow-hidden rounded-xl border border-border bg-card transition-colors hover:border-primary/40"
+      >
       <div className="grid aspect-video place-items-center bg-muted">
         <CategoryIcon
           categoryId={item.categoryId}
@@ -53,7 +61,8 @@ export function ItemCard({ item }: ItemCardProps) {
           <span className="font-heading text-lg font-semibold">{price}</span>
           <Rating targetId={item.id} />
         </div>
-      </div>
-    </Link>
+        </div>
+      </Link>
+    </div>
   );
 }
