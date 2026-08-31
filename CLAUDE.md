@@ -29,6 +29,10 @@ no hay app móvil ni la habrá en esta etapa.
   No se editan acá; son el original.
 - `docs/logbook/` — seguimiento del proyecto (ver abajo).
 
+**Al agregar una ruta, agregarla también al mapa del pie de página**
+(`src/components/site-footer.tsx`). Es cómo el equipo descubre las pantallas
+mientras dure el prototipo, y `pnpm check` falla si alguna queda fuera.
+
 ## Documentos derivados — regla dura
 
 Cada documento de `docs/originales/` tiene su gemelo en markdown en `docs/`, con el
@@ -48,8 +52,9 @@ original está mal, se corrige el original.
 
 - `pnpm build` — build de producción; **es la forma de validar** (corre el
   type-check de Next). `pnpm lint` solo revisa estilo, no tipos.
-- `pnpm check` — verifica los datos mock: ids únicos, referencias que existen,
-  totales que cuadran. Correrlo al tocar `src/data/`.
+- `pnpm check` — verifica los datos mock (ids únicos, referencias que existen,
+  totales que cuadran) y que el mapa del pie de página cubra **todas** las rutas,
+  una a una. Correrlo al tocar `src/data/` o al agregar una ruta.
 - **No levantar el dev server** (`pnpm dev`); la validación se hace con `build`.
 
 ## Stack

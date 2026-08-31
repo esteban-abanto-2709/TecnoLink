@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readdirSync, readFileSync } from "node:fs";
 
 import {
   benefits,
@@ -244,4 +245,44 @@ assert.equal(
   "el término y el rango de precio deben combinarse"
 );
 
-console.log("Datos mock verificados.");
+const routes = readdirSync("src/app", { recursive: true })
+  .map(String)
+  .filter((entry) => entry.endsWith("page.tsx"))
+  .map((entry) => `/${entry.replaceAll("\\", "/").replace(/\/?page\.tsx$/, "")}`);
+
+const footerLinks = [
+  ...readFileSync("src/components/site-footer.tsx", "utf8").matchAll(
+    /href: "([^"]+)"/g
+  ),
+].map((match) => match[1].split("?")[0]);
+
+function matchesRoute(route: string, link: string): boolean {
+  const pattern = new RegExp(
+    `^${route.replace(/\[[^\]]+\]/g, "[^/]+").replace(/\//g, "\\/")}$`
+  );
+  return pattern.test(link);
+}
+
+for (const route of routes) {
+  assert.ok(
+    footerLinks.some((link) => matchesRoute(route, link)),
+    `la ruta ${route} no está en el mapa del pie de página: los compañeros no pueden llegar a ella`
+  );
+}
+
+for (const link of footerLinks) {
+  assert.ok(
+    routes.some((route) => matchesRoute(route, link)),
+    `el pie de página enlaza a ${link}, que no existe como ruta`
+  );
+}
+
+assert.equal(
+  footerLinks.length,
+  routes.length,
+  "el pie de página y las rutas no están uno a uno"
+);
+
+console.log(
+  `Datos mock verificados. ${routes.length} rutas mapeadas en el pie de página.`
+);
