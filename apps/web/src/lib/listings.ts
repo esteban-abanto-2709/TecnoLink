@@ -4,6 +4,7 @@ import { useSyncExternalStore } from "react";
 
 import { productsBySupplier, servicesBySupplier } from "@/data/catalog";
 import type { Product, Service, ServicePricing } from "@/data/types";
+import { slugify } from "@/lib/utils";
 
 export type ListingEdit = {
   name: string;
@@ -59,15 +60,6 @@ function getSnapshot(): ListingState {
 
 function getServerSnapshot(): ListingState {
   return EMPTY;
-}
-
-function slugify(name: string): string {
-  return name
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
 }
 
 function uniqueId(name: string, taken: string[]): string {

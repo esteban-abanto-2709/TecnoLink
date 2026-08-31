@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-015] Administración (2026-08-31 14:38)
+Panel de administración con gestión de categorías —alta, edición, desactivación y control
+de duplicados— y revisión de proveedores con tres estados y observación registrada.
+
 ## [RM-014] Fidelización (2026-08-31 14:35)
 Pantalla de puntos con saldo, movimientos y catálogo de beneficios separando disponibles
 de usados, con canje real. Los movimientos de compra se derivan de los pedidos, así que

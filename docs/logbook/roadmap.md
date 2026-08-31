@@ -15,12 +15,6 @@ que permita recorrer las experiencias de usuario completas. Todo en `apps/web`. 
 tareas están ordenadas para que el camino del cliente (buscar → ver → comprar) quede
 recorrible lo antes posible; el resto se cuelga de ahí.
 
-## [RM-015] Administración — HU-18, HU-19
-- **Objetivo:** el panel del administrador sobre categorías y proveedores.
-- **Hecho cuando:** se listan, crean, editan y desactivan categorías validando
-  duplicados; y se revisa proveedores pudiendo cambiar su estado con observación.
-- **Fecha:** 2026-08-31 · **Estado:** Abierto
-
 ## [RM-016] Pasada responsive — HU-20
 - **Objetivo:** revisar el prototipo completo en móvil y escritorio.
 - **Hecho cuando:** ninguna pantalla desborda horizontalmente, menús y formularios son
