@@ -6,10 +6,10 @@ const sections = [
     links: [
       { href: "/", label: "Portada" },
       { href: "/search", label: "Resultados de búsqueda" },
-      { href: "/products/1", label: "Detalle de producto" },
-      { href: "/services/1", label: "Detalle de servicio" },
+      { href: "/products/lenovo-ideapad-3", label: "Detalle de producto" },
+      { href: "/services/soporte-domicilio", label: "Detalle de servicio" },
       { href: "/compare", label: "Comparador" },
-      { href: "/suppliers/1", label: "Perfil de proveedor" },
+      { href: "/suppliers/techperu", label: "Perfil de proveedor" },
       { href: "/cart", label: "Carrito" },
       { href: "/checkout", label: "Compra simulada" },
       { href: "/orders", label: "Mis compras" },

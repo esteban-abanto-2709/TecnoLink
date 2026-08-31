@@ -12,6 +12,11 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-003] Datos mock del catálogo (2026-08-31 12:41)
+Fuente única en `src/data/`: 9 categorías, 5 proveedores, 14 productos con especificaciones
+comparables, 6 servicios, reseñas, cotizaciones, compras y puntos. `pnpm check` valida
+referencias y totales; precios y fechas se formatean en `src/lib/format.ts`.
+
 ## [RM-002] Shell de navegación y mapa de rutas (2026-08-31 12:35)
 Header con buscador y accesos, y footer que hace de mapa a las 21 rutas del prototipo.
 Cada pantalla pendiente existe con un estado vacío que dice qué RM la construye.

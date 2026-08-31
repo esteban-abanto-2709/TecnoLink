@@ -48,6 +48,8 @@ original está mal, se corrige el original.
 
 - `pnpm build` — build de producción; **es la forma de validar** (corre el
   type-check de Next). `pnpm lint` solo revisa estilo, no tipos.
+- `pnpm check` — verifica los datos mock: ids únicos, referencias que existen,
+  totales que cuadran. Correrlo al tocar `src/data/`.
 - **No levantar el dev server** (`pnpm dev`); la validación se hace con `build`.
 
 ## Stack
@@ -70,6 +72,13 @@ original está mal, se corrige el original.
 - **Es un prototipo:** el estado vive en memoria (React) sobre datos mock. No se
   arma persistencia, ni auth real, ni API. Si una pantalla necesita "guardar", el
   prototipo simula el resultado y sigue.
+- **Datos en un solo lugar:** `src/data/` es la única fuente. Ninguna pantalla
+  define sus propios datos ni los duplica; si falta algo, se agrega ahí. Está
+  aislado a propósito: el día que haya API, se reemplaza esa capa sin tocar las
+  pantallas.
+- **Precios y fechas por `src/lib/format.ts`.** Soles con `Intl` en `es-PE`, y las
+  fechas ISO se parsean a fecha local — construirlas con `new Date("2026-07-14")`
+  corre el día en Lima.
 
 ## Next.js 16 — ojo
 

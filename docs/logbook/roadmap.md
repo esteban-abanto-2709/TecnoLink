@@ -15,14 +15,6 @@ que permita recorrer las experiencias de usuario completas. Todo en `apps/web`. 
 tareas están ordenadas para que el camino del cliente (buscar → ver → comprar) quede
 recorrible lo antes posible; el resto se cuelga de ahí.
 
-## [RM-003] Datos mock del catálogo
-- **Objetivo:** una única fuente de datos falsos (productos, servicios, proveedores,
-  categorías, reseñas, cotizaciones) que alimente todas las pantallas, para que no se
-  contradigan entre sí.
-- **Hecho cuando:** existe un módulo con los tipos y los datos; cualquier pantalla los
-  consume desde ahí y ninguna define los suyos.
-- **Fecha:** 2026-08-31 · **Estado:** Abierto
-
 ## [RM-004] Inicio y búsqueda — HU-03
 - **Objetivo:** la portada con categorías destacadas y el buscador por texto.
 - **Hecho cuando:** escribir un término lleva a resultados coincidentes y se puede
