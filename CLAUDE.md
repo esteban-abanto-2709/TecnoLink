@@ -77,10 +77,14 @@ original está mal, se corrige el original.
   aislado a propósito: el día que haya API, se reemplaza esa capa sin tocar las
   pantallas.
 - **Estado de cliente en stores de módulo, no en Context.** El carrito
-  (`src/lib/cart.ts`) es el patrón: un módulo con su valor, `useSyncExternalStore`
-  para leerlo y funciones sueltas para mutarlo. Sin provider en el layout, y con
-  `getServerSnapshot` para que la hidratación no reviente. Lo que se guarda entre
-  recargas va a `localStorage` dentro del mismo módulo.
+  (`src/lib/cart.ts`) y la sesión (`src/lib/session.ts`) son el patrón: un módulo
+  con su valor, `useSyncExternalStore` para leerlo y funciones sueltas para
+  mutarlo. Sin provider en el layout, y con `getServerSnapshot` para que la
+  hidratación no reviente. Lo que se guarda entre recargas va a `localStorage`
+  dentro del mismo módulo.
+- **Sin guardas de rol.** Cualquier rol llega a cualquier ruta: es un prototipo y
+  hay que poder recorrer las tres experiencias sin fricción. El rol activo decide
+  qué muestra el menú del header y a dónde redirige al entrar, nada más.
 - **Precios y fechas por `src/lib/format.ts`.** Soles con `Intl` en `es-PE`, y las
   fechas ISO se parsean a fecha local — construirlas con `new Date("2026-07-14")`
   corre el día en Lima.

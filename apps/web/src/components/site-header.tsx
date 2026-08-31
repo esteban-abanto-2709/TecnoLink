@@ -3,6 +3,7 @@ import { Link2, Search, ShoppingCart } from "lucide-react";
 
 import { ButtonLink } from "@/components/button-link";
 import { CartCount } from "@/components/cart-count";
+import { UserMenu } from "@/components/user-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -46,12 +47,7 @@ export function SiteHeader() {
             <ShoppingCart />
             <CartCount />
           </ButtonLink>
-          <ButtonLink href="/login" variant="ghost" size="sm">
-            Ingresar
-          </ButtonLink>
-          <ButtonLink href="/register" size="sm">
-            Crear cuenta
-          </ButtonLink>
+          <UserMenu />
         </nav>
       </div>
     </header>

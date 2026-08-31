@@ -15,13 +15,6 @@ que permita recorrer las experiencias de usuario completas. Todo en `apps/web`. 
 tareas están ordenadas para que el camino del cliente (buscar → ver → comprar) quede
 recorrible lo antes posible; el resto se cuelga de ahí.
 
-## [RM-008] Acceso simulado — HU-01, HU-02
-- **Objetivo:** registro e inicio de sesión, y el cambio de rol (cliente / proveedor /
-  administrador) que el prototipo necesita para demostrar las tres experiencias.
-- **Hecho cuando:** ambos formularios validan campos y confirman; el rol activo cambia
-  lo que muestra el header y a dónde redirige.
-- **Fecha:** 2026-08-31 · **Estado:** Abierto
-
 ## [RM-009] Comparador de equipos — HU-07
 - **Objetivo:** comparar dos o más equipos atributo por atributo.
 - **Hecho cuando:** se seleccionan equipos desde el catálogo, se ven en columnas y las

@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-008] Acceso simulado (2026-08-31 13:12)
+Registro e inicio de sesión con validación nativa, y sesión en un store igual al del
+carrito. El menú del header muestra los accesos del rol activo y permite cambiarlo.
+
 ## [RM-007] Compra simulada (2026-08-31 13:04)
 Carrito, checkout y confirmación con código de pedido y puntos ganados. El carrito es un
 store con `useSyncExternalStore` respaldado en `localStorage`, sin provider ni contexto.
