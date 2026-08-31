@@ -12,6 +12,11 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-011] Solicitud de cotización (2026-08-31 13:49)
+Formulario de solicitud con cantidad y requerimiento desde la ficha de cualquier equipo o
+servicio, y pantalla de cotizaciones con el estado de cada una y la respuesta del
+proveedor en formato estándar.
+
 ## [RM-010] Perfil de proveedor y reseñas (2026-08-31 13:46)
 Perfil público del proveedor con su oferta y valoración, historial de compras, y reseñas
 propias que se suman al promedio en todas las pantallas. El checkout ahora guarda el

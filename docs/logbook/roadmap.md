@@ -15,12 +15,6 @@ que permita recorrer las experiencias de usuario completas. Todo en `apps/web`. 
 tareas están ordenadas para que el camino del cliente (buscar → ver → comprar) quede
 recorrible lo antes posible; el resto se cuelga de ahí.
 
-## [RM-011] Solicitud de cotización — HU-08
-- **Objetivo:** el lado cliente del flujo de cotizaciones.
-- **Hecho cuando:** desde un producto o servicio se envía una solicitud con cantidad y
-  requerimiento, y se confirma el envío.
-- **Fecha:** 2026-08-31 · **Estado:** Abierto
-
 ## [RM-012] Bandeja y respuesta de cotizaciones — HU-09, HU-17
 - **Objetivo:** el lado proveedor del mismo flujo, con el formato estandarizado que
   hace comparables las propuestas.
