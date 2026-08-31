@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-005] Resultados y filtros (2026-08-31 12:54)
+Filtros de tipo, categoría y rango de precio en `/search`, resueltos con enlaces: cada
+opción es una URL compartible y el servidor filtra. Se combinan entre sí y con el término.
+
 ## [RM-004] Inicio y búsqueda (2026-08-31 12:48)
 Portada con buscador, las 9 categorías y destacados, y `/search` mostrando resultados
 reales. La búsqueda ignora tildes y mayúsculas, exige todos los términos y hace prefijo

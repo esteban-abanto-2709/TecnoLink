@@ -159,4 +159,35 @@ assert.equal(
   "el término y la categoría deben combinarse"
 );
 
+assert.equal(
+  searchCatalog({ kind: "service" }).length,
+  services.length,
+  "el filtro por tipo no aísla los servicios"
+);
+assert.equal(
+  searchCatalog({ maxPrice: 500 }).length,
+  7,
+  "el tope de precio no filtra bien"
+);
+assert.equal(
+  searchCatalog({ minPrice: 1500, maxPrice: 3000 }).length,
+  4,
+  "el rango de precio no filtra bien"
+);
+assert.equal(
+  searchCatalog({
+    kind: "product",
+    categoryId: "laptops",
+    minPrice: 1500,
+    maxPrice: 3000,
+  }).length,
+  3,
+  "los filtros no se combinan entre sí"
+);
+assert.equal(
+  searchCatalog({ query: "laptop", minPrice: 3000 }).length,
+  1,
+  "el término y el rango de precio deben combinarse"
+);
+
 console.log("Datos mock verificados.");

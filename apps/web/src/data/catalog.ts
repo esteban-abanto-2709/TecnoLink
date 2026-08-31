@@ -1,6 +1,7 @@
 import type {
   CatalogItem,
   Category,
+  CategoryKind,
   Order,
   PointsMovement,
   Product,
@@ -684,13 +685,25 @@ function haystack(item: CatalogItem): string[] {
 export type CatalogQuery = {
   query?: string;
   categoryId?: string;
+  kind?: CategoryKind;
+  minPrice?: number;
+  maxPrice?: number;
 };
 
-export function searchCatalog({ query, categoryId }: CatalogQuery): CatalogItem[] {
+export function searchCatalog({
+  query,
+  categoryId,
+  kind,
+  minPrice,
+  maxPrice,
+}: CatalogQuery): CatalogItem[] {
   const terms = words(query ?? "");
 
   return catalogItems().filter((item) => {
     if (categoryId && item.categoryId !== categoryId) return false;
+    if (kind && item.kind !== kind) return false;
+    if (minPrice !== undefined && item.price < minPrice) return false;
+    if (maxPrice !== undefined && item.price > maxPrice) return false;
     if (terms.length === 0) return true;
     const found = haystack(item);
     return terms.every((term) =>

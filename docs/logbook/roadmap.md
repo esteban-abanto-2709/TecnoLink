@@ -15,13 +15,6 @@ que permita recorrer las experiencias de usuario completas. Todo en `apps/web`. 
 tareas están ordenadas para que el camino del cliente (buscar → ver → comprar) quede
 recorrible lo antes posible; el resto se cuelga de ahí.
 
-## [RM-005] Resultados y filtros — HU-04
-- **Objetivo:** sumar a la pantalla de resultados los filtros por precio y por tipo
-  (producto o servicio); el de categoría ya funciona desde RM-004.
-- **Hecho cuando:** los filtros se combinan entre sí, actualizan la lista y el estado
-  se refleja en la URL.
-- **Fecha:** 2026-08-31 · **Estado:** Abierto
-
 ## [RM-006] Detalle de producto y de servicio — HU-05, HU-06
 - **Objetivo:** las dos fichas de detalle, que comparten estructura pero no contenido:
   el producto muestra especificaciones, el servicio muestra alcance y cobertura.
