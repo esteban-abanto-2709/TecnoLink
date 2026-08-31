@@ -13,6 +13,19 @@ changelog y se borra de aquí.
 
 ---
 
+## [TD-002] Lo que publica el proveedor no llega al catálogo público
+- **Ubicación:** `apps/web/src/app/search/page.tsx`, `apps/web/src/app/products/[id]/page.tsx`
+- **Riesgo:** 5/10
+- **Problema:** las publicaciones nuevas y las ediciones viven en un store de cliente,
+  pero el catálogo, las fichas de detalle y el perfil del proveedor son componentes
+  servidor que solo leen `src/data/`. Un equipo recién publicado no aparece en la
+  búsqueda ni tiene ficha propia, así que la lista de publicaciones no enlaza a la vista
+  pública para no dejar enlaces rotos.
+- **Impacto futuro:** en una demo, publicar algo y no encontrarlo en el catálogo se lee
+  como un bug. Cerrarlo pide que la búsqueda y el detalle pasen a cliente y fusionen el
+  store, o que exista una API de verdad detrás de `src/data/`.
+- **Fecha:** 2026-08-31 · **Estado:** Abierto
+
 ## [TD-001] El buscador del header no conserva el término
 - **Ubicación:** `apps/web/src/components/site-header.tsx`
 - **Riesgo:** 3/10

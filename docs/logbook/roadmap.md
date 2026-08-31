@@ -15,12 +15,6 @@ que permita recorrer las experiencias de usuario completas. Todo en `apps/web`. 
 tareas están ordenadas para que el camino del cliente (buscar → ver → comprar) quede
 recorrible lo antes posible; el resto se cuelga de ahí.
 
-## [RM-013] Publicaciones del proveedor — HU-15, HU-16
-- **Objetivo:** publicar y editar productos y servicios.
-- **Hecho cuando:** el formulario valida los campos obligatorios, la lista de
-  publicaciones refleja los cambios y confirma la edición.
-- **Fecha:** 2026-08-31 · **Estado:** Abierto
-
 ## [RM-014] Fidelización — HU-13, HU-14
 - **Objetivo:** los puntos que deja cada compra y la pantalla donde se consultan.
 - **Hecho cuando:** una compra simulada suma puntos, el saldo se actualiza, y la

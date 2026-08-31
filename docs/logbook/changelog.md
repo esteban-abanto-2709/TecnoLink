@@ -12,6 +12,11 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-013] Publicaciones del proveedor (2026-08-31 14:32)
+Alta y edición de equipos y servicios con un solo formulario que cambia de campos según
+el tipo, y lista de publicaciones que refleja los cambios. Las ediciones sobre datos de
+ejemplo se guardan como superposición.
+
 ## [RM-012] Bandeja y respuesta de cotizaciones (2026-08-31 14:28)
 Panel del proveedor con sus métricas y bandeja que lista las solicitudes recibidas y
 permite responderlas con precio, vigencia, condiciones y observaciones. La respuesta se
