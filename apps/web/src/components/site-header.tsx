@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Link2, Search, ShoppingCart } from "lucide-react";
 
 import { ButtonLink } from "@/components/button-link";
+import { CartCount } from "@/components/cart-count";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -40,8 +41,10 @@ export function SiteHeader() {
             variant="ghost"
             size="icon-sm"
             aria-label="Carrito"
+            className="relative"
           >
             <ShoppingCart />
+            <CartCount />
           </ButtonLink>
           <ButtonLink href="/login" variant="ghost" size="sm">
             Ingresar

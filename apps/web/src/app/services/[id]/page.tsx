@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronRight, FileText, MapPin, ShoppingCart } from "lucide-react";
+import { ChevronRight, FileText, MapPin } from "lucide-react";
 
+import { AddToCartButton } from "@/components/add-to-cart-button";
 import { ButtonLink } from "@/components/button-link";
 import { CategoryIcon } from "@/components/category-icon";
 import { Rating } from "@/components/rating";
@@ -112,10 +113,16 @@ export default async function Page({ params }: PageProps<"/services/[id]">) {
                 <FileText />
                 Solicitar cotización
               </ButtonLink>
-              <ButtonLink href="/cart" variant="secondary">
-                <ShoppingCart />
-                Contratar ahora
-              </ButtonLink>
+              <AddToCartButton
+                variant="secondary"
+                label="Contratar ahora"
+                item={{
+                  id: service.id,
+                  kind: "service",
+                  name: service.name,
+                  price: service.price,
+                }}
+              />
             </div>
           </div>
 

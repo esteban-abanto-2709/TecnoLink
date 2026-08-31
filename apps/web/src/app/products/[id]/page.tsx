@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronRight, FileText, Scale, ShoppingCart } from "lucide-react";
+import { ChevronRight, FileText, Scale } from "lucide-react";
 
+import { AddToCartButton } from "@/components/add-to-cart-button";
 import { ButtonLink } from "@/components/button-link";
 import { CategoryIcon } from "@/components/category-icon";
 import { Rating } from "@/components/rating";
@@ -100,10 +101,14 @@ export default async function Page({ params }: PageProps<"/products/[id]">) {
               Precio referencial. La compra es simulada: no se cobra nada.
             </p>
             <div className="grid gap-2 pt-2">
-              <ButtonLink href="/cart">
-                <ShoppingCart />
-                Comprar ahora
-              </ButtonLink>
+              <AddToCartButton
+                item={{
+                  id: product.id,
+                  kind: "product",
+                  name: product.name,
+                  price: product.price,
+                }}
+              />
               <ButtonLink
                 href={`/quotes/new?item=${product.id}`}
                 variant="secondary"

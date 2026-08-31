@@ -106,6 +106,11 @@ for (const order of orders) {
     0
   );
   assert.equal(order.total, total, `${order.id}: el total no cuadra con las líneas`);
+  assert.equal(
+    order.pointsEarned,
+    Math.floor(order.total / 10),
+    `${order.id}: los puntos no siguen la regla de 1 punto por cada S/ 10`
+  );
   for (const line of order.lines) {
     assert.ok(itemIds.has(line.itemId), `${order.id}: ítem inexistente en una línea`);
   }

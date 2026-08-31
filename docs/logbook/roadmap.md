@@ -15,12 +15,6 @@ que permita recorrer las experiencias de usuario completas. Todo en `apps/web`. 
 tareas están ordenadas para que el camino del cliente (buscar → ver → comprar) quede
 recorrible lo antes posible; el resto se cuelga de ahí.
 
-## [RM-007] Compra simulada — carrito, checkout y confirmación
-- **Objetivo:** cerrar el recorrido principal del cliente de punta a punta.
-- **Hecho cuando:** se agrega al carrito, se completa el checkout y se llega a una
-  confirmación con resumen del pedido. Sin cobro, y la pantalla lo dice.
-- **Fecha:** 2026-08-31 · **Estado:** Abierto
-
 ## [RM-008] Acceso simulado — HU-01, HU-02
 - **Objetivo:** registro e inicio de sesión, y el cambio de rol (cliente / proveedor /
   administrador) que el prototipo necesita para demostrar las tres experiencias.

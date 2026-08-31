@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-007] Compra simulada (2026-08-31 13:04)
+Carrito, checkout y confirmación con código de pedido y puntos ganados. El carrito es un
+store con `useSyncExternalStore` respaldado en `localStorage`, sin provider ni contexto.
+
 ## [RM-006] Detalle de producto y de servicio (2026-08-31 12:57)
 Fichas de producto (especificaciones) y de servicio (modalidad de cobro y cobertura), con
 proveedor, reseñas y acciones de comprar, cotizar y comparar. Un id inexistente da 404.
