@@ -77,12 +77,18 @@ nombre. Si el original cambia, el markdown se regenera en el mismo commit.
 
 ## Estado
 
-Arrancando. Proyecto Next.js inicializado; falta construir las pantallas.
+**Prototipo completo.** Las 23 pantallas están construidas y las 20 historias de
+usuario del informe (HU-01 … HU-20) están cubiertas, con datos mock y sin backend.
+Se recorren de punta a punta las tres experiencias: cliente, proveedor y
+administrador.
 
-Lo que sigue es un **prototipo navegable** de punta a punta con datos mock: recorrer
-las experiencias de cliente, proveedor y administrador completas, sin backend. El
-trabajo comprometido está en [`docs/logbook/roadmap.md`](docs/logbook/roadmap.md)
-(`RM-001` … `RM-016`).
+El pie de página de la aplicación funciona como mapa: lista todas las pantallas con
+la historia de usuario que cubre cada una.
+
+Lo terminado está en [`docs/logbook/changelog.md`](docs/logbook/changelog.md)
+(`RM-001` … `RM-016`); lo que quedó pendiente, en
+[`docs/logbook/technical-debt.md`](docs/logbook/technical-debt.md) y
+[`docs/logbook/wishlist.md`](docs/logbook/wishlist.md).
 
 ## Equipo
 

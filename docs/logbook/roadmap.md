@@ -15,9 +15,5 @@ que permita recorrer las experiencias de usuario completas. Todo en `apps/web`. 
 tareas están ordenadas para que el camino del cliente (buscar → ver → comprar) quede
 recorrible lo antes posible; el resto se cuelga de ahí.
 
-## [RM-016] Pasada responsive — HU-20
-- **Objetivo:** revisar el prototipo completo en móvil y escritorio.
-- **Hecho cuando:** ninguna pantalla desborda horizontalmente, menús y formularios son
-  usables en móvil, y las tablas anchas (comparador, cotizaciones) tienen su propio
-  scroll.
-- **Fecha:** 2026-08-31 · **Estado:** Abierto
+Sin tareas comprometidas pendientes. Las próximas salen de `technical-debt.md` o de
+`wishlist.md` cuando se promuevan.

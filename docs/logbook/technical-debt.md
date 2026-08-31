@@ -13,6 +13,17 @@ changelog y se borra de aquí.
 
 ---
 
+## [TD-003] Los controles táctiles quedan por debajo de 44 px
+- **Ubicación:** `apps/web/src/components/ui/button.tsx`
+- **Riesgo:** 3/10
+- **Problema:** la escala de `base-nova` da botones de 28 a 32 px de alto. Las pautas de
+  accesibilidad piden 44 px de área táctil. En el carrito y el comparador se subió a 36 px
+  en móvil con una clase puntual, pero el resto de la interfaz sigue en la escala chica.
+- **Impacto futuro:** en celular cuesta acertarle a los botones secundarios. Resolverlo
+  bien es tocar la escala del sistema de diseño, no cada pantalla, así que conviene
+  decidirlo de una vez antes de que haya más pantallas.
+- **Fecha:** 2026-08-31 · **Estado:** Abierto
+
 ## [TD-002] Lo que publica el proveedor no llega al catálogo público
 - **Ubicación:** `apps/web/src/app/search/page.tsx`, `apps/web/src/app/products/[id]/page.tsx`
 - **Riesgo:** 5/10

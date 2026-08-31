@@ -45,7 +45,7 @@ export default function Page() {
                 : `/services/${line.id}`;
 
             return (
-              <li key={line.id} className="flex gap-4 py-4">
+              <li key={line.id} className="flex flex-wrap gap-4 py-4">
                 <span className="grid size-16 shrink-0 place-items-center rounded-lg bg-muted">
                   <CategoryIcon
                     categoryId={source?.categoryId ?? ""}
@@ -53,7 +53,7 @@ export default function Page() {
                   />
                 </span>
 
-                <div className="min-w-0 flex-1 space-y-1">
+                <div className="min-w-0 flex-1 basis-40 space-y-1">
                   <Link href={href} className="font-medium hover:text-primary">
                     {line.name}
                   </Link>
@@ -67,15 +67,16 @@ export default function Page() {
                   </p>
                 </div>
 
-                <div className="flex flex-col items-end gap-2">
+                <div className="flex w-full items-center justify-between gap-3 sm:w-auto sm:flex-col sm:items-end">
                   <span className="font-medium">
                     {formatPrice(line.price * line.quantity)}
                   </span>
 
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1.5">
                     <Button
                       variant="outline"
-                      size="icon-xs"
+                      size="icon-sm"
+                      className="size-9 sm:size-7"
                       aria-label="Quitar una unidad"
                       onClick={() => setQuantity(line.id, line.quantity - 1)}
                     >
@@ -86,7 +87,8 @@ export default function Page() {
                     </span>
                     <Button
                       variant="outline"
-                      size="icon-xs"
+                      size="icon-sm"
+                      className="size-9 sm:size-7"
                       aria-label="Agregar una unidad"
                       onClick={() => setQuantity(line.id, line.quantity + 1)}
                     >
@@ -94,7 +96,8 @@ export default function Page() {
                     </Button>
                     <Button
                       variant="ghost"
-                      size="icon-xs"
+                      size="icon-sm"
+                      className="size-9 sm:size-7"
                       aria-label={`Quitar ${line.name}`}
                       onClick={() => removeFromCart(line.id)}
                     >

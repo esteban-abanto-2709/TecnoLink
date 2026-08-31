@@ -113,7 +113,8 @@ export default function Page() {
                     </span>
                     <Button
                       variant="ghost"
-                      size="icon-xs"
+                      size="icon-sm"
+                      className="size-9 sm:size-7"
                       aria-label={`Quitar ${product.name} del comparador`}
                       onClick={() => removeFromCompare(product.id)}
                     >

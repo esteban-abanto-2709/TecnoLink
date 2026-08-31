@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Link2, Search, ShoppingCart } from "lucide-react";
+import { Link2, Scale, Search, ShoppingCart } from "lucide-react";
 
 import { ButtonLink } from "@/components/button-link";
 import { CartCount } from "@/components/cart-count";
@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 export function SiteHeader() {
   return (
     <header className="border-b border-border bg-background">
-      <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-x-6 gap-y-3 px-6 py-3">
+      <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-x-4 gap-y-3 px-4 py-3 sm:gap-x-6 sm:px-6">
         <Link
           href="/"
           className="flex items-center gap-2 text-primary transition-colors hover:text-foreground"
@@ -35,8 +35,14 @@ export function SiteHeader() {
         </form>
 
         <nav className="ml-auto flex items-center gap-1">
-          <ButtonLink href="/compare" variant="ghost" size="sm">
-            Comparar
+          <ButtonLink
+            href="/compare"
+            variant="ghost"
+            size="sm"
+            aria-label="Comparador"
+          >
+            <Scale className="sm:hidden" />
+            <span className="hidden sm:inline">Comparar</span>
             <CompareCount />
           </ButtonLink>
           <ButtonLink

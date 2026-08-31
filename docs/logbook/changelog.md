@@ -12,6 +12,11 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-016] Pasada responsive (2026-08-31 14:56)
+Barrido de las 23 pantallas entre 320 y 1280 px: sin desbordes horizontales. Se corrigió
+el header en pantallas chicas y se rehizo la fila del carrito, y los controles de cantidad
+pasaron a 36 px en móvil.
+
 ## [RM-015] Administración (2026-08-31 14:38)
 Panel de administración con gestión de categorías —alta, edición, desactivación y control
 de duplicados— y revisión de proveedores con tres estados y observación registrada.
