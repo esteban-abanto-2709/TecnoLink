@@ -1,14 +1,15 @@
+"use client";
+
 import { Stars } from "@/components/rating";
-import { ratingFor, reviewsFor } from "@/data/catalog";
 import { formatDate } from "@/lib/format";
+import { useReviewsFor } from "@/lib/reviews";
 
 type ReviewListProps = {
   targetId: string;
 };
 
 export function ReviewList({ targetId }: ReviewListProps) {
-  const reviews = reviewsFor(targetId);
-  const average = ratingFor(targetId);
+  const { reviews, average } = useReviewsFor(targetId);
 
   if (average === null) {
     return (
@@ -30,9 +31,7 @@ export function ReviewList({ targetId }: ReviewListProps) {
         <div>
           <Stars value={average} />
           <p className="mt-1 text-sm text-muted-foreground">
-            {reviews.length === 1
-              ? "1 reseña"
-              : `${reviews.length} reseñas`}
+            {reviews.length === 1 ? "1 reseña" : `${reviews.length} reseñas`}
           </p>
         </div>
       </div>

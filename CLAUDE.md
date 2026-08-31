@@ -82,6 +82,11 @@ original está mal, se corrige el original.
   mutarlo. Sin provider en el layout, y con `getServerSnapshot` para que la
   hidratación no reviente. Lo que se guarda entre recargas va a `localStorage`
   dentro del mismo módulo.
+- **Mock abajo, aportes del usuario encima.** `src/data/` es la base inmutable; lo
+  que el usuario genera (pedidos, reseñas) vive en su store local y se fusiona con
+  el mock **solo en componentes cliente** (`Rating`, `ReviewList`, `/orders`,
+  `/compare`). Un componente servidor ve únicamente el mock, así que cualquier
+  pantalla que deba reflejar lo que hizo el usuario tiene que ser cliente.
 - **Sin guardas de rol.** Cualquier rol llega a cualquier ruta: es un prototipo y
   hay que poder recorrer las tres experiencias sin fricción. El rol activo decide
   qué muestra el menú del header y a dónde redirige al entrar, nada más.

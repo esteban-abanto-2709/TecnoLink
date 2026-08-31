@@ -12,6 +12,11 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-010] Perfil de proveedor y reseñas (2026-08-31 13:46)
+Perfil público del proveedor con su oferta y valoración, historial de compras, y reseñas
+propias que se suman al promedio en todas las pantallas. El checkout ahora guarda el
+pedido, así que lo comprado aparece en "Mis compras" y habilita reseñarlo.
+
 ## [RM-009] Comparador de equipos (2026-08-31 13:20)
 Selección de hasta 4 equipos desde tarjetas y fichas, con contador en el header, y tabla
 que enfrenta precio, marca, proveedor, calificación y especificaciones resaltando las

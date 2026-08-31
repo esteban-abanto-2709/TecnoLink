@@ -8,15 +8,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { clearCart, pointsFor, useCart, type CartLine } from "@/lib/cart";
+import { clearCart, pointsFor, useCart } from "@/lib/cart";
 import { formatPrice } from "@/lib/format";
-
-type Confirmation = {
-  code: string;
-  lines: CartLine[];
-  total: number;
-  points: number;
-};
+import { placeOrder } from "@/lib/orders";
+import type { Order } from "@/data/types";
 
 const paymentMethods = [
   { id: "transfer", label: "Transferencia bancaria" },
@@ -24,25 +19,13 @@ const paymentMethods = [
   { id: "card", label: "Tarjeta de crédito o débito" },
 ];
 
-function orderCode(): string {
-  const random = Math.floor(Math.random() * 10000)
-    .toString()
-    .padStart(4, "0");
-  return `TL-${new Date().getFullYear()}-${random}`;
-}
-
 export default function Page() {
   const { lines, total } = useCart();
-  const [confirmation, setConfirmation] = useState<Confirmation | null>(null);
+  const [confirmation, setConfirmation] = useState<Order | null>(null);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setConfirmation({
-      code: orderCode(),
-      lines,
-      total,
-      points: pointsFor(total),
-    });
+    setConfirmation(placeOrder(lines, total));
     clearCart();
   }
 
@@ -53,7 +36,7 @@ export default function Page() {
           <CircleCheckBig className="size-8 text-primary" aria-hidden />
           <h1 className="text-2xl font-semibold">Compra registrada</h1>
           <p className="text-muted-foreground">
-            Tu pedido {confirmation.code} quedó registrado. El proveedor se
+            Tu pedido {confirmation.id} quedó registrado. El proveedor se
             comunicará para coordinar la entrega.
           </p>
         </div>
@@ -62,7 +45,7 @@ export default function Page() {
           <h2 className="font-semibold">Resumen del pedido</h2>
           <ul className="divide-y divide-border border-y border-border">
             {confirmation.lines.map((line) => (
-              <li key={line.id} className="flex justify-between gap-4 py-3">
+              <li key={line.itemId} className="flex justify-between gap-4 py-3">
                 <span className="min-w-0">
                   {line.name}
                   <span className="text-muted-foreground"> × {line.quantity}</span>
@@ -80,7 +63,7 @@ export default function Page() {
             </span>
           </div>
           <p className="text-sm text-muted-foreground">
-            Sumaste {confirmation.points} puntos de fidelización.
+            Sumaste {confirmation.pointsEarned} puntos de fidelización.
           </p>
         </div>
 

@@ -6,8 +6,8 @@ import { Scale, X } from "lucide-react";
 import { ButtonLink } from "@/components/button-link";
 import { CategoryIcon } from "@/components/category-icon";
 import { Button } from "@/components/ui/button";
-import { getProduct, getSupplier, ratingFor } from "@/data/catalog";
-import type { Product } from "@/data/types";
+import { getProduct, getSupplier } from "@/data/catalog";
+import type { Product, Review } from "@/data/types";
 import {
   MAX_COMPARE,
   clearCompare,
@@ -15,13 +15,14 @@ import {
   useCompare,
 } from "@/lib/compare";
 import { formatPrice } from "@/lib/format";
+import { averageOf, reviewsWith, useOwnReviews } from "@/lib/reviews";
 
 type Row = {
   label: string;
   values: string[];
 };
 
-function buildRows(products: Product[]): Row[] {
+function buildRows(products: Product[], ownReviews: Review[]): Row[] {
   const specKeys = Array.from(
     new Set(products.flatMap((product) => Object.keys(product.specs)))
   );
@@ -41,7 +42,7 @@ function buildRows(products: Product[]): Row[] {
     {
       label: "Calificación",
       values: products.map((product) => {
-        const rating = ratingFor(product.id);
+        const rating = averageOf(reviewsWith(ownReviews, product.id));
         return rating === null ? "Sin reseñas" : `${rating.toFixed(1)} de 5`;
       }),
     },
@@ -54,6 +55,7 @@ function buildRows(products: Product[]): Row[] {
 
 export default function Page() {
   const { ids } = useCompare();
+  const ownReviews = useOwnReviews();
   const products = ids
     .map((id) => getProduct(id))
     .filter((product): product is Product => product !== undefined);
@@ -73,7 +75,7 @@ export default function Page() {
     );
   }
 
-  const rows = buildRows(products);
+  const rows = buildRows(products, ownReviews);
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">

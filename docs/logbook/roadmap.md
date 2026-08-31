@@ -15,12 +15,6 @@ que permita recorrer las experiencias de usuario completas. Todo en `apps/web`. 
 tareas están ordenadas para que el camino del cliente (buscar → ver → comprar) quede
 recorrible lo antes posible; el resto se cuelga de ahí.
 
-## [RM-010] Perfil de proveedor y reseñas — HU-10, HU-11, HU-12
-- **Objetivo:** la vista pública del proveedor y el sistema de reseñas.
-- **Hecho cuando:** el perfil muestra datos, oferta publicada y valoración promedio; se
-  puede leer reseñas y registrar una desde una compra hecha.
-- **Fecha:** 2026-08-31 · **Estado:** Abierto
-
 ## [RM-011] Solicitud de cotización — HU-08
 - **Objetivo:** el lado cliente del flujo de cotizaciones.
 - **Hecho cuando:** desde un producto o servicio se envía una solicitud con cantidad y
