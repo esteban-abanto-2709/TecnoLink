@@ -14,6 +14,7 @@ const sections = [
       { href: "/checkout", label: "Compra simulada" },
       { href: "/orders", label: "Mis compras" },
       { href: "/quotes", label: "Mis cotizaciones" },
+      { href: "/quotes/new", label: "Solicitar cotización" },
       { href: "/points", label: "Mis puntos" },
     ],
   },

@@ -15,13 +15,6 @@ que permita recorrer las experiencias de usuario completas. Todo en `apps/web`. 
 tareas están ordenadas para que el camino del cliente (buscar → ver → comprar) quede
 recorrible lo antes posible; el resto se cuelga de ahí.
 
-## [RM-006] Detalle de producto y de servicio — HU-05, HU-06
-- **Objetivo:** las dos fichas de detalle, que comparten estructura pero no contenido:
-  el producto muestra especificaciones, el servicio muestra alcance y cobertura.
-- **Hecho cuando:** ambas muestran datos, proveedor, reseñas y las acciones de comprar
-  y cotizar.
-- **Fecha:** 2026-08-31 · **Estado:** Abierto
-
 ## [RM-007] Compra simulada — carrito, checkout y confirmación
 - **Objetivo:** cerrar el recorrido principal del cliente de punta a punta.
 - **Hecho cuando:** se agrega al carrito, se completa el checkout y se llega a una

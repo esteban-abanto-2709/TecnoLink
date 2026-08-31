@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-006] Detalle de producto y de servicio (2026-08-31 12:57)
+Fichas de producto (especificaciones) y de servicio (modalidad de cobro y cobertura), con
+proveedor, reseñas y acciones de comprar, cotizar y comparar. Un id inexistente da 404.
+
 ## [RM-005] Resultados y filtros (2026-08-31 12:54)
 Filtros de tipo, categoría y rango de precio en `/search`, resueltos con enlaces: cada
 opción es una URL compartible y el servidor filtra. Se combinan entre sí y con el término.

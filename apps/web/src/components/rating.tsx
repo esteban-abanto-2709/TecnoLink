@@ -1,6 +1,34 @@
 import { Star } from "lucide-react";
 
 import { ratingFor, reviewsFor } from "@/data/catalog";
+import { cn } from "@/lib/utils";
+
+type StarsProps = {
+  value: number;
+  className?: string;
+};
+
+export function Stars({ value, className }: StarsProps) {
+  return (
+    <span
+      className={cn("flex items-center gap-0.5", className)}
+      aria-label={`${value} de 5 estrellas`}
+    >
+      {[1, 2, 3, 4, 5].map((position) => (
+        <Star
+          key={position}
+          aria-hidden
+          className={cn(
+            "size-4",
+            position <= Math.round(value)
+              ? "fill-accent text-accent"
+              : "text-border"
+          )}
+        />
+      ))}
+    </span>
+  );
+}
 
 type RatingProps = {
   targetId: string;
