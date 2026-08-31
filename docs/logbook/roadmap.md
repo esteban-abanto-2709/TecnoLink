@@ -15,15 +15,6 @@ que permita recorrer las experiencias de usuario completas. Todo en `apps/web`. 
 tareas están ordenadas para que el camino del cliente (buscar → ver → comprar) quede
 recorrible lo antes posible; el resto se cuelga de ahí.
 
-## [RM-001] Instalar shadcn/ui y fijar el sistema visual base
-- **Objetivo:** tener el sistema de componentes instalado y los tokens de marca
-  definidos (color, tipografía, radios, modo claro/oscuro), para que ninguna pantalla
-  invente su propio estilo.
-- **Hecho cuando:** `shadcn init` corrido sobre Tailwind v4, `components.json` en el
-  repo, tokens en `globals.css` y una página de muestra que renderiza botón, input,
-  card y diálogo con el tema aplicado.
-- **Fecha:** 2026-08-31 · **Estado:** Abierto
-
 ## [RM-002] Shell de navegación y mapa de rutas
 - **Objetivo:** el esqueleto navegable: header con buscador y acceso, footer, y todas
   las rutas del prototipo existiendo aunque estén vacías.
