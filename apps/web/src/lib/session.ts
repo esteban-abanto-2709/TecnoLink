@@ -8,6 +8,7 @@ export type Session = {
   name: string;
   email: string;
   role: Role;
+  supplierId?: string;
 };
 
 export const roleLabels: Record<Role, string> = {
@@ -70,6 +71,10 @@ function getServerSnapshot(): Session | null {
 
 export function useSession(): Session | null {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+}
+
+export function useActiveSupplierId(): string {
+  return useSession()?.supplierId ?? DEMO_SUPPLIER_ID;
 }
 
 export function signIn(next: Session) {

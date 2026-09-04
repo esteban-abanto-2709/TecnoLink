@@ -42,6 +42,7 @@ export default async function Page({ params }: PageProps<"/suppliers/[id]">) {
             <CalendarDays className="size-4" aria-hidden />
             En la plataforma desde {supplier.since}
           </span>
+          <span>RUC {supplier.ruc}</span>
           {supplier.verified ? (
             <span className="flex items-center gap-1.5 text-primary">
               <BadgeCheck className="size-4" aria-hidden />

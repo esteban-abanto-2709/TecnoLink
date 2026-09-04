@@ -16,9 +16,11 @@ import {
   signIn,
   type Role,
 } from "@/lib/session";
+import { useRegisteredSuppliers } from "@/lib/suppliers";
 
 export default function Page() {
   const router = useRouter();
+  const registered = useRegisteredSuppliers();
   const [role, setRole] = useState<Role>("client");
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -26,7 +28,12 @@ export default function Page() {
     const data = new FormData(event.currentTarget);
     const email = String(data.get("email") ?? "");
 
-    signIn({ name: nameFromEmail(email), email, role });
+    signIn({
+      name: nameFromEmail(email),
+      email,
+      role,
+      supplierId: role === "supplier" ? registered[0]?.id : undefined,
+    });
     router.push(roleHome[role]);
   }
 

@@ -13,6 +13,10 @@ export function normalizeText(value: string): string {
     .trim()
 }
 
+export function isValidRuc(value: string): boolean {
+  return /^(10|15|17|20)\d{9}$/.test(value.trim())
+}
+
 export function slugify(value: string): string {
   return normalizeText(value)
     .replace(/[^a-z0-9]+/g, "-")

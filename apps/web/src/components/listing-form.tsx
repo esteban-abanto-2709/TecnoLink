@@ -19,7 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { categories } from "@/data/catalog";
 import type { Product, Service, ServicePricing } from "@/data/types";
 import { createProduct, createService, editListing } from "@/lib/listings";
-import { DEMO_SUPPLIER_ID } from "@/lib/session";
+import { useActiveSupplierId } from "@/lib/session";
 
 const pricingOptions: { id: ServicePricing; label: string }[] = [
   { id: "fixed", label: "Precio cerrado" },
@@ -43,6 +43,7 @@ export function ListingForm({ product, service }: ListingFormProps) {
   const [pricing, setPricing] = useState<ServicePricing>(
     service?.pricing ?? "fixed"
   );
+  const supplierId = useActiveSupplierId();
   const [saved, setSaved] = useState("");
   const [error, setError] = useState("");
 
@@ -99,7 +100,7 @@ export function ListingForm({ product, service }: ListingFormProps) {
         name,
         brand,
         categoryId,
-        supplierId: DEMO_SUPPLIER_ID,
+        supplierId,
         price,
         description,
       });
@@ -107,7 +108,7 @@ export function ListingForm({ product, service }: ListingFormProps) {
       createService({
         name,
         categoryId,
-        supplierId: DEMO_SUPPLIER_ID,
+        supplierId,
         price,
         pricing,
         description,

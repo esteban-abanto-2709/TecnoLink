@@ -12,6 +12,11 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-018] Registro diferenciado para proveedores (2026-09-04 12:31)
+El registro cambia de campos según el tipo de cuenta: el proveedor carga razón social,
+RUC, distrito, teléfono y descripción, y esa cuenta pasa a ser el proveedor activo de
+todas las pantallas de `/supplier`, que antes apuntaban a uno fijo.
+
 ## [RM-017] Puntos por publicar una reseña (2026-09-04 11:46)
 Publicar una reseña suma 50 puntos, derivados del store de reseñas en vez de guardarse
 como movimiento aparte. La regla se anuncia antes de escribir y se confirma después.

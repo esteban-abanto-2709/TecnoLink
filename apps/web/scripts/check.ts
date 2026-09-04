@@ -19,6 +19,7 @@ import {
   suppliers,
 } from "../src/data/catalog.ts";
 import { formatDate, formatServicePrice } from "../src/lib/format.ts";
+import { isValidRuc } from "../src/lib/utils.ts";
 
 function assertUniqueIds(label: string, items: { id: string }[]) {
   const ids = items.map((item) => item.id);
@@ -37,6 +38,19 @@ assertUniqueIds("reviews", reviews);
 assertUniqueIds("quotes", quotes);
 assertUniqueIds("orders", orders);
 assertUniqueIds("pointsMovements", pointsMovements);
+
+for (const supplier of suppliers) {
+  assert.ok(
+    isValidRuc(supplier.ruc),
+    `${supplier.id}: el RUC "${supplier.ruc}" no tiene 11 dígitos ni un prefijo válido`
+  );
+  assert.ok(supplier.phone.trim() !== "", `${supplier.id}: falta el teléfono`);
+}
+assert.equal(
+  new Set(suppliers.map((supplier) => supplier.ruc)).size,
+  suppliers.length,
+  "hay dos proveedores con el mismo RUC"
+);
 
 const itemIds = new Set([
   ...products.map((product) => product.id),

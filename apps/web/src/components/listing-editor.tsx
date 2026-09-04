@@ -3,14 +3,14 @@
 import { ButtonLink } from "@/components/button-link";
 import { ListingForm } from "@/components/listing-form";
 import { useListing } from "@/lib/listings";
-import { DEMO_SUPPLIER_ID } from "@/lib/session";
+import { useActiveSupplierId } from "@/lib/session";
 
 type ListingEditorProps = {
   id: string;
 };
 
 export function ListingEditor({ id }: ListingEditorProps) {
-  const listing = useListing(DEMO_SUPPLIER_ID, id);
+  const listing = useListing(useActiveSupplierId(), id);
 
   if (!listing) {
     return (

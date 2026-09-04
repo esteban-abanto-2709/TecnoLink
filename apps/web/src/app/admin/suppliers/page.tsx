@@ -11,6 +11,7 @@ import {
   type SupplierStatus,
 } from "@/lib/admin";
 import { formatDate } from "@/lib/format";
+import { isMockSupplier } from "@/lib/suppliers";
 
 const statusVariants: Record<
   SupplierStatus,
@@ -41,15 +42,22 @@ export default function Page() {
           >
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="min-w-0">
-                <Link
-                  href={`/suppliers/${row.supplier.id}`}
-                  className="font-medium hover:text-primary"
-                >
-                  {row.supplier.name}
-                </Link>
+                {isMockSupplier(row.supplier.id) ? (
+                  <Link
+                    href={`/suppliers/${row.supplier.id}`}
+                    className="font-medium hover:text-primary"
+                  >
+                    {row.supplier.name}
+                  </Link>
+                ) : (
+                  <p className="font-medium">{row.supplier.name}</p>
+                )}
                 <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
                   <MapPin className="size-3.5" aria-hidden />
                   {row.supplier.district} · Desde {row.supplier.since}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  RUC {row.supplier.ruc} · {row.supplier.phone}
                 </p>
               </div>
 

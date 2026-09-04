@@ -6,11 +6,12 @@ import { Inbox } from "lucide-react";
 import { ButtonLink } from "@/components/button-link";
 import { QuoteAnswerDialog } from "@/components/quote-answer-dialog";
 import { Badge } from "@/components/ui/badge";
-import { getProduct, getService, getSupplier } from "@/data/catalog";
+import { getProduct, getService } from "@/data/catalog";
 import type { QuoteStatus } from "@/data/types";
 import { formatDate, formatPrice } from "@/lib/format";
 import { quoteStatusLabels, useQuotes } from "@/lib/quotes";
-import { DEMO_SUPPLIER_ID } from "@/lib/session";
+import { useActiveSupplierId } from "@/lib/session";
+import { useSupplierById } from "@/lib/suppliers";
 
 const statusVariants: Record<
   QuoteStatus,
@@ -22,9 +23,10 @@ const statusVariants: Record<
 };
 
 export default function Page() {
-  const supplier = getSupplier(DEMO_SUPPLIER_ID);
+  const supplierId = useActiveSupplierId();
+  const supplier = useSupplierById(supplierId);
   const quotes = useQuotes().filter(
-    (quote) => quote.supplierId === DEMO_SUPPLIER_ID
+    (quote) => quote.supplierId === supplierId
   );
   const pending = quotes.filter((quote) => quote.status === "sent");
 

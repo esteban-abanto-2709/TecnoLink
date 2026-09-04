@@ -2,8 +2,9 @@
 
 import { useSyncExternalStore } from "react";
 
-import { categories as mockCategories, suppliers } from "@/data/catalog";
+import { categories as mockCategories } from "@/data/catalog";
 import type { Category, CategoryKind } from "@/data/types";
+import { useAllSuppliers } from "@/lib/suppliers";
 import { normalizeText, slugify } from "@/lib/utils";
 
 export type SupplierStatus = "verified" | "pending" | "suspended";
@@ -149,6 +150,7 @@ export function useAdminSuppliers() {
     getSnapshot,
     getServerSnapshot
   );
+  const suppliers = useAllSuppliers();
 
   return suppliers.map((supplier) => {
     const review = current.supplierReviews[supplier.id];

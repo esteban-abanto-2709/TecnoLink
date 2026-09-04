@@ -9,6 +9,8 @@ export type Category = {
 export type Supplier = {
   id: string;
   name: string;
+  ruc: string;
+  phone: string;
   district: string;
   description: string;
   since: number;

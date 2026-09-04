@@ -9,10 +9,11 @@ import { Badge } from "@/components/ui/badge";
 import { getCategory } from "@/data/catalog";
 import { formatPrice, formatServicePrice } from "@/lib/format";
 import { useSupplierListings } from "@/lib/listings";
-import { DEMO_SUPPLIER_ID } from "@/lib/session";
+import { useActiveSupplierId } from "@/lib/session";
 
 export default function Page() {
-  const { products, services } = useSupplierListings(DEMO_SUPPLIER_ID);
+  const supplierId = useActiveSupplierId();
+  const { products, services } = useSupplierListings(supplierId);
 
   const rows = [
     ...products.map((product) => ({

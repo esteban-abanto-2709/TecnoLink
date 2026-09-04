@@ -28,6 +28,8 @@ export const suppliers: Supplier[] = [
   {
     id: "techperu",
     name: "Importaciones TechPerú",
+    ruc: "20553417802",
+    phone: "(01) 562 4471",
     district: "San Miguel",
     description:
       "Importador de equipos de cómputo con tienda física y garantía propia de 12 meses.",
@@ -37,6 +39,8 @@ export const suppliers: Supplier[] = [
   {
     id: "compuzone",
     name: "CompuZone",
+    ruc: "20481936275",
+    phone: "(01) 428 9013",
     district: "Cercado de Lima",
     description:
       "Venta de componentes y armado de equipos a medida en la galería Wilson.",
@@ -46,6 +50,8 @@ export const suppliers: Supplier[] = [
   {
     id: "digitalstore",
     name: "Digital Store Perú",
+    ruc: "20604158293",
+    phone: "987 314 220",
     district: "Miraflores",
     description:
       "Celulares y accesorios liberados, con planes de cambio y reparación.",
@@ -55,6 +61,8 @@ export const suppliers: Supplier[] = [
   {
     id: "redesandinas",
     name: "Redes Andinas",
+    ruc: "20512873604",
+    phone: "(01) 476 8852",
     district: "San Borja",
     description:
       "Cableado estructurado, cámaras y redes para oficinas y locales comerciales.",
@@ -64,6 +72,8 @@ export const suppliers: Supplier[] = [
   {
     id: "soportelima",
     name: "Soporte Lima",
+    ruc: "10457821936",
+    phone: "961 208 447",
     district: "Santiago de Surco",
     description:
       "Servicio técnico a domicilio para equipos de cómputo y periféricos.",

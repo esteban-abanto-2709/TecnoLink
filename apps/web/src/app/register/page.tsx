@@ -3,13 +3,17 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
+import { Info } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
 import { roleHome, signIn, type Role } from "@/lib/session";
+import { registerSupplier } from "@/lib/suppliers";
+import { isValidRuc } from "@/lib/utils";
 
 const accountTypes: { id: Role; label: string; description: string }[] = [
   {
@@ -30,11 +34,13 @@ export default function Page() {
   const [accepted, setAccepted] = useState(false);
   const [error, setError] = useState("");
 
+  const isSupplier = role === "supplier";
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const name = String(data.get("name") ?? "");
-    const email = String(data.get("email") ?? "");
+    const name = String(data.get("name") ?? "").trim();
+    const email = String(data.get("email") ?? "").trim();
     const password = String(data.get("password") ?? "");
     const confirmation = String(data.get("confirmation") ?? "");
 
@@ -48,23 +54,150 @@ export default function Page() {
       return;
     }
 
+    if (!isSupplier) {
+      setError("");
+      signIn({ name, email, role });
+      router.push(roleHome.client);
+      return;
+    }
+
+    const ruc = String(data.get("ruc") ?? "").trim();
+    const phone = String(data.get("phone") ?? "").trim();
+    const district = String(data.get("district") ?? "").trim();
+    const description = String(data.get("description") ?? "").trim();
+
+    if (!isValidRuc(ruc)) {
+      setError("El RUC debe tener 11 dígitos y empezar en 10, 15, 17 o 20.");
+      return;
+    }
+
+    if (district === "") {
+      setError("Indica el distrito donde opera tu negocio.");
+      return;
+    }
+
+    if (description.length < 30) {
+      setError(
+        "Describe tu negocio en al menos 30 caracteres: es lo que el cliente lee en tu perfil."
+      );
+      return;
+    }
+
     setError("");
-    signIn({ name, email, role });
-    router.push(roleHome[role]);
+    const supplier = registerSupplier({
+      name,
+      ruc,
+      phone,
+      district,
+      description,
+    });
+    signIn({ name, email, role, supplierId: supplier.id });
+    router.push(roleHome.supplier);
   }
 
   return (
     <main className="mx-auto w-full max-w-md flex-1 px-6 py-16">
       <h1 className="text-2xl font-semibold">Crear cuenta</h1>
       <p className="mt-2 text-muted-foreground">
-        Guarda tus datos para comprar y solicitar cotizaciones.
+        {isSupplier
+          ? "Registra tu negocio para publicar equipos y servicios."
+          : "Guarda tus datos para comprar y solicitar cotizaciones."}
       </p>
 
-      <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-        <div className="space-y-2">
-          <Label htmlFor="name">Nombre completo</Label>
-          <Input id="name" name="name" required autoComplete="name" />
+      <fieldset className="mt-8 space-y-2">
+        <legend className="text-sm font-medium">Tipo de cuenta</legend>
+        <RadioGroup
+          value={role}
+          onValueChange={(value) => {
+            setRole(value as Role);
+            setError("");
+          }}
+          className="gap-2"
+        >
+          {accountTypes.map((type) => (
+            <Label
+              key={type.id}
+              className="flex items-start gap-3 rounded-lg border border-border p-3"
+            >
+              <RadioGroupItem value={type.id} className="mt-0.5" />
+              <span>
+                {type.label}
+                <span className="block text-sm font-normal text-muted-foreground">
+                  {type.description}
+                </span>
+              </span>
+            </Label>
+          ))}
+        </RadioGroup>
+      </fieldset>
+
+      {isSupplier ? (
+        <div className="mt-6 flex items-start gap-2 rounded-lg border border-border bg-secondary/40 p-3 text-sm">
+          <Info
+            className="mt-0.5 size-4 shrink-0 text-muted-foreground"
+            aria-hidden
+          />
+          <p>
+            Tu cuenta entra como <strong>Por revisar</strong>. Un administrador
+            valida los datos antes de que aparezcas como proveedor verificado.
+          </p>
         </div>
+      ) : null}
+
+      <form onSubmit={handleSubmit} className="mt-6 space-y-6">
+        <div className="space-y-2">
+          <Label htmlFor="name">
+            {isSupplier ? "Razón social o nombre comercial" : "Nombre completo"}
+          </Label>
+          <Input
+            id="name"
+            name="name"
+            required
+            autoComplete={isSupplier ? "organization" : "name"}
+            placeholder={isSupplier ? "Importaciones TechPerú" : undefined}
+          />
+        </div>
+
+        {isSupplier ? (
+          <>
+            <div className="space-y-2">
+              <Label htmlFor="ruc">RUC</Label>
+              <Input
+                id="ruc"
+                name="ruc"
+                inputMode="numeric"
+                maxLength={11}
+                required
+                placeholder="20553417802"
+              />
+              <p className="text-xs text-muted-foreground">
+                11 dígitos, tal como figura en SUNAT.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="district">Distrito</Label>
+              <Input
+                id="district"
+                name="district"
+                required
+                placeholder="San Miguel"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone">Teléfono de contacto</Label>
+              <Input
+                id="phone"
+                name="phone"
+                type="tel"
+                required
+                autoComplete="tel"
+                placeholder="(01) 562 4471"
+              />
+            </div>
+          </>
+        ) : null}
 
         <div className="space-y-2">
           <Label htmlFor="email">Correo electrónico</Label>
@@ -103,29 +236,20 @@ export default function Page() {
           />
         </div>
 
-        <fieldset className="space-y-2">
-          <legend className="text-sm font-medium">Tipo de cuenta</legend>
-          <RadioGroup
-            value={role}
-            onValueChange={(value) => setRole(value as Role)}
-            className="gap-2"
-          >
-            {accountTypes.map((type) => (
-              <Label
-                key={type.id}
-                className="flex items-start gap-3 rounded-lg border border-border p-3"
-              >
-                <RadioGroupItem value={type.id} className="mt-0.5" />
-                <span>
-                  {type.label}
-                  <span className="block text-sm font-normal text-muted-foreground">
-                    {type.description}
-                  </span>
-                </span>
-              </Label>
-            ))}
-          </RadioGroup>
-        </fieldset>
+        {isSupplier ? (
+          <div className="space-y-2">
+            <Label htmlFor="description">Descripción del negocio</Label>
+            <Textarea
+              id="description"
+              name="description"
+              rows={3}
+              placeholder="Qué vendes o qué servicios ofreces, desde cuándo y qué te diferencia."
+            />
+            <p className="text-xs text-muted-foreground">
+              Es el texto que los clientes leen en tu perfil público.
+            </p>
+          </div>
+        ) : null}
 
         <Label className="flex items-start gap-3">
           <Checkbox
@@ -146,7 +270,7 @@ export default function Page() {
         ) : null}
 
         <Button type="submit" className="w-full">
-          Crear cuenta
+          {isSupplier ? "Registrar mi negocio" : "Crear cuenta"}
         </Button>
       </form>
 

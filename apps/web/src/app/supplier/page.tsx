@@ -1,27 +1,24 @@
 "use client";
 
-import { BadgeCheck, FileText, Inbox, Package } from "lucide-react";
+import { BadgeCheck, Clock, FileText, Inbox, Package } from "lucide-react";
 
 import { ButtonLink } from "@/components/button-link";
-import {
-  getSupplier,
-  productsBySupplier,
-  servicesBySupplier,
-} from "@/data/catalog";
+import { useSupplierListings } from "@/lib/listings";
 import { useQuotes } from "@/lib/quotes";
-import { DEMO_SUPPLIER_ID } from "@/lib/session";
+import { useActiveSupplierId } from "@/lib/session";
+import { isMockSupplier, useSupplierById } from "@/lib/suppliers";
 
 export default function Page() {
-  const supplier = getSupplier(DEMO_SUPPLIER_ID);
+  const supplierId = useActiveSupplierId();
+  const supplier = useSupplierById(supplierId);
+  const { products, services } = useSupplierListings(supplierId);
   const quotes = useQuotes().filter(
-    (quote) => quote.supplierId === DEMO_SUPPLIER_ID
+    (quote) => quote.supplierId === supplierId
   );
 
   if (!supplier) return null;
 
-  const listings =
-    productsBySupplier(supplier.id).length +
-    servicesBySupplier(supplier.id).length;
+  const listings = products.length + services.length;
   const pending = quotes.filter((quote) => quote.status === "sent").length;
   const answered = quotes.filter((quote) => quote.status === "answered").length;
 
@@ -42,7 +39,15 @@ export default function Page() {
               <BadgeCheck className="size-4" aria-hidden />
               Verificado
             </span>
-          ) : null}
+          ) : (
+            <span className="flex items-center gap-1 text-sm">
+              <Clock className="size-4" aria-hidden />
+              Por revisar
+            </span>
+          )}
+        </p>
+        <p className="text-sm text-muted-foreground">
+          RUC {supplier.ruc} · {supplier.phone}
         </p>
       </header>
 
@@ -68,9 +73,11 @@ export default function Page() {
         <ButtonLink href="/supplier/listings" variant="outline">
           Mis publicaciones
         </ButtonLink>
-        <ButtonLink href={`/suppliers/${supplier.id}`} variant="ghost">
-          Ver mi perfil público
-        </ButtonLink>
+        {isMockSupplier(supplier.id) ? (
+          <ButtonLink href={`/suppliers/${supplier.id}`} variant="ghost">
+            Ver mi perfil público
+          </ButtonLink>
+        ) : null}
       </div>
     </main>
   );
