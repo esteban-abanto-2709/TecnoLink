@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { benefits } from "@/data/catalog";
 import { formatDate } from "@/lib/format";
-import { redeemBenefit, usePoints } from "@/lib/points";
+import { REVIEW_POINTS, redeemBenefit, usePoints } from "@/lib/points";
 
 export default function Page() {
   const { movements, balance, usedBenefits } = usePoints();
@@ -25,8 +25,9 @@ export default function Page() {
         <p className="text-sm text-muted-foreground">Saldo disponible</p>
         <p className="font-heading text-4xl font-semibold">{balance}</p>
         <p className="mt-2 text-sm text-muted-foreground">
-          Ganas 1 punto por cada S/ 10 de compra. Los puntos no vencen mientras
-          tu cuenta esté activa.
+          Ganas 1 punto por cada S/ 10 de compra y {REVIEW_POINTS} puntos por
+          cada reseña que publiques. Los puntos no vencen mientras tu cuenta
+          esté activa.
         </p>
       </div>
 

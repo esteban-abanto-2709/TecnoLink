@@ -2,9 +2,18 @@
 
 import { useSyncExternalStore } from "react";
 
-import { benefits, pointsMovements as mockMovements } from "@/data/catalog";
+import {
+  benefits,
+  getProduct,
+  getService,
+  getSupplier,
+  pointsMovements as mockMovements,
+} from "@/data/catalog";
 import type { PointsMovement } from "@/data/types";
 import { useOwnOrders } from "@/lib/orders";
+import { useOwnReviews } from "@/lib/reviews";
+
+export const REVIEW_POINTS = 50;
 
 const STORAGE_KEY = "tecnolink-redemptions";
 const EMPTY: PointsMovement[] = [];
@@ -68,9 +77,19 @@ export function redeemBenefit(benefitId: string) {
   ]);
 }
 
+function reviewedName(targetId: string): string {
+  return (
+    getProduct(targetId)?.name ??
+    getService(targetId)?.name ??
+    getSupplier(targetId)?.name ??
+    targetId
+  );
+}
+
 export function usePoints() {
   const own = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const orders = useOwnOrders();
+  const reviews = useOwnReviews();
 
   const fromOrders: PointsMovement[] = orders.map((order) => ({
     id: `pts-${order.id}`,
@@ -79,9 +98,19 @@ export function usePoints() {
     points: order.pointsEarned,
   }));
 
-  const movements = [...own, ...fromOrders, ...mockMovements].sort((a, b) =>
-    b.date.localeCompare(a.date)
-  );
+  const fromReviews: PointsMovement[] = reviews.map((review) => ({
+    id: `pts-${review.id}`,
+    date: review.date,
+    description: `Reseña de ${reviewedName(review.targetId)}`,
+    points: REVIEW_POINTS,
+  }));
+
+  const movements = [
+    ...own,
+    ...fromOrders,
+    ...fromReviews,
+    ...mockMovements,
+  ].sort((a, b) => b.date.localeCompare(a.date));
 
   const balance = movements.reduce(
     (sum, movement) => sum + movement.points,

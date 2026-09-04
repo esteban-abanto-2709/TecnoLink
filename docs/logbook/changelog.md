@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-017] Puntos por publicar una reseña (2026-09-04 11:46)
+Publicar una reseña suma 50 puntos, derivados del store de reseñas en vez de guardarse
+como movimiento aparte. La regla se anuncia antes de escribir y se confirma después.
+
 ## [RM-016] Pasada responsive (2026-08-31 14:56)
 Barrido de las 23 pantallas entre 320 y 1280 px: sin desbordes horizontales. Se corrigió
 el header en pantallas chicas y se rehizo la fila del carrito, y los controles de cantidad

@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { REVIEW_POINTS } from "@/lib/points";
 import { addReview, useReviewsFor } from "@/lib/reviews";
 import { useSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
@@ -35,7 +36,9 @@ export function ReviewDialog({ targetId, targetName }: ReviewDialogProps) {
 
   if (reviewed) {
     return (
-      <span className="text-sm text-muted-foreground">Reseña registrada</span>
+      <span className="text-sm text-muted-foreground">
+        Reseña registrada · +{REVIEW_POINTS} puntos
+      </span>
     );
   }
 
@@ -74,7 +77,7 @@ export function ReviewDialog({ targetId, targetName }: ReviewDialogProps) {
             <DialogTitle>Reseñar {targetName}</DialogTitle>
             <DialogDescription>
               Cuenta cómo te fue con la compra. Tu reseña queda asociada a este
-              pedido.
+              pedido y te suma {REVIEW_POINTS} puntos.
             </DialogDescription>
           </DialogHeader>
 

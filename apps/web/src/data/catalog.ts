@@ -637,7 +637,7 @@ export const pointsMovements: PointsMovement[] = [
   {
     id: "pts-004",
     date: "2026-06-01",
-    description: "Bono por primera reseña publicada",
+    description: "Bono por reseña publicada",
     points: 50,
   },
 ];

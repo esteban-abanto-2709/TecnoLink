@@ -13,6 +13,18 @@ changelog y se borra de aquí.
 
 ---
 
+## [TD-004] El informe dice que los puntos salen solo de las compras
+- **Ubicación:** `docs/originales/informe-marcos-de-desarrollo-web.docx`, objetivo
+  específico 6 y sección 10
+- **Riesgo:** 4/10
+- **Problema:** RM-017 hace que publicar una reseña sume 50 puntos, pero el informe
+  declara un programa de fidelización que otorga puntos "a partir de las compras
+  realizadas". La aplicación entrega más de lo que el documento promete.
+- **Impacto futuro:** es un entregable calificado; la incoherencia entre el documento y
+  la demo salta apenas alguien abre las dos cosas a la vez. Lo corrige el grupo en el
+  `.docx`, y el `.md` derivado se regenera en el mismo commit.
+- **Fecha:** 2026-09-04 · **Estado:** Abierto
+
 ## [TD-003] Los controles táctiles quedan por debajo de 44 px
 - **Ubicación:** `apps/web/src/components/ui/button.tsx`
 - **Riesgo:** 3/10
