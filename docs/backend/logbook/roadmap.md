@@ -31,11 +31,11 @@ Criterios de toda la API:
 ## [RM-001] Esqueleto hexagonal y piezas transversales
 - **Objetivo:** dejar la base sobre la que se cuelgan todos los módulos: paquete raíz único con
   `shared/` (manejo de errores, respuesta de error común), CORS para `http://localhost:3000` y el
-  dominio de Vercel (`https://tecno-link.vercel.app`), y arranque sin base de datos mientras dure el APF2
-  (resuelve TD-001).
+  dominio de Vercel (`https://tecno-link.vercel.app`), Swagger UI para probar los endpoints, y arranque
+  sin base de datos mientras dure el APF2 (hecho en TD-001).
   - Errores en JSON: `404` recurso inexistente · `400` validación (`{"errors": [...]}`) · `409` conflicto (duplicados, canje repetido).
 - **Hecho cuando:** `./mvnw test` pasa, la app arranca sin MySQL y una ruta inexistente bajo `/api/v1` responde 404 en JSON.
-- **Fecha:** 2026-10-02 · **Estado:** Abierto
+- **Fecha:** 2026-10-02 · **Estado:** En progreso (2026-10-02)
 
 ## [RM-002] Catálogo: categorías, productos, servicios y búsqueda
 - **Objetivo:** reemplazar las lecturas de `catalog.ts` (`categories`, `getCategory`, `getProduct`,

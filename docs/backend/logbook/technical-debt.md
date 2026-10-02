@@ -13,13 +13,6 @@ changelog y se borra de aquí.
 
 ---
 
-## [TD-001] La app no arranca: JPA y MySQL sin datasource
-- **Ubicación:** `tecnolink/src/main/resources/application.properties:1`, `tecnolink/pom.xml`
-- **Riesgo:** 8/10
-- **Problema:** el `pom.xml` trae `spring-boot-starter-data-jpa` y `mysql-connector-j`, pero `application.properties` solo tiene `spring.application.name`. Al arrancar falla con `Failed to configure a DataSource`, y el test `contextLoads` también.
-- **Impacto futuro:** nadie del grupo puede levantar la API ni correr tests hasta configurar una BD, y eso bloquea el APF2, que se trabaja con datos en memoria.
-- **Fecha:** 2026-10-02 · **Estado:** Abierto
-
 ## [TD-002] Estructura del repo distinta a la que pide la rúbrica
 - **Ubicación:** `tecnolink/` (raíz del repo), `tecnolink/src/main/java/com/tecnolink/tecnolink/`
 - **Riesgo:** 4/10
