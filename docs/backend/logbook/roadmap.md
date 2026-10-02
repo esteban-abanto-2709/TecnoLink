@@ -21,21 +21,16 @@ Criterios de toda la API:
   `infrastructure/` e `interfaces/rest/`. Ver `marcos-de-desarrollo-web/apuntes/estructura-backend.md`.
 - **APF2 (semana 8):** datos sintéticos en repositorios en memoria, cargados con el mismo contenido de `catalog.ts`.
   **APF3 (semana 12):** MySQL con Spring Data. **Final (semana 18):** Spring Security.
-- Hasta que exista la autenticación (RM-010), el usuario actual es uno demo fijo, igual que
-  `DEMO_SUPPLIER_ID = "techperu"` en el front.
+- **Solo lo que enseña el curso.** Nada de librerías ni clases que no salgan en las clases o labs
+  (sin Swagger, sin configuración extra). Las pruebas se hacen con el navegador, Postman o el cliente HTTP de IntelliJ.
+- Errores como en el lab de la semana 6: `NotFoundException` → `404 {"error": ...}`, validación →
+  `400 {"errors": [...]}`, reglas de dominio (`IllegalArgumentException`) → `400 {"error": ...}`.
+- Hasta que exista la autenticación (RM-010), el usuario que hace la petición se decide en cada módulo
+  cuando lo necesite (lo más simple: un parámetro). No hay usuario demo compartido.
+- CORS se agrega al conectar el front, con `@CrossOrigin` en los controllers.
 - Se quedan en el cliente (`localStorage`), sin endpoint: **carrito** (`lib/cart.ts`), **comparador**
   (`lib/compare.ts`, solo guarda ids) y el cambio de rol del menú (`switchRole`, propio del prototipo).
-- Decisión pendiente antes de RM-002: el front usa ids **string tipo slug** (`"laptops"`, `"techperu"`) y el
-  profesor usa `Long` IDENTITY. O se exponen los slugs como id, o se agrega `Long id` interno con el slug como `code`.
-
-## [RM-001] Esqueleto hexagonal y piezas transversales
-- **Objetivo:** dejar la base sobre la que se cuelgan todos los módulos: paquete raíz único con
-  `shared/` (manejo de errores, respuesta de error común), CORS para `http://localhost:3000` y el
-  dominio de Vercel (`https://tecno-link.vercel.app`), Swagger UI para probar los endpoints, y arranque
-  sin base de datos mientras dure el APF2 (hecho en TD-001).
-  - Errores en JSON: `404` recurso inexistente · `400` validación (`{"errors": [...]}`) · `409` conflicto (duplicados, canje repetido).
-- **Hecho cuando:** `./mvnw test` pasa, la app arranca sin MySQL y una ruta inexistente bajo `/api/v1` responde 404 en JSON.
-- **Fecha:** 2026-10-02 · **Estado:** En progreso (2026-10-02)
+- Ids: se exponen los mismos ids **string tipo slug** del front (`"laptops"`, `"techperu"`), para no tocar el front.
 
 ## [RM-002] Catálogo: categorías, productos, servicios y búsqueda
 - **Objetivo:** reemplazar las lecturas de `catalog.ts` (`categories`, `getCategory`, `getProduct`,
@@ -77,7 +72,7 @@ Criterios de toda la API:
   | GET | `/api/v1/reviews?targetId={id}` | `{ reviews: Review[], average: number \| null }`, con el promedio redondeado a 1 decimal |
   | POST | `/api/v1/reviews` | `{ targetId, rating, comment }` → `201 Review`. El autor es el usuario actual |
 
-  Regla: una reseña por usuario y por destino (`409` si repite). Publicar una reseña suma **50 puntos** (`REVIEW_POINTS`, ver RM-007).
+  Regla: una reseña por usuario y por destino (`400` si repite). Publicar una reseña suma **50 puntos** (`REVIEW_POINTS`, ver RM-007).
 - **Hecho cuando:** una reseña creada aparece en el GET de su destino, el promedio cambia y no se puede reseñar dos veces lo mismo.
 - **Fecha:** 2026-10-02 · **Estado:** Abierto
 
@@ -91,7 +86,7 @@ Criterios de toda la API:
   | GET | `/api/v1/suppliers/{id}/quotes` | `Quote[]` recibidas por el proveedor |
   | POST | `/api/v1/quotes/{id}/answer` | `{ price, validUntil, conditions, notes }` → `Quote` con `status: "answered"` y `answer` |
 
-  `status` ∈ `sent | answered | expired`. Una cotización respondida no se vuelve a responder (`409`).
+  `status` ∈ `sent | answered | expired`. Una cotización respondida no se vuelve a responder (`400`).
 - **Hecho cuando:** el flujo completo (el cliente pide, el proveedor la ve en su bandeja y responde, el cliente ve la respuesta) funciona solo con la API.
 - **Fecha:** 2026-10-02 · **Estado:** Abierto
 
@@ -117,7 +112,7 @@ Criterios de toda la API:
   |---|---|---|
   | GET | `/api/v1/benefits` | `Benefit[]` (`id, name, description, cost`) |
   | GET | `/api/v1/points` | `{ balance, movements: PointsMovement[], usedBenefits: string[] }`, con los movimientos del más reciente al más antiguo |
-  | POST | `/api/v1/points/redemptions` | `{ benefitId }` → `201 PointsMovement`. `400` si no alcanza el saldo y `409` si ese beneficio ya se canjeó |
+  | POST | `/api/v1/points/redemptions` | `{ benefitId }` → `201 PointsMovement`. `400` si no alcanza el saldo o si ese beneficio ya se canjeó |
 - **Hecho cuando:** comprar y reseñar suben el saldo, canjear lo baja, y el saldo coincide con la suma de los movimientos.
 - **Fecha:** 2026-10-02 · **Estado:** Abierto
 
@@ -144,7 +139,7 @@ Criterios de toda la API:
   | Método | Ruta | Body / Respuesta |
   |---|---|---|
   | GET | `/api/v1/admin/categories` | `[{ id, name, kind, active }]`, incluye las inactivas |
-  | POST | `/api/v1/admin/categories` | `{ name, kind }` → `201`. `409` si el nombre ya existe (sin tildes ni mayúsculas) |
+  | POST | `/api/v1/admin/categories` | `{ name, kind }` → `201`. `400` si el nombre ya existe (sin tildes ni mayúsculas) |
   | PATCH | `/api/v1/admin/categories/{id}` | `{ name }` para renombrar (misma regla de duplicado) |
   | PATCH | `/api/v1/admin/categories/{id}/status` | `{ active }` para activar o desactivar |
   | GET | `/api/v1/admin/suppliers` | `[{ supplier, status, note, reviewedOn }]` |
@@ -156,7 +151,7 @@ Criterios de toda la API:
 - **Fecha:** 2026-10-02 · **Estado:** Abierto
 
 ## [RM-010] Registro e inicio de sesión
-- **Objetivo:** reemplazar `signIn` y `registerSupplier` (`/login`, `/register`) y dejar de usar el usuario demo fijo.
+- **Objetivo:** reemplazar `signIn` y `registerSupplier` (`/login`, `/register`) y resolver quién hace cada petición.
 
   | Método | Ruta | Body / Respuesta |
   |---|---|---|
