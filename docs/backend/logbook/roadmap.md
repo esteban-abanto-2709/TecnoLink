@@ -46,7 +46,8 @@ Criterios de toda la API:
   | GET | `/api/v1/catalog?query=&categoryId=&kind=&minPrice=&maxPrice=` | `CatalogItem[]` |
 
   La búsqueda replica `searchCatalog`: ignora tildes y mayúsculas, todas las palabras deben coincidir por
-  prefijo contra nombre, descripción, marca, categoría y proveedor.
+  prefijo contra nombre, descripción, marca, categoría y proveedor. El nombre del proveedor se suma a la
+  búsqueda cuando exista el módulo `suppliers` (RM-003); mientras tanto busca en los otros cuatro campos.
   Los enums van en mayúsculas, como los del profesor: `kind` ∈ `PRODUCT | SERVICE` y `pricing` ∈ `FIXED | FROM | HOURLY`.
   La capa `src/data` del front los pasa a minúsculas al conectarse.
 - **Hecho cuando:** cada endpoint devuelve los mismos datos que `catalog.ts` para los ids del mock, y un id inexistente da 404.
