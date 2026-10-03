@@ -3,6 +3,7 @@ package com.tecnolink.tecnolink.suppliers.application;
 import com.tecnolink.tecnolink.catalog.application.CatalogService;
 import com.tecnolink.tecnolink.catalog.domain.model.aggregates.Product;
 import com.tecnolink.tecnolink.catalog.domain.model.aggregates.TechService;
+import com.tecnolink.tecnolink.catalog.domain.model.enums.ServicePricing;
 import com.tecnolink.tecnolink.shared.domain.exceptions.NotFoundException;
 import com.tecnolink.tecnolink.suppliers.domain.model.aggregates.Supplier;
 import com.tecnolink.tecnolink.suppliers.domain.repositories.SupplierRepository;
@@ -38,5 +39,37 @@ public class SupplierService {
     public List<TechService> getServices(String supplierId) {
         getSupplier(supplierId);
         return catalogService.getServicesBySupplier(supplierId);
+    }
+
+    public Product publishProduct(String supplierId, String name, String brand, String categoryId,
+                                  double price, String description) {
+        getSupplier(supplierId);
+        return catalogService.createProduct(supplierId, name, brand, categoryId, price, description);
+    }
+
+    public Product editProduct(String supplierId, String productId, String name, String brand,
+                               double price, String description) {
+        getSupplier(supplierId);
+        Product product = catalogService.getProduct(productId);
+        if (!product.getSupplierId().equals(supplierId)) {
+            throw new NotFoundException("Product " + productId + " not found for supplier " + supplierId);
+        }
+        return catalogService.updateProduct(productId, name, brand, price, description);
+    }
+
+    public TechService publishService(String supplierId, String name, String categoryId, double price,
+                                      ServicePricing pricing, String description, String coverage) {
+        getSupplier(supplierId);
+        return catalogService.createService(supplierId, name, categoryId, price, pricing, description, coverage);
+    }
+
+    public TechService editService(String supplierId, String serviceId, String name, double price,
+                                   ServicePricing pricing, String description, String coverage) {
+        getSupplier(supplierId);
+        TechService service = catalogService.getService(serviceId);
+        if (!service.getSupplierId().equals(supplierId)) {
+            throw new NotFoundException("Service " + serviceId + " not found for supplier " + supplierId);
+        }
+        return catalogService.updateService(serviceId, name, price, pricing, description, coverage);
     }
 }

@@ -87,22 +87,6 @@ Criterios de toda la API:
 - **Hecho cuando:** comprar y reseñar suben el saldo, canjear lo baja, y el saldo coincide con la suma de los movimientos.
 - **Fecha:** 2026-10-02 · **Estado:** Abierto
 
-## [RM-008] Publicaciones del proveedor
-- **Objetivo:** reemplazar `lib/listings.ts` (`/supplier/listings`, `/supplier/listings/new`,
-  `/supplier/listings/[id]`, `ListingForm`, `ListingEditor`).
-
-  | Método | Ruta | Body |
-  |---|---|---|
-  | POST | `/api/v1/suppliers/{id}/products` | `{ name, brand, categoryId, price, description }` → `201 Product` (`specs` vacío) |
-  | POST | `/api/v1/suppliers/{id}/services` | `{ name, categoryId, price, pricing, description, coverage }` → `201 Service` |
-  | PUT | `/api/v1/products/{id}` | `{ name, price, description, brand }` |
-  | PUT | `/api/v1/services/{id}` | `{ name, price, description, coverage, pricing }` |
-
-  La lectura de lo publicado reutiliza los GET de RM-003. El id se genera como slug único del nombre, igual que `uniqueId()` en el front.
-  La categoría debe existir, estar activa y ser del mismo tipo (`product` o `service`).
-- **Hecho cuando:** un producto o servicio creado o editado aparece en el catálogo, en la búsqueda y en el perfil del proveedor.
-- **Fecha:** 2026-10-02 · **Estado:** Abierto
-
 ## [RM-009] Administración: categorías y verificación de proveedores
 - **Objetivo:** reemplazar `lib/admin.ts` (`/admin`, `/admin/categories`, `/admin/suppliers`,
   `CategoryDialog`, `SupplierReviewDialog`).

@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-008] Publicaciones del proveedor (2026-10-03 17:57)
+`POST /suppliers/{id}/products|services` y `PUT /suppliers/{id}/products|services/{itemId}`, con DTOs validados.
+El proveedor solo edita lo suyo (404 si no); las reglas de categoría las aplica `CatalogService`.
+
 ## [RM-003] Proveedores: perfil público y su oferta (2026-10-03 17:53)
 Módulo `suppliers` con los 5 proveedores del mock: `GET /suppliers`, `/suppliers/{id}`, `/suppliers/{id}/products` y `/services`.
 La búsqueda `GET /catalog` también encuentra por nombre del proveedor (el controller le pasa los nombres al servicio).

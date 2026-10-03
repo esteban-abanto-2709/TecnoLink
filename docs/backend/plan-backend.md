@@ -17,7 +17,7 @@ cada módulo usa lo del anterior.
 | 2 | `catalog` (Esteban) | Lectura del catálogo: categorías, producto, servicio, búsqueda, comparador | RM-002 | Hecho |
 | 3 | `catalog` (Esteban) | Escrituras del catálogo: (1) admin de categorías · (2) crear y editar productos y servicios | RM-009 (categorías) | Hecho |
 | 4 | `suppliers` (Leyla) | Proveedores: perfil, su oferta y el nombre del proveedor en la búsqueda | RM-003 | Hecho |
-| 5 | `suppliers` (Leyla) | Publicaciones del proveedor y verificación por el admin | RM-008 + RM-009 (proveedores) | Pendiente |
+| 5 | `suppliers` (Leyla) | Publicaciones del proveedor y verificación por el admin | RM-008 + RM-009 (proveedores) | En curso: (1) publicaciones hecho · (2) verificación pendiente |
 | 6 | `loyalty` (Esperanza) | Puntos y beneficios. Antes que reseñas y compras, porque ambas suman puntos | RM-007 | Pendiente |
 | 7 | `reviews` (Esperanza) | Reseñas (+50 puntos) | RM-004 | Pendiente |
 | 8 | `quotes` (Carlos) | Cotizaciones | RM-005 | Pendiente |
@@ -69,7 +69,7 @@ Lo más simple y fiel al curso es un parámetro `userId`.
 | Módulo | Clase | Métodos públicos |
 |---|---|---|
 | `shared` | `NotFoundException` | `new NotFoundException(mensaje)` → 404 |
-| `suppliers` | `SupplierService` | `getSuppliers()` · `getSupplier(id)` (404 si no existe) · `getProducts(supplierId)` · `getServices(supplierId)` |
+| `suppliers` | `SupplierService` | `getSuppliers()` · `getSupplier(id)` (404 si no existe) · `getProducts(supplierId)` · `getServices(supplierId)` · `publishProduct(...)` · `editProduct(supplierId, productId, ...)` · `publishService(...)` · `editService(supplierId, serviceId, ...)` |
 | `catalog` | `CatalogService` | `getCategories()` (solo activas) · `getAllCategories()` · `getCategory(id)` · `createCategory(name, kind)` · `renameCategory(id, name)` · `setCategoryActive(id, active)` · `createProduct(supplierId, name, brand, categoryId, price, description)` · `updateProduct(id, name, brand, price, description)` · `createService(supplierId, name, categoryId, price, pricing, description, coverage)` · `updateService(id, name, price, pricing, description, coverage)` · `getProduct(id)` · `getProductsBySupplier(supplierId)` · `getServicesBySupplier(supplierId)` · `getProductsToCompare(ids)` · `getService(id)` · `search(query, categoryId, kind, minPrice, maxPrice, supplierNames)` (el controller arma `supplierNames` con `SupplierService`) |
 
 `createProduct`/`createService` validan que la categoría exista, esté activa y sea del tipo correcto, y generan el id como slug único del nombre. **No validan que el proveedor exista**: eso lo hace el módulo `suppliers` antes de llamarlos. En `update...`, `brand`, `pricing` y `coverage` en `null` conservan el valor anterior.

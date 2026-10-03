@@ -41,3 +41,17 @@ diferencias aquí.
 | `GET /api/v1/suppliers/{id}/products` | `productsBySupplier(id)` | Proveedor inexistente da 404, no lista vacía |
 | `GET /api/v1/suppliers/{id}/services` | `servicesBySupplier(id)` | Igual que el anterior |
 | — | `isMockSupplier(id)` | Deja de tener sentido: con la API todos los proveedores tienen perfil público, también los registrados |
+
+## Publicaciones del proveedor (RM-008)
+
+| Endpoint | Reemplaza en el front | Diferencias |
+|---|---|---|
+| `POST /api/v1/suppliers/{id}/products` | `createProduct(...)` | Body `{ name, brand, categoryId, price, description }`. Responde `201` con el producto y su `id` generado |
+| `POST /api/v1/suppliers/{id}/services` | `createService(...)` | Body `{ name, categoryId, price, pricing, description, coverage }`, con `pricing` en mayúsculas |
+| `PUT /api/v1/suppliers/{id}/products/{productId}` | `editListing(id, edit)` para productos | **Ruta distinta al roadmap original**: lleva el proveedor para revisar que el producto sea suyo (si no, 404). Body `{ name, brand, price, description }`, todos obligatorios |
+| `PUT /api/v1/suppliers/{id}/services/{serviceId}` | `editListing(id, edit)` para servicios | Igual. Body `{ name, price, pricing, description, coverage }`, todos obligatorios |
+| — | `useSupplierListings`, `useListing` | Se leen con `GET /suppliers/{id}/products` y `/services`. Ya no hay ediciones locales que fusionar (`edits`) |
+
+Validaciones: las mismas del formulario (nombre, marca o cobertura, descripción de 20 caracteres o más,
+precio mayor que 0) más las de categoría (que exista, esté activa y sea del tipo correcto). La API responde
+`400 {"errors": [...]}` o `400 {"error": "..."}` en inglés; el front sigue mostrando sus propios mensajes en español.
