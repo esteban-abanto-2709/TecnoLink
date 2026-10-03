@@ -25,10 +25,19 @@ diferencias aquí.
 | `GET /api/v1/products/{id}` | `getProduct(id)` | Un id inexistente da 404. El front hoy recibe `undefined` |
 | `GET /api/v1/services/{id}` | `getService(id)` | Igual que el anterior |
 | `GET /api/v1/products?ids=a,b` | `getProduct` en bucle dentro de `/compare` | Devuelve solo los ids que son productos, en el orden pedido (igual que el `.filter` del front). Más de 4 da 400 |
-| `GET /api/v1/catalog?query=&categoryId=&kind=&minPrice=&maxPrice=` | `searchCatalog(...)`, `catalogItems()` | Mismos nombres de parámetros. `kind` va en mayúsculas. En productos, `pricing` llega como `null` (no `undefined`): el `item.pricing ? ...` del front funciona igual. Hasta RM-003 **no busca por nombre del proveedor** |
+| `GET /api/v1/catalog?query=&categoryId=&kind=&minPrice=&maxPrice=` | `searchCatalog(...)`, `catalogItems()` | Mismos nombres de parámetros. `kind` va en mayúsculas. En productos, `pricing` llega como `null` (no `undefined`): el `item.pricing ? ...` del front funciona igual. |
 | `GET /api/v1/admin/categories` | `useAdminCategories()` | Devuelve todas, con `active`. El front hoy fusiona el mock con su store local (`names`, `disabled`); con la API eso desaparece |
 | `POST /api/v1/admin/categories` | `createCategory(name, kind)` | Body `{ name, kind }` con `kind` en mayúsculas. Duplicado da `400 {"error": "Category X already exists"}`. El front puede dejar de validar con `isDuplicateCategory` o mantenerlo como aviso previo |
 | `PATCH /api/v1/admin/categories/{id}` | `renameCategory(id, name)` | Body `{ name }`. Misma regla de duplicado |
 | `PATCH /api/v1/admin/categories/{id}/status` | `toggleCategory(id)` | El front alterna; la API recibe el estado final `{ "active": true\|false }` |
 | — | `ratingFor`, `reviewsFor` | Salen del módulo de reseñas (RM-004) |
-| — | `getSupplier`, `productsBySupplier`, `servicesBySupplier` | Salen del módulo de proveedores (RM-003) |
+
+## Proveedores (RM-003)
+
+| Endpoint | Reemplaza en el front | Diferencias |
+|---|---|---|
+| `GET /api/v1/suppliers` | `suppliers`, `useAllSuppliers()` | Devuelve los del mock y, desde el plan 10, los registrados. Ya no hace falta fusionar con `lib/suppliers.ts` |
+| `GET /api/v1/suppliers/{id}` | `getSupplier(id)`, `useSupplierById(id)` | Un id inexistente da 404 (el front hoy recibe `undefined`). Se usa en tarjetas, detalle, comparador y cotizaciones: conviene pedir la lista una vez y buscar en ella, en vez de un request por tarjeta |
+| `GET /api/v1/suppliers/{id}/products` | `productsBySupplier(id)` | Proveedor inexistente da 404, no lista vacía |
+| `GET /api/v1/suppliers/{id}/services` | `servicesBySupplier(id)` | Igual que el anterior |
+| — | `isMockSupplier(id)` | Deja de tener sentido: con la API todos los proveedores tienen perfil público, también los registrados |

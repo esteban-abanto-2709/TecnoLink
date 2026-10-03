@@ -34,22 +34,6 @@ Criterios de toda la API:
 - Enums en mayúsculas, como los del profesor (`PRODUCT`, `FIXED`, `SENT`...). La capa `src/data` del front los
   pasa a minúsculas al conectarse.
 
-## [RM-003] Proveedores: perfil público y su oferta
-- **Objetivo:** reemplazar `suppliers`, `getSupplier`, `productsBySupplier` y `servicesBySupplier`
-  (`/suppliers/[id]`, tarjetas de proveedor, detalle de producto o servicio).
-
-  | Método | Ruta | Respuesta |
-  |---|---|---|
-  | GET | `/api/v1/suppliers` | `Supplier[]` (`id, name, ruc, phone, district, description, since, verified`) |
-  | GET | `/api/v1/suppliers/{id}` | `Supplier` |
-  | GET | `/api/v1/suppliers/{id}/products` | `Product[]` |
-  | GET | `/api/v1/suppliers/{id}/services` | `Service[]` |
-
-  Además: sumar el nombre del proveedor a la búsqueda de `GET /api/v1/catalog` (`CatalogService.search`),
-  como hace `searchCatalog` en el front. Hoy busca solo en nombre, descripción, marca y categoría.
-- **Hecho cuando:** el perfil de `techperu` y de cualquier proveedor del mock se arma solo con estos endpoints.
-- **Fecha:** 2026-10-02 · **Estado:** En progreso (2026-10-03)
-
 ## [RM-004] Reseñas y valoraciones
 - **Objetivo:** reemplazar `reviewsFor`, `ratingFor` y el store `lib/reviews.ts` (`ReviewList`, `Rating`,
   `ReviewDialog`, `SupplierReviewDialog`). `targetId` puede ser un producto, un servicio o un proveedor.

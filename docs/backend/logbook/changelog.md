@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-003] Proveedores: perfil público y su oferta (2026-10-03 17:53)
+Módulo `suppliers` con los 5 proveedores del mock: `GET /suppliers`, `/suppliers/{id}`, `/suppliers/{id}/products` y `/services`.
+La búsqueda `GET /catalog` también encuentra por nombre del proveedor (el controller le pasa los nombres al servicio).
+
 ## [RM-002] Catálogo: categorías, productos, servicios y búsqueda (2026-10-02 18:30)
 Módulo `catalog` con datos en memoria iguales al mock del front: `GET /categories`, `/products/{id}`, `/services/{id}`,
 búsqueda `GET /catalog` (sin tildes, por prefijo, con filtros) y lote para el comparador `GET /products?ids=` (máx. 4).

@@ -183,7 +183,7 @@ public class CatalogService {
     }
 
     public List<CatalogItem> search(String query, String categoryId, CategoryKind kind,
-                                    Double minPrice, Double maxPrice) {
+                                    Double minPrice, Double maxPrice, Map<String, String> supplierNames) {
         List<String> terms = words(query);
         List<CatalogItem> results = new ArrayList<>();
 
@@ -191,7 +191,7 @@ public class CatalogService {
             CatalogItem item = new CatalogItem(product.getId(), CategoryKind.PRODUCT, product.getName(),
                     product.getCategoryId(), product.getSupplierId(), product.getPrice(), null,
                     product.getDescription());
-            if (matches(item, product.getBrand(), terms, categoryId, kind, minPrice, maxPrice)) {
+            if (matches(item, product.getBrand(), terms, categoryId, kind, minPrice, maxPrice, supplierNames)) {
                 results.add(item);
             }
         }
@@ -200,7 +200,7 @@ public class CatalogService {
             CatalogItem item = new CatalogItem(service.getId(), CategoryKind.SERVICE, service.getName(),
                     service.getCategoryId(), service.getSupplierId(), service.getPrice(), service.getPricing(),
                     service.getDescription());
-            if (matches(item, "", terms, categoryId, kind, minPrice, maxPrice)) {
+            if (matches(item, "", terms, categoryId, kind, minPrice, maxPrice, supplierNames)) {
                 results.add(item);
             }
         }
@@ -209,7 +209,8 @@ public class CatalogService {
     }
 
     private boolean matches(CatalogItem item, String brand, List<String> terms, String categoryId,
-                            CategoryKind kind, Double minPrice, Double maxPrice) {
+                            CategoryKind kind, Double minPrice, Double maxPrice,
+                            Map<String, String> supplierNames) {
         if (categoryId != null && !item.categoryId().equals(categoryId)) return false;
         if (kind != null && item.kind() != kind) return false;
         if (minPrice != null && item.price() < minPrice) return false;
@@ -219,7 +220,9 @@ public class CatalogService {
         String categoryName = categoryRepository.findById(item.categoryId())
                 .map(Category::getName)
                 .orElse("");
-        List<String> found = words(item.name() + " " + item.description() + " " + brand + " " + categoryName);
+        String supplierName = supplierNames.getOrDefault(item.supplierId(), "");
+        List<String> found = words(item.name() + " " + item.description() + " " + brand + " "
+                + categoryName + " " + supplierName);
 
         for (String term : terms) {
             boolean termFound = false;
