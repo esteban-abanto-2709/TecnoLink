@@ -18,7 +18,7 @@ solo cambie de dónde lee y no cómo.
 Criterios de toda la API:
 - Prefijo `/api/v1`. JSON en inglés; los textos que ve el usuario se quedan en el front.
 - Arquitectura del profesor (DDD + hexagonal): cada módulo con `domain/`, `application/`,
-  `infrastructure/` e `interfaces/rest/`. Ver `marcos-de-desarrollo-web/apuntes/estructura-backend.md`.
+  `infrastructure/` e `interfaces/rest/`. Ver `marcos-de-desarrollo-web/procesado/estructura-backend.md`.
 - **APF2 (semana 8):** datos sintéticos en repositorios en memoria, cargados con el mismo contenido de `catalog.ts`.
   **APF3 (semana 12):** MySQL con Spring Data. **Final (semana 18):** Spring Security.
 - **Solo lo que enseña el curso.** Nada de librerías ni clases que no salgan en las clases o labs
@@ -135,7 +135,7 @@ Criterios de toda la API:
   Una categoría desactivada deja de salir en `GET /api/v1/categories` y no admite publicaciones nuevas.
   Sin revisión, el estado de un proveedor es `verified` si `verified = true` y `pending` en caso contrario.
 - **Hecho cuando:** los cambios del admin se reflejan en el catálogo público y en el perfil del proveedor.
-- **Fecha:** 2026-10-02 · **Estado:** Abierto
+- **Fecha:** 2026-10-02 · **Estado:** En progreso (2026-10-03). Categorías hechas; falta la verificación de proveedores (plan 5)
 
 ## [RM-010] Registro e inicio de sesión
 - **Objetivo:** reemplazar `signIn` y `registerSupplier` (`/login`, `/register`) y resolver quién hace cada petición.

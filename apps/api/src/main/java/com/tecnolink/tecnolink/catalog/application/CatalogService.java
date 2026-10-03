@@ -33,7 +33,61 @@ public class CatalogService {
     }
 
     public List<Category> getCategories() {
+        List<Category> active = new ArrayList<>();
+        for (Category category : categoryRepository.findAll()) {
+            if (category.isActive()) active.add(category);
+        }
+        return active;
+    }
+
+    public List<Category> getAllCategories() {
         return categoryRepository.findAll();
+    }
+
+    public Category getCategory(String id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Category " + id + " not found"));
+    }
+
+    public Category createCategory(String name, CategoryKind kind) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Category name is required");
+        }
+        checkCategoryNameIsFree(name, null);
+        String id = slugify(name);
+        if (id.isEmpty()) {
+            id = "categoria-" + System.currentTimeMillis();
+        }
+        if (categoryRepository.findById(id).isPresent()) {
+            throw new IllegalArgumentException("Category " + id + " already exists");
+        }
+        return categoryRepository.save(new Category(id, name, kind));
+    }
+
+    public Category renameCategory(String id, String name) {
+        Category category = getCategory(id);
+        checkCategoryNameIsFree(name, id);
+        category.rename(name);
+        return categoryRepository.save(category);
+    }
+
+    public Category setCategoryActive(String id, boolean active) {
+        Category category = getCategory(id);
+        if (active) {
+            category.activate();
+        } else {
+            category.deactivate();
+        }
+        return categoryRepository.save(category);
+    }
+
+    private void checkCategoryNameIsFree(String name, String exceptId) {
+        String target = normalize(name == null ? "" : name.trim());
+        for (Category category : categoryRepository.findAll()) {
+            if (!category.getId().equals(exceptId) && normalize(category.getName()).equals(target)) {
+                throw new IllegalArgumentException("Category " + name.trim() + " already exists");
+            }
+        }
     }
 
     public Product getProduct(String id) {
@@ -111,13 +165,22 @@ public class CatalogService {
 
     private List<String> words(String text) {
         if (text == null) return List.of();
-        String normalized = Normalizer.normalize(text, Normalizer.Form.NFD)
-                .replaceAll("\\p{M}", "")
-                .toLowerCase();
         List<String> words = new ArrayList<>();
-        for (String word : normalized.split("[^a-z0-9]+")) {
+        for (String word : normalize(text).split("[^a-z0-9]+")) {
             if (!word.isEmpty()) words.add(word);
         }
         return words;
+    }
+
+    private String slugify(String text) {
+        return normalize(text.trim())
+                .replaceAll("[^a-z0-9]+", "-")
+                .replaceAll("^-|-$", "");
+    }
+
+    private String normalize(String text) {
+        return Normalizer.normalize(text, Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "")
+                .toLowerCase();
     }
 }

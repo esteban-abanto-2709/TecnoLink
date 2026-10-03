@@ -28,8 +28,10 @@ public class InMemoryCategoryRepository implements CategoryRepository {
         save(new Category("development", "Desarrollo", CategoryKind.SERVICE));
     }
 
-    private void save(Category category) {
+    @Override
+    public Category save(Category category) {
         store.put(category.getId(), category);
+        return category;
     }
 
     @Override

@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface CategoryRepository {
     List<Category> findAll();
     Optional<Category> findById(String id);
+    Category save(Category category);
 }

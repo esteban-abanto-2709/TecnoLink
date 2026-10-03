@@ -43,10 +43,8 @@ Lo que cada dueño **expone** para que otros lo usen. El nombre exacto de cada c
 
 ## Orden de trabajo
 
-1. **Esteban:** RM-001 y la lectura del catálogo (RM-002). Así quedan listas las piezas comunes y los productos que los demás referencian.
-2. **En paralelo:** cada integrante desarrolla su módulo con datos en memoria. Mientras tanto, Esteban completa la búsqueda, las categorías de admin y los comandos de catálogo que necesita Leyla.
-3. **Integración (Esteban):** todo junto y una prueba del flujo completo:
-   buscar → cotizar → comprar → reseñar → canjear puntos.
+El orden de los módulos está en el macro plan de [`plan-backend.md`](plan-backend.md). Al final se prueba
+el flujo completo: buscar → cotizar → comprar → reseñar → canjear puntos.
 
 En el APF3, cada uno hace el adaptador JPA (MySQL) de su propio módulo.
 
