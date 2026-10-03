@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-009] Administración: categorías y verificación de proveedores (2026-10-03 18:00)
+Admin de categorías (crear, renombrar, activar/desactivar) en `catalog` y revisión de proveedores en `suppliers`
+(`VERIFIED`, `PENDING`, `SUSPENDED` con nota y fecha). `verified` se calcula del estado; un suspendido no publica.
+
 ## [RM-008] Publicaciones del proveedor (2026-10-03 17:57)
 `POST /suppliers/{id}/products|services` y `PUT /suppliers/{id}/products|services/{itemId}`, con DTOs validados.
 El proveedor solo edita lo suyo (404 si no); las reglas de categoría las aplica `CatalogService`.

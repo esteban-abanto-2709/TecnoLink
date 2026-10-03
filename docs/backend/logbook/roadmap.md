@@ -87,24 +87,6 @@ Criterios de toda la API:
 - **Hecho cuando:** comprar y reseñar suben el saldo, canjear lo baja, y el saldo coincide con la suma de los movimientos.
 - **Fecha:** 2026-10-02 · **Estado:** Abierto
 
-## [RM-009] Administración: categorías y verificación de proveedores
-- **Objetivo:** reemplazar `lib/admin.ts` (`/admin`, `/admin/categories`, `/admin/suppliers`,
-  `CategoryDialog`, `SupplierReviewDialog`).
-
-  | Método | Ruta | Body / Respuesta |
-  |---|---|---|
-  | GET | `/api/v1/admin/categories` | `[{ id, name, kind, active }]`, incluye las inactivas |
-  | POST | `/api/v1/admin/categories` | `{ name, kind }` → `201`. `400` si el nombre ya existe (sin tildes ni mayúsculas) |
-  | PATCH | `/api/v1/admin/categories/{id}` | `{ name }` para renombrar (misma regla de duplicado) |
-  | PATCH | `/api/v1/admin/categories/{id}/status` | `{ active }` para activar o desactivar |
-  | GET | `/api/v1/admin/suppliers` | `[{ supplier, status, note, reviewedOn }]` |
-  | PATCH | `/api/v1/admin/suppliers/{id}/review` | `{ status, note }`, con `status` ∈ `verified \| pending \| suspended` |
-
-  Una categoría desactivada deja de salir en `GET /api/v1/categories` y no admite publicaciones nuevas.
-  Sin revisión, el estado de un proveedor es `verified` si `verified = true` y `pending` en caso contrario.
-- **Hecho cuando:** los cambios del admin se reflejan en el catálogo público y en el perfil del proveedor.
-- **Fecha:** 2026-10-02 · **Estado:** En progreso (2026-10-03). Categorías hechas; falta la verificación de proveedores (plan 5)
-
 ## [RM-010] Registro e inicio de sesión
 - **Objetivo:** reemplazar `signIn` y `registerSupplier` (`/login`, `/register`) y resolver quién hace cada petición.
 

@@ -1,5 +1,8 @@
 package com.tecnolink.tecnolink.suppliers.domain.model.aggregates;
 
+import com.tecnolink.tecnolink.suppliers.domain.model.enums.SupplierStatus;
+
+import java.time.LocalDate;
 import java.time.Year;
 
 public class Supplier {
@@ -10,7 +13,9 @@ public class Supplier {
     private final String district;
     private final String description;
     private final int since;
-    private final boolean verified;
+    private SupplierStatus status;
+    private String reviewNote;
+    private LocalDate reviewedOn;
 
     public Supplier(String id, String name, String ruc, String phone, String district,
                     String description, int since, boolean verified) {
@@ -33,7 +38,21 @@ public class Supplier {
         this.district = district;
         this.description = description;
         this.since = since;
-        this.verified = verified;
+        this.status = verified ? SupplierStatus.VERIFIED : SupplierStatus.PENDING;
+        this.reviewNote = "";
+    }
+
+    public void review(SupplierStatus newStatus, String note) {
+        if (newStatus == null) {
+            throw new IllegalArgumentException("Supplier review status is required");
+        }
+        this.status = newStatus;
+        this.reviewNote = note == null ? "" : note.trim();
+        this.reviewedOn = LocalDate.now();
+    }
+
+    public boolean isSuspended() {
+        return status == SupplierStatus.SUSPENDED;
     }
 
     public String getId() {
@@ -65,6 +84,18 @@ public class Supplier {
     }
 
     public boolean isVerified() {
-        return verified;
+        return status == SupplierStatus.VERIFIED;
+    }
+
+    public SupplierStatus getStatus() {
+        return status;
+    }
+
+    public String getReviewNote() {
+        return reviewNote;
+    }
+
+    public LocalDate getReviewedOn() {
+        return reviewedOn;
     }
 }

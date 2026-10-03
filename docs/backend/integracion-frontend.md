@@ -55,3 +55,12 @@ diferencias aquí.
 Validaciones: las mismas del formulario (nombre, marca o cobertura, descripción de 20 caracteres o más,
 precio mayor que 0) más las de categoría (que exista, esté activa y sea del tipo correcto). La API responde
 `400 {"errors": [...]}` o `400 {"error": "..."}` en inglés; el front sigue mostrando sus propios mensajes en español.
+
+## Verificación de proveedores (RM-009)
+
+| Endpoint | Reemplaza en el front | Diferencias |
+|---|---|---|
+| `GET /api/v1/admin/suppliers` | `useAdminSuppliers()` | **Forma plana**: devuelve `Supplier[]` con los campos de revisión adentro (`status`, `reviewNote`, `reviewedOn`), no `{ supplier, status, note, reviewedOn }`. El front la adapta en `src/data`. `status` va en mayúsculas. `reviewedOn` es `null` si nunca se revisó (el front usa `""`) y `reviewNote` es `""` |
+| `PATCH /api/v1/admin/suppliers/{id}/review` | `reviewSupplier(id, status, note)` | Body `{ status, note }`. Responde el proveedor actualizado |
+| `GET /api/v1/suppliers` y `/suppliers/{id}` | — | Ahora también traen `status`, `reviewNote` y `reviewedOn`. `verified` pasa a ser `true` solo si `status = VERIFIED`: el sello público cambia cuando el admin revisa (en el front hoy no cambia) |
+| `POST/PUT /api/v1/suppliers/{id}/...` | `ListingForm` | **Regla nueva**: un proveedor `SUSPENDED` no puede publicar ni editar, da `400 {"error": "Supplier X is suspended"}`. El front debería avisarlo en el panel `/supplier` |
