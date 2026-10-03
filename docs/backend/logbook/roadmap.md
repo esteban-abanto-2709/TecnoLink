@@ -48,7 +48,7 @@ Criterios de toda la API:
   Además: sumar el nombre del proveedor a la búsqueda de `GET /api/v1/catalog` (`CatalogService.search`),
   como hace `searchCatalog` en el front. Hoy busca solo en nombre, descripción, marca y categoría.
 - **Hecho cuando:** el perfil de `techperu` y de cualquier proveedor del mock se arma solo con estos endpoints.
-- **Fecha:** 2026-10-02 · **Estado:** Abierto
+- **Fecha:** 2026-10-02 · **Estado:** En progreso (2026-10-03)
 
 ## [RM-004] Reseñas y valoraciones
 - **Objetivo:** reemplazar `reviewsFor`, `ratingFor` y el store `lib/reviews.ts` (`ReviewList`, `Rating`,

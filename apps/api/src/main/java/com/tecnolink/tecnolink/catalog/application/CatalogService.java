@@ -113,6 +113,22 @@ public class CatalogService {
                 .orElseThrow(() -> new NotFoundException("Service " + id + " not found"));
     }
 
+    public List<Product> getProductsBySupplier(String supplierId) {
+        List<Product> products = new ArrayList<>();
+        for (Product product : productRepository.findAll()) {
+            if (product.getSupplierId().equals(supplierId)) products.add(product);
+        }
+        return products;
+    }
+
+    public List<TechService> getServicesBySupplier(String supplierId) {
+        List<TechService> services = new ArrayList<>();
+        for (TechService service : techServiceRepository.findAll()) {
+            if (service.getSupplierId().equals(supplierId)) services.add(service);
+        }
+        return services;
+    }
+
     public Product createProduct(String supplierId, String name, String brand, String categoryId,
                                  double price, String description) {
         checkCategoryAccepts(categoryId, CategoryKind.PRODUCT);
