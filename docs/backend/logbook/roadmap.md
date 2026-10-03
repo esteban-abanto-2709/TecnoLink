@@ -31,27 +31,8 @@ Criterios de toda la API:
 - Se quedan en el cliente (`localStorage`), sin endpoint: **carrito** (`lib/cart.ts`), **comparador**
   (`lib/compare.ts`, solo guarda ids) y el cambio de rol del menú (`switchRole`, propio del prototipo).
 - Ids: se exponen los mismos ids **string tipo slug** del front (`"laptops"`, `"techperu"`), para no tocar el front.
-
-## [RM-002] Catálogo: categorías, productos, servicios y búsqueda
-- **Objetivo:** reemplazar las lecturas de `catalog.ts` (`categories`, `getCategory`, `getProduct`,
-  `getService`, `catalogItems`, `searchCatalog`) que usan `/`, `/search`, `/products/[id]`,
-  `/services/[id]` y `/compare`.
-
-  | Método | Ruta | Respuesta |
-  |---|---|---|
-  | GET | `/api/v1/categories` | `Category[]` solo activas (`id, name, kind`) |
-  | GET | `/api/v1/products/{id}` | `Product` (`id, name, brand, categoryId, supplierId, price, description, specs`) |
-  | GET | `/api/v1/products?ids=a,b,c` | `Product[]` para el comparador (máx. 4, `MAX_COMPARE`) |
-  | GET | `/api/v1/services/{id}` | `Service` (`id, name, categoryId, supplierId, price, pricing, description, coverage`) |
-  | GET | `/api/v1/catalog?query=&categoryId=&kind=&minPrice=&maxPrice=` | `CatalogItem[]` |
-
-  La búsqueda replica `searchCatalog`: ignora tildes y mayúsculas, todas las palabras deben coincidir por
-  prefijo contra nombre, descripción, marca, categoría y proveedor. El nombre del proveedor se suma a la
-  búsqueda cuando exista el módulo `suppliers` (RM-003); mientras tanto busca en los otros cuatro campos.
-  Los enums van en mayúsculas, como los del profesor: `kind` ∈ `PRODUCT | SERVICE` y `pricing` ∈ `FIXED | FROM | HOURLY`.
-  La capa `src/data` del front los pasa a minúsculas al conectarse.
-- **Hecho cuando:** cada endpoint devuelve los mismos datos que `catalog.ts` para los ids del mock, y un id inexistente da 404.
-- **Fecha:** 2026-10-02 · **Estado:** En progreso (2026-10-02)
+- Enums en mayúsculas, como los del profesor (`PRODUCT`, `FIXED`, `SENT`...). La capa `src/data` del front los
+  pasa a minúsculas al conectarse.
 
 ## [RM-003] Proveedores: perfil público y su oferta
 - **Objetivo:** reemplazar `suppliers`, `getSupplier`, `productsBySupplier` y `servicesBySupplier`
@@ -63,6 +44,9 @@ Criterios de toda la API:
   | GET | `/api/v1/suppliers/{id}` | `Supplier` |
   | GET | `/api/v1/suppliers/{id}/products` | `Product[]` |
   | GET | `/api/v1/suppliers/{id}/services` | `Service[]` |
+
+  Además: sumar el nombre del proveedor a la búsqueda de `GET /api/v1/catalog` (`CatalogService.search`),
+  como hace `searchCatalog` en el front. Hoy busca solo en nombre, descripción, marca y categoría.
 - **Hecho cuando:** el perfil de `techperu` y de cualquier proveedor del mock se arma solo con estos endpoints.
 - **Fecha:** 2026-10-02 · **Estado:** Abierto
 

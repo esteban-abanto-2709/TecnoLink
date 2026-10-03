@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-002] Catálogo: categorías, productos, servicios y búsqueda (2026-10-02 18:30)
+Módulo `catalog` con datos en memoria iguales al mock del front: `GET /categories`, `/products/{id}`, `/services/{id}`,
+búsqueda `GET /catalog` (sin tildes, por prefijo, con filtros) y lote para el comparador `GET /products?ids=` (máx. 4).
+
 ## [RM-001] Esqueleto hexagonal y piezas transversales (2026-10-02 17:59)
 Módulo `shared` con el manejo de errores del lab de la semana 6: `NotFoundException` → 404 y `RestExceptionHandler`
 (404, 400 de validación con `spring-boot-starter-validation`, 400 por `IllegalArgumentException`).

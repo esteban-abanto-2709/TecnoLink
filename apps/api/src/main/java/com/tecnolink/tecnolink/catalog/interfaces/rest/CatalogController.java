@@ -34,6 +34,11 @@ public class CatalogController {
         return catalogService.getProduct(id);
     }
 
+    @GetMapping("/products")
+    public List<Product> productsToCompare(@RequestParam List<String> ids) {
+        return catalogService.getProductsToCompare(ids);
+    }
+
     @GetMapping("/services/{id}")
     public TechService service(@PathVariable String id) {
         return catalogService.getService(id);
