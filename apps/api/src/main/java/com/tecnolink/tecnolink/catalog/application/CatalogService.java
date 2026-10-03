@@ -4,6 +4,7 @@ import com.tecnolink.tecnolink.catalog.domain.model.aggregates.Category;
 import com.tecnolink.tecnolink.catalog.domain.model.aggregates.Product;
 import com.tecnolink.tecnolink.catalog.domain.model.aggregates.TechService;
 import com.tecnolink.tecnolink.catalog.domain.model.enums.CategoryKind;
+import com.tecnolink.tecnolink.catalog.domain.model.enums.ServicePricing;
 import com.tecnolink.tecnolink.catalog.domain.model.valueobjects.CatalogItem;
 import com.tecnolink.tecnolink.catalog.domain.repositories.CategoryRepository;
 import com.tecnolink.tecnolink.catalog.domain.repositories.ProductRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CatalogService {
@@ -109,6 +111,59 @@ public class CatalogService {
     public TechService getService(String id) {
         return techServiceRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Service " + id + " not found"));
+    }
+
+    public Product createProduct(String supplierId, String name, String brand, String categoryId,
+                                 double price, String description) {
+        checkCategoryAccepts(categoryId, CategoryKind.PRODUCT);
+        Product product = new Product(uniqueListingId(name), name, brand, categoryId, supplierId,
+                price, description, Map.of());
+        return productRepository.save(product);
+    }
+
+    public Product updateProduct(String id, String name, String brand, double price, String description) {
+        Product product = getProduct(id);
+        product.update(name, brand, price, description);
+        return productRepository.save(product);
+    }
+
+    public TechService createService(String supplierId, String name, String categoryId, double price,
+                                     ServicePricing pricing, String description, String coverage) {
+        checkCategoryAccepts(categoryId, CategoryKind.SERVICE);
+        TechService service = new TechService(uniqueListingId(name), name, categoryId, supplierId,
+                price, pricing, description, coverage);
+        return techServiceRepository.save(service);
+    }
+
+    public TechService updateService(String id, String name, double price, ServicePricing pricing,
+                                     String description, String coverage) {
+        TechService service = getService(id);
+        service.update(name, price, pricing, description, coverage);
+        return techServiceRepository.save(service);
+    }
+
+    private void checkCategoryAccepts(String categoryId, CategoryKind kind) {
+        Category category = getCategory(categoryId);
+        if (!category.isActive()) {
+            throw new IllegalArgumentException("Category " + categoryId + " is not active");
+        }
+        if (category.getKind() != kind) {
+            throw new IllegalArgumentException("Category " + categoryId + " does not accept " + kind);
+        }
+    }
+
+    private String uniqueListingId(String name) {
+        String base = name == null ? "" : slugify(name);
+        if (base.isEmpty()) {
+            base = "publicacion";
+        }
+        String id = base;
+        int suffix = 2;
+        while (productRepository.findById(id).isPresent() || techServiceRepository.findById(id).isPresent()) {
+            id = base + "-" + suffix;
+            suffix++;
+        }
+        return id;
     }
 
     public List<CatalogItem> search(String query, String categoryId, CategoryKind kind,

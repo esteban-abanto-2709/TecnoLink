@@ -80,8 +80,10 @@ public class InMemoryProductRepository implements ProductRepository {
         return specs;
     }
 
-    private void save(Product product) {
+    @Override
+    public Product save(Product product) {
         store.put(product.getId(), product);
+        return product;
     }
 
     @Override

@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface TechServiceRepository {
     List<TechService> findAll();
     Optional<TechService> findById(String id);
+    TechService save(TechService techService);
 }

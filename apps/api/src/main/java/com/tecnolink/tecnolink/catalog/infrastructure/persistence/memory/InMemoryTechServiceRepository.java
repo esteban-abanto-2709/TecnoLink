@@ -43,8 +43,10 @@ public class InMemoryTechServiceRepository implements TechServiceRepository {
                 "Remoto"));
     }
 
-    private void save(TechService service) {
+    @Override
+    public TechService save(TechService service) {
         store.put(service.getId(), service);
+        return service;
     }
 
     @Override
