@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-007] Fidelización: puntos y canje de beneficios (2026-10-03 19:07)
+Módulo `loyalty`: `GET /benefits`, `GET /users/{userId}/points` (saldo calculado de los movimientos) y canje
+`POST /users/{userId}/points/redemptions` (saldo suficiente, una vez por beneficio). `awardPoints` para reseñas y compras.
+
 ## [RM-009] Administración: categorías y verificación de proveedores (2026-10-03 18:00)
 Admin de categorías (crear, renombrar, activar/desactivar) en `catalog` y revisión de proveedores en `suppliers`
 (`VERIFIED`, `PENDING`, `SUSPENDED` con nota y fecha). `verified` se calcula del estado; un suspendido no publica.

@@ -5,8 +5,10 @@ import com.tecnolink.tecnolink.loyalty.domain.model.aggregates.PointsMovement;
 import com.tecnolink.tecnolink.loyalty.domain.model.valueobjects.PointsSummary;
 import com.tecnolink.tecnolink.loyalty.domain.repositories.BenefitRepository;
 import com.tecnolink.tecnolink.loyalty.domain.repositories.PointsMovementRepository;
+import com.tecnolink.tecnolink.shared.domain.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -39,5 +41,30 @@ public class LoyaltyService {
             }
         }
         return new PointsSummary(balance, movements, usedBenefits);
+    }
+
+    public PointsMovement redeem(String userId, String benefitId) {
+        Benefit benefit = benefitRepository.findById(benefitId)
+                .orElseThrow(() -> new NotFoundException("Benefit " + benefitId + " not found"));
+        PointsSummary summary = getSummary(userId);
+        if (summary.usedBenefits().contains(benefitId)) {
+            throw new IllegalArgumentException("Benefit " + benefitId + " was already redeemed");
+        }
+        if (summary.balance() < benefit.getCost()) {
+            throw new IllegalArgumentException("Not enough points: balance " + summary.balance()
+                    + ", cost " + benefit.getCost());
+        }
+        PointsMovement movement = new PointsMovement(movementRepository.nextId(), userId, LocalDate.now(),
+                "Canje: " + benefit.getName(), -benefit.getCost(), benefit.getId());
+        return movementRepository.save(movement);
+    }
+
+    public PointsMovement awardPoints(String userId, int points, String description) {
+        if (points <= 0) {
+            throw new IllegalArgumentException("Awarded points must be greater than zero");
+        }
+        PointsMovement movement = new PointsMovement(movementRepository.nextId(), userId, LocalDate.now(),
+                description, points, null);
+        return movementRepository.save(movement);
     }
 }

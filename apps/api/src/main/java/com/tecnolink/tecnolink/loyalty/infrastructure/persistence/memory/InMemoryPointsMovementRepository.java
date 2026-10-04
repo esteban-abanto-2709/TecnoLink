@@ -9,11 +9,13 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class InMemoryPointsMovementRepository implements PointsMovementRepository {
 
     private final Map<String, PointsMovement> store = new LinkedHashMap<>();
+    private final AtomicLong sequence = new AtomicLong(5);
 
     public InMemoryPointsMovementRepository() {
         save(new PointsMovement("pts-001", "demo-client", LocalDate.of(2026, 8, 18),
@@ -26,8 +28,15 @@ public class InMemoryPointsMovementRepository implements PointsMovementRepositor
                 "Bono por reseña publicada", 50, null));
     }
 
-    private void save(PointsMovement movement) {
+    @Override
+    public PointsMovement save(PointsMovement movement) {
         store.put(movement.getId(), movement);
+        return movement;
+    }
+
+    @Override
+    public String nextId() {
+        return String.format("pts-%03d", sequence.getAndIncrement());
     }
 
     @Override

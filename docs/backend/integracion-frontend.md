@@ -71,6 +71,7 @@ precio mayor que 0) más las de categoría (que exista, esté activa y sea del t
 |---|---|---|
 | `GET /api/v1/benefits` | `benefits` | Igual |
 | `GET /api/v1/users/{userId}/points` | `usePoints()` | Responde `{ balance, movements, usedBenefits }`. **`usedBenefits` es una lista**, no un `Set`. Los movimientos traen además `userId`. El front ya no calcula puntos de compras y reseñas al vuelo: la API los guarda como movimientos |
+| `POST /api/v1/users/{userId}/points/redemptions` | `redeemBenefit(benefitId)` | Body `{ benefitId }`. Responde `201` con el movimiento. **La API valida** saldo suficiente y que no se haya canjeado antes (400 si no): el front hoy solo deshabilita el botón |
 | — | `pointsBalance()` | Sale de `balance` |
 
 El usuario va en la ruta. Hasta el plan 10 el front usa `demo-client`, que es el dueño de los datos de ejemplo.

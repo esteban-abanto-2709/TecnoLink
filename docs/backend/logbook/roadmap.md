@@ -75,18 +75,6 @@ Criterios de toda la API:
 - **Hecho cuando:** un pedido creado aparece en `/orders` con el total y los puntos correctos, y un `itemId` inexistente da 400.
 - **Fecha:** 2026-10-02 · **Estado:** Abierto
 
-## [RM-007] Fidelización: puntos y canje de beneficios
-- **Objetivo:** reemplazar `benefits`, `pointsMovements`, `pointsBalance` y `lib/points.ts` (`/points`).
-  Los movimientos son un libro de asientos: `+pointsEarned` por pedido (RM-006), `+50` por reseña (RM-004) y `-cost` por canje.
-
-  | Método | Ruta | Body / Respuesta |
-  |---|---|---|
-  | GET | `/api/v1/benefits` | `Benefit[]` (`id, name, description, cost`) |
-  | GET | `/api/v1/users/{userId}/points` | `{ balance, movements: PointsMovement[], usedBenefits: string[] }`, con los movimientos del más reciente al más antiguo |
-  | POST | `/api/v1/users/{userId}/points/redemptions` | `{ benefitId }` → `201 PointsMovement`. `400` si no alcanza el saldo o si ese beneficio ya se canjeó |
-- **Hecho cuando:** comprar y reseñar suben el saldo, canjear lo baja, y el saldo coincide con la suma de los movimientos.
-- **Fecha:** 2026-10-02 · **Estado:** En progreso (2026-10-03)
-
 ## [RM-010] Registro e inicio de sesión
 - **Objetivo:** reemplazar `signIn` y `registerSupplier` (`/login`, `/register`) y resolver quién hace cada petición.
 
