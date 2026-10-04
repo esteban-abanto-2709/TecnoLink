@@ -18,7 +18,7 @@ cada módulo usa lo del anterior.
 | 3 | `catalog` (Esteban) | Escrituras del catálogo: (1) admin de categorías · (2) crear y editar productos y servicios | RM-009 (categorías) | Hecho |
 | 4 | `suppliers` (Leyla) | Proveedores: perfil, su oferta y el nombre del proveedor en la búsqueda | RM-003 | Hecho |
 | 5 | `suppliers` (Leyla) | Publicaciones del proveedor y verificación por el admin | RM-008 + RM-009 (proveedores) | Hecho |
-| 6 | `loyalty` (Esperanza) | Puntos y beneficios. Antes que reseñas y compras, porque ambas suman puntos | RM-007 | Pendiente |
+| 6 | `loyalty` (Esperanza) | Puntos y beneficios. Antes que reseñas y compras, porque ambas suman puntos | RM-007 | En curso: (1) lectura hecho · (2) canje pendiente |
 | 7 | `reviews` (Esperanza) | Reseñas (+50 puntos) | RM-004 | Pendiente |
 | 8 | `quotes` (Carlos) | Cotizaciones | RM-005 | Pendiente |
 | 9 | `orders` (Carlos) | Compra simulada (+ puntos) | RM-006 | Pendiente |
@@ -27,8 +27,9 @@ cada módulo usa lo del anterior.
 
 Fuera de este plan: RM-011 (MySQL, APF3) y RM-012 (Spring Security, entrega final).
 
-Decisión pendiente para el plan 6: cómo sabe la API qué usuario hace la petición antes de RM-010.
-Lo más simple y fiel al curso es un parámetro `userId`.
+Usuario de cada petición (decidido en el plan 6): va en la ruta, `/api/v1/users/{userId}/...`, leído con
+`@PathVariable`. Los datos de ejemplo (movimientos, compras) son del usuario `demo-client`. Hasta RM-010 cualquier
+`userId` es válido (uno desconocido tiene 0 puntos y nada registrado).
 
 ## Reglas de trabajo
 
@@ -70,6 +71,7 @@ Lo más simple y fiel al curso es un parámetro `userId`.
 |---|---|---|
 | `shared` | `NotFoundException` | `new NotFoundException(mensaje)` → 404 |
 | `suppliers` | `SupplierService` | `getSuppliers()` · `getSupplier(id)` (404 si no existe) · `getProducts(supplierId)` · `getServices(supplierId)` · `publishProduct(...)` · `editProduct(supplierId, productId, ...)` · `publishService(...)` · `editService(supplierId, serviceId, ...)` · `reviewSupplier(id, status, note)`. Publicar o editar con un proveedor suspendido da 400 |
+| `loyalty` | `LoyaltyService` | `getBenefits()` · `getSummary(userId)` → `PointsSummary(balance, movements, usedBenefits)` |
 | `catalog` | `CatalogService` | `getCategories()` (solo activas) · `getAllCategories()` · `getCategory(id)` · `createCategory(name, kind)` · `renameCategory(id, name)` · `setCategoryActive(id, active)` · `createProduct(supplierId, name, brand, categoryId, price, description)` · `updateProduct(id, name, brand, price, description)` · `createService(supplierId, name, categoryId, price, pricing, description, coverage)` · `updateService(id, name, price, pricing, description, coverage)` · `getProduct(id)` · `getProductsBySupplier(supplierId)` · `getServicesBySupplier(supplierId)` · `getProductsToCompare(ids)` · `getService(id)` · `search(query, categoryId, kind, minPrice, maxPrice, supplierNames)` (el controller arma `supplierNames` con `SupplierService`) |
 
 `createProduct`/`createService` validan que la categoría exista, esté activa y sea del tipo correcto, y generan el id como slug único del nombre. **No validan que el proveedor exista**: eso lo hace el módulo `suppliers` antes de llamarlos. En `update...`, `brand`, `pricing` y `coverage` en `null` conservan el valor anterior.

@@ -25,8 +25,8 @@ Criterios de toda la API:
   (sin Swagger, sin configuración extra). Las pruebas se hacen con el navegador, Postman o el cliente HTTP de IntelliJ.
 - Errores como en el lab de la semana 6: `NotFoundException` → `404 {"error": ...}`, validación →
   `400 {"errors": [...]}`, reglas de dominio (`IllegalArgumentException`) → `400 {"error": ...}`.
-- Hasta que exista la autenticación (RM-010), el usuario que hace la petición se decide en cada módulo
-  cuando lo necesite (lo más simple: un parámetro). No hay usuario demo compartido.
+- El usuario va **en la ruta**: `/api/v1/users/{userId}/...` (puntos, compras, cotizaciones del cliente).
+  Los datos de ejemplo son del usuario `demo-client`. Hasta RM-010 cualquier `userId` es válido.
 - CORS se agrega al conectar el front, con `@CrossOrigin` en los controllers.
 - Se quedan en el cliente (`localStorage`), sin endpoint: **carrito** (`lib/cart.ts`), **comparador**
   (`lib/compare.ts`, solo guarda ids) y el cambio de rol del menú (`switchRole`, propio del prototipo).
@@ -82,10 +82,10 @@ Criterios de toda la API:
   | Método | Ruta | Body / Respuesta |
   |---|---|---|
   | GET | `/api/v1/benefits` | `Benefit[]` (`id, name, description, cost`) |
-  | GET | `/api/v1/points` | `{ balance, movements: PointsMovement[], usedBenefits: string[] }`, con los movimientos del más reciente al más antiguo |
-  | POST | `/api/v1/points/redemptions` | `{ benefitId }` → `201 PointsMovement`. `400` si no alcanza el saldo o si ese beneficio ya se canjeó |
+  | GET | `/api/v1/users/{userId}/points` | `{ balance, movements: PointsMovement[], usedBenefits: string[] }`, con los movimientos del más reciente al más antiguo |
+  | POST | `/api/v1/users/{userId}/points/redemptions` | `{ benefitId }` → `201 PointsMovement`. `400` si no alcanza el saldo o si ese beneficio ya se canjeó |
 - **Hecho cuando:** comprar y reseñar suben el saldo, canjear lo baja, y el saldo coincide con la suma de los movimientos.
-- **Fecha:** 2026-10-02 · **Estado:** Abierto
+- **Fecha:** 2026-10-02 · **Estado:** En progreso (2026-10-03)
 
 ## [RM-010] Registro e inicio de sesión
 - **Objetivo:** reemplazar `signIn` y `registerSupplier` (`/login`, `/register`) y resolver quién hace cada petición.

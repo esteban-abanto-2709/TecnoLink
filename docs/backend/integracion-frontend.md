@@ -64,3 +64,13 @@ precio mayor que 0) más las de categoría (que exista, esté activa y sea del t
 | `PATCH /api/v1/admin/suppliers/{id}/review` | `reviewSupplier(id, status, note)` | Body `{ status, note }`. Responde el proveedor actualizado |
 | `GET /api/v1/suppliers` y `/suppliers/{id}` | — | Ahora también traen `status`, `reviewNote` y `reviewedOn`. `verified` pasa a ser `true` solo si `status = VERIFIED`: el sello público cambia cuando el admin revisa (en el front hoy no cambia) |
 | `POST/PUT /api/v1/suppliers/{id}/...` | `ListingForm` | **Regla nueva**: un proveedor `SUSPENDED` no puede publicar ni editar, da `400 {"error": "Supplier X is suspended"}`. El front debería avisarlo en el panel `/supplier` |
+
+## Puntos y beneficios (RM-007)
+
+| Endpoint | Reemplaza en el front | Diferencias |
+|---|---|---|
+| `GET /api/v1/benefits` | `benefits` | Igual |
+| `GET /api/v1/users/{userId}/points` | `usePoints()` | Responde `{ balance, movements, usedBenefits }`. **`usedBenefits` es una lista**, no un `Set`. Los movimientos traen además `userId`. El front ya no calcula puntos de compras y reseñas al vuelo: la API los guarda como movimientos |
+| — | `pointsBalance()` | Sale de `balance` |
+
+El usuario va en la ruta. Hasta el plan 10 el front usa `demo-client`, que es el dueño de los datos de ejemplo.
