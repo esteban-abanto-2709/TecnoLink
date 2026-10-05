@@ -1,11 +1,63 @@
-# Modelo de datos: cotizaciones y comparador
+# Modelo de datos
 
-Tablas del módulo `cotizaciones/` según el diagrama de clases del equipo. En este avance **no hay base de datos**:
-los datos viven en repositorios en memoria (`infrastructure/persistence/memory`). Este modelo es el que tomarán las
-tablas cuando se conecte MySQL con Spring Data.
+Tablas de cada módulo según el diagrama de clases del equipo. En este avance **no hay base de datos**: los datos
+viven en repositorios en memoria (`infrastructure/persistence/memory`). Este modelo es el que tomarán las tablas
+cuando se conecte MySQL con Spring Data.
 
-`clientes`, `publicaciones` y `productos` son de otros módulos (usuarios y catálogo); aquí solo se muestran las
-columnas que se referencian.
+En cada diagrama, las tablas de otros módulos solo muestran las columnas que se referencian.
+
+## Catálogo (`catalogo/`, Carlos)
+
+`Publicacion` es abstracta y se guarda en una sola tabla con la columna `tipo` (`PRODUCTO` o `SERVICIO`): las
+columnas propias de cada subclase quedan vacías en la otra.
+
+```mermaid
+erDiagram
+    proveedores ||--o{ publicaciones : "publica"
+    categorias ||--o{ publicaciones : "agrupa"
+    publicaciones ||--o{ publicacion_imagenes : "tiene"
+
+    proveedores {
+        varchar id PK
+    }
+    categorias {
+        varchar id_categoria PK
+        varchar nombre
+        varchar descripcion
+    }
+    publicaciones {
+        varchar id_publicacion PK
+        varchar tipo "PRODUCTO o SERVICIO"
+        varchar proveedor_id FK
+        varchar categoria_id FK
+        varchar titulo
+        varchar descripcion "20 caracteres o más"
+        decimal precio "mayor que 0"
+        date fecha_publicacion
+        varchar estado "ACTIVA, PAUSADA"
+        varchar marca "solo producto"
+        varchar modelo "solo producto"
+        int stock "solo producto, 0 o más"
+        varchar modalidad "solo servicio"
+        varchar duracion_estimada "solo servicio"
+        varchar cobertura "solo servicio"
+    }
+    publicacion_imagenes {
+        varchar publicacion_id PK, FK
+        varchar url PK
+    }
+```
+
+| Clase (dominio) | Tipo | Tabla | Repositorio en memoria |
+|---|---|---|---|
+| `Publicacion` | Aggregate abstracto | `publicaciones` | `InMemoryPublicacionRepository` |
+| `Producto` | Hereda de `Publicacion` | `publicaciones` (`tipo = PRODUCTO`) | El mismo |
+| `Servicio` | Hereda de `Publicacion` | `publicaciones` (`tipo = SERVICIO`) | El mismo |
+| `Categoria` | Aggregate | `categorias` | `InMemoryCategoriaRepository` |
+
+`listarPublicaciones()` de `Categoria` es `PublicacionRepository.findByCategoriaId(...)`.
+
+## Cotizaciones y comparador (`cotizaciones/`, Esteban)
 
 ```mermaid
 erDiagram
@@ -60,8 +112,6 @@ erDiagram
         varchar unidad "vacío si no aplica"
     }
 ```
-
-## De clase a tabla
 
 | Clase (dominio) | Tipo | Tabla | Repositorio en memoria |
 |---|---|---|---|

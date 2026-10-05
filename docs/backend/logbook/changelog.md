@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-014] Catálogo según el diagrama de clases (2026-10-05 16:09)
+Módulo `catalogo/`: `Publicacion` abstracta con `Producto` y `Servicio`, y `Categoria`, con los 20 ítems y 9 categorías
+del catálogo en memoria. Modelo de datos agregado en `docs/modelo-datos.md`.
+
 ## [RM-013] Cotizaciones y comparador: dominio y datos de prueba (2026-10-05 16:01)
 Módulo `cotizaciones/` con el modelo del profesor: `SolicitudCotizacion` y `Comparacion` (aggregates), `Cotizacion` y
 `Especificacion` (entities), repositorios en memoria con datos de prueba y el modelo de datos en `docs/modelo-datos.md`.
