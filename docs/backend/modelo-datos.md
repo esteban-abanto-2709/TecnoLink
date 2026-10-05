@@ -57,6 +57,60 @@ erDiagram
 
 `listarPublicaciones()` de `Categoria` es `PublicacionRepository.findByCategoriaId(...)`.
 
+## Compra simulada (`compras/`, Leyla)
+
+Cada cliente tiene un solo carrito. Al comprar, cada ítem del carrito pasa a ser un detalle del pedido con el
+precio de ese momento. El pago es simulado: no hay pasarela.
+
+```mermaid
+erDiagram
+    clientes ||--|| carritos : "tiene"
+    carritos ||--o{ items_carrito : "contiene"
+    publicaciones ||--o{ items_carrito : ""
+    clientes ||--o{ pedidos : "realiza"
+    pedidos ||--|{ detalles_pedido : "contiene"
+    publicaciones ||--o{ detalles_pedido : ""
+
+    clientes {
+        varchar id PK
+    }
+    publicaciones {
+        varchar id_publicacion PK
+    }
+    carritos {
+        bigint id_carrito PK
+        varchar cliente_id FK "único"
+    }
+    items_carrito {
+        bigint carrito_id PK, FK
+        varchar publicacion_id PK, FK
+        int cantidad "1 o más"
+        decimal precio_unitario
+    }
+    pedidos {
+        bigint id_pedido PK
+        varchar cliente_id FK
+        date fecha
+        decimal total "suma de los subtotales"
+        varchar estado "PENDIENTE, PAGADO, CONFIRMADO"
+        varchar metodo_pago_simulado
+    }
+    detalles_pedido {
+        bigint pedido_id PK, FK
+        varchar publicacion_id PK, FK
+        int cantidad
+        decimal precio_unitario
+        decimal subtotal
+    }
+```
+
+| Clase (dominio) | Tipo | Tabla | Repositorio en memoria |
+|---|---|---|---|
+| `Carrito` | Aggregate | `carritos` | `InMemoryCarritoRepository` |
+| `ItemCarrito` | Entity dentro del carrito | `items_carrito` | Se guarda con su carrito |
+| `Pedido` | Aggregate | `pedidos` | `InMemoryPedidoRepository` |
+| `DetallePedido` | Entity dentro del pedido | `detalles_pedido` | Se guarda con su pedido |
+
 ## Cotizaciones y comparador (`cotizaciones/`, Esteban)
 
 ```mermaid

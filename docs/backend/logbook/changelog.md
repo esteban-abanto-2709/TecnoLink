@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-015] Compra simulada según el diagrama de clases (2026-10-05 16:11)
+Módulo `compras/`: `Carrito` con `ItemCarrito` y `Pedido` con `DetallePedido` (pago simulado, 1 punto por cada S/ 10),
+con carrito y pedidos de prueba de `demo-client`. Modelo de datos agregado en `docs/modelo-datos.md`.
+
 ## [RM-014] Catálogo según el diagrama de clases (2026-10-05 16:09)
 Módulo `catalogo/`: `Publicacion` abstracta con `Producto` y `Servicio`, y `Categoria`, con los 20 ítems y 9 categorías
 del catálogo en memoria. Modelo de datos agregado en `docs/modelo-datos.md`.
