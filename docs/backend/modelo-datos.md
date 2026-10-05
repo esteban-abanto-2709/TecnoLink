@@ -6,6 +6,48 @@ cuando se conecte MySQL con Spring Data.
 
 En cada diagrama, las tablas de otros módulos solo muestran las columnas que se referencian.
 
+## Usuarios (`usuarios/`, Benjamin)
+
+`Usuario` es abstracta. Cada subclase (`Cliente`, `Administrador` y `Proveedor`, este último en el módulo de
+Esperanza) tiene su propia tabla, cuya clave es también la clave de `usuarios`.
+
+```mermaid
+erDiagram
+    usuarios ||--o| clientes : "es"
+    usuarios ||--o| administradores : "es"
+    usuarios ||--o| proveedores : "es"
+
+    usuarios {
+        varchar id_usuario PK
+        varchar nombres
+        varchar apellidos
+        varchar correo "único"
+        varchar contrasena "8 caracteres o más"
+        varchar telefono
+        date fecha_registro
+        boolean activo
+    }
+    clientes {
+        varchar id_usuario PK, FK
+        char dni "8 dígitos, único"
+        varchar direccion
+        varchar region
+    }
+    administradores {
+        varchar id_usuario PK, FK
+        varchar cargo
+    }
+    proveedores {
+        varchar id_usuario PK, FK
+    }
+```
+
+| Clase (dominio) | Tipo | Tabla | Repositorio en memoria |
+|---|---|---|---|
+| `Usuario` | Aggregate abstracto | `usuarios` | `InMemoryUsuarioRepository` |
+| `Cliente` | Hereda de `Usuario` | `usuarios` + `clientes` | El mismo |
+| `Administrador` | Hereda de `Usuario` | `usuarios` + `administradores` | El mismo |
+
 ## Catálogo (`catalogo/`, Carlos)
 
 `Publicacion` es abstracta y se guarda en una sola tabla con la columna `tipo` (`PRODUCTO` o `SERVICIO`): las
@@ -83,7 +125,7 @@ erDiagram
         bigint id_pedido PK
     }
     proveedores {
-        varchar id_proveedor PK
+        varchar id_usuario PK, FK "hereda de usuarios"
         char ruc "11 dígitos, único"
         varchar razon_social
         varchar region
@@ -116,7 +158,7 @@ erDiagram
 
 | Clase (dominio) | Tipo | Tabla | Repositorio en memoria |
 |---|---|---|---|
-| `Proveedor` | Aggregate | `proveedores` | `InMemoryProveedorRepository` |
+| `Proveedor` | Hereda de `Usuario` | `usuarios` + `proveedores` | `InMemoryProveedorRepository` |
 | `Resena` | Aggregate | `resenas` | `InMemoryResenaRepository` |
 | `CuentaFidelizacion` | Aggregate | `cuentas_fidelizacion` | `InMemoryCuentaFidelizacionRepository` |
 | `MovimientoPuntos` | Entity dentro de la cuenta | `movimientos_puntos` | Se guarda con su cuenta |

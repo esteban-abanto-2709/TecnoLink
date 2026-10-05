@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-017] Usuarios según el diagrama de clases (2026-10-05 16:15)
+Módulo `usuarios/`: `Usuario` abstracta con `Cliente` y `Administrador` (registro, inicio y cierre de sesión, perfil),
+y `Proveedor` pasa a heredar de `Usuario`. Datos de prueba en memoria y modelo de datos en `docs/modelo-datos.md`.
+
 ## [RM-016] Proveedor, reseñas y fidelización según el diagrama de clases (2026-10-05 16:13)
 Módulos `proveedores/` (`Proveedor` con reputación calculada, `Resena`) y `fidelizacion/` (`CuentaFidelizacion` con
 `MovimientoPuntos` y nivel), con datos de prueba en memoria. Modelo de datos agregado en `docs/modelo-datos.md`.
