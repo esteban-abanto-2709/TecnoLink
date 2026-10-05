@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-016] Proveedor, reseñas y fidelización según el diagrama de clases (2026-10-05 16:13)
+Módulos `proveedores/` (`Proveedor` con reputación calculada, `Resena`) y `fidelizacion/` (`CuentaFidelizacion` con
+`MovimientoPuntos` y nivel), con datos de prueba en memoria. Modelo de datos agregado en `docs/modelo-datos.md`.
+
 ## [RM-015] Compra simulada según el diagrama de clases (2026-10-05 16:11)
 Módulo `compras/`: `Carrito` con `ItemCarrito` y `Pedido` con `DetallePedido` (pago simulado, 1 punto por cada S/ 10),
 con carrito y pedidos de prueba de `demo-client`. Modelo de datos agregado en `docs/modelo-datos.md`.

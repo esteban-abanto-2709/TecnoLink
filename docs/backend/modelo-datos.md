@@ -57,6 +57,72 @@ erDiagram
 
 `listarPublicaciones()` de `Categoria` es `PublicacionRepository.findByCategoriaId(...)`.
 
+## Proveedor, reseñas y fidelización (`proveedores/` y `fidelizacion/`, Esperanza)
+
+La reputación del proveedor es el promedio de las calificaciones de las reseñas de sus publicaciones. El saldo de la
+cuenta sale de sus movimientos: una acumulación suma y un canje resta. El nivel depende del saldo
+(BRONCE menos de 500, PLATA desde 500, ORO desde 1500).
+
+```mermaid
+erDiagram
+    proveedores ||--o{ publicaciones : "publica"
+    clientes ||--o{ resenas : "escribe"
+    publicaciones ||--o{ resenas : "califica"
+    clientes ||--|| cuentas_fidelizacion : "posee"
+    cuentas_fidelizacion ||--o{ movimientos_puntos : "registra"
+    pedidos |o--o| movimientos_puntos : "genera"
+
+    clientes {
+        varchar id PK
+    }
+    publicaciones {
+        varchar id_publicacion PK
+        varchar proveedor_id FK
+    }
+    pedidos {
+        bigint id_pedido PK
+    }
+    proveedores {
+        varchar id_proveedor PK
+        char ruc "11 dígitos, único"
+        varchar razon_social
+        varchar region
+        varchar descripcion
+        decimal reputacion "promedio de 1 a 5"
+    }
+    resenas {
+        bigint id_resena PK
+        varchar cliente_id FK
+        varchar publicacion_id FK
+        int calificacion "1 a 5"
+        varchar comentario "10 caracteres o más"
+        date fecha
+    }
+    cuentas_fidelizacion {
+        varchar cliente_id PK, FK
+        int puntos_acumulados
+        varchar nivel "BRONCE, PLATA, ORO"
+    }
+    movimientos_puntos {
+        bigint id_movimiento PK
+        varchar cliente_id FK
+        bigint pedido_id FK "solo si viene de una compra"
+        date fecha
+        varchar tipo "ACUMULACION, CANJE"
+        int puntos "mayor que 0"
+        varchar motivo
+    }
+```
+
+| Clase (dominio) | Tipo | Tabla | Repositorio en memoria |
+|---|---|---|---|
+| `Proveedor` | Aggregate | `proveedores` | `InMemoryProveedorRepository` |
+| `Resena` | Aggregate | `resenas` | `InMemoryResenaRepository` |
+| `CuentaFidelizacion` | Aggregate | `cuentas_fidelizacion` | `InMemoryCuentaFidelizacionRepository` |
+| `MovimientoPuntos` | Entity dentro de la cuenta | `movimientos_puntos` | Se guarda con su cuenta |
+
+Una reseña por cliente y por publicación (`existsByClienteIdAndPublicacionId`).
+
 ## Compra simulada (`compras/`, Leyla)
 
 Cada cliente tiene un solo carrito. Al comprar, cada ítem del carrito pasa a ser un detalle del pedido con el
