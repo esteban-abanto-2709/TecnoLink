@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-013] Cotizaciones y comparador: dominio y datos de prueba (2026-10-05 16:01)
+Módulo `cotizaciones/` con el modelo del profesor: `SolicitudCotizacion` y `Comparacion` (aggregates), `Cotizacion` y
+`Especificacion` (entities), repositorios en memoria con datos de prueba y el modelo de datos en `docs/modelo-datos.md`.
+
 ## [RM-007] Fidelización: puntos y canje de beneficios (2026-10-03 19:07)
 Módulo `loyalty`: `GET /benefits`, `GET /users/{userId}/points` (saldo calculado de los movimientos) y canje
 `POST /users/{userId}/points/redemptions` (saldo suficiente, una vez por beneficio). `awardPoints` para reseñas y compras.
