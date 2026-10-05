@@ -102,3 +102,10 @@ Criterios de toda la API:
   cotizaciones propias solo el cliente). El catálogo, los proveedores y las reseñas siguen siendo públicos en lectura.
 - **Hecho cuando:** sin token, las rutas protegidas dan 401; con el rol equivocado dan 403; con el rol correcto responden.
 - **Fecha:** 2026-10-02 · **Estado:** Abierto
+
+## [RM-013] Cotizaciones y comparador: dominio y datos de prueba
+- **Objetivo:** módulo `cotizaciones/` según el diagrama de clases del equipo y el modelo `learning-platform` del
+  profesor (`domain/aggregates`, `domain/entities`, `domain/valueobjects`, `domain/repositories`), con repositorios en
+  memoria en vez de MySQL: `SolicitudCotizacion`, `Cotizacion`, `Comparacion`, `Especificacion` y el modelo de datos en `docs/`.
+- **Hecho cuando:** las 4 clases existen con sus reglas y datos de prueba, la app arranca sin base de datos y el diagrama entidad-relación está en `docs/modelo-datos.md`.
+- **Fecha:** 2026-10-05 · **Estado:** En progreso (2026-10-05)
