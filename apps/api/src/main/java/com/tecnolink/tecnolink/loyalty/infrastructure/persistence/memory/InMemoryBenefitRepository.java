@@ -2,7 +2,6 @@ package com.tecnolink.tecnolink.loyalty.infrastructure.persistence.memory;
 
 import com.tecnolink.tecnolink.loyalty.domain.model.aggregates.Benefit;
 import com.tecnolink.tecnolink.loyalty.domain.repositories.BenefitRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -10,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Repository
 public class InMemoryBenefitRepository implements BenefitRepository {
 
     private final Map<String, Benefit> store = new LinkedHashMap<>();

@@ -1,45 +1,53 @@
 package com.tecnolink.tecnolink.suppliers.domain.model.aggregates;
 
+import com.tecnolink.tecnolink.iam.domain.model.aggregates.User;
 import com.tecnolink.tecnolink.suppliers.domain.model.enums.SupplierStatus;
 
 import java.time.LocalDate;
 import java.time.Year;
 
-public class Supplier {
-    private final String id;
-    private final String name;
+public class Supplier extends User {
     private final String ruc;
-    private final String phone;
+    private final String name;
+    private final String region;
     private final String district;
     private final String description;
     private final int since;
+    private final double reputation;
     private SupplierStatus status;
     private String reviewNote;
     private LocalDate reviewedOn;
 
-    public Supplier(String id, String name, String ruc, String phone, String district,
-                    String description, int since, boolean verified) {
-        if (id == null || id.isBlank()) {
-            throw new IllegalArgumentException("Supplier id is required");
+    public Supplier(String id, String firstName, String lastName, String email, String password, String phone,
+                    LocalDate registeredOn, boolean active, String ruc, String name, String region,
+                    String district, String description, int since, double reputation, SupplierStatus status,
+                    String reviewNote, LocalDate reviewedOn) {
+        super(id, firstName, lastName, email, password, phone, registeredOn, active);
+        if (ruc == null || !ruc.matches("\\d{11}")) {
+            throw new IllegalArgumentException("Supplier RUC must have 11 digits");
         }
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Supplier name is required");
         }
-        if (ruc == null || !ruc.matches("\\d{11}")) {
-            throw new IllegalArgumentException("Supplier RUC must have 11 digits");
-        }
         if (since > Year.now().getValue()) {
             throw new IllegalArgumentException("Supplier start year cannot be in the future");
         }
-        this.id = id;
-        this.name = name.trim();
+        if (reputation < 0 || reputation > 5) {
+            throw new IllegalArgumentException("Supplier reputation must be between 0 and 5");
+        }
+        if (status == null) {
+            throw new IllegalArgumentException("Supplier status is required");
+        }
         this.ruc = ruc;
-        this.phone = phone;
+        this.name = name.trim();
+        this.region = region;
         this.district = district;
         this.description = description;
         this.since = since;
-        this.status = verified ? SupplierStatus.VERIFIED : SupplierStatus.PENDING;
-        this.reviewNote = "";
+        this.reputation = reputation;
+        this.status = status;
+        this.reviewNote = reviewNote == null ? "" : reviewNote;
+        this.reviewedOn = reviewedOn;
     }
 
     public void review(SupplierStatus newStatus, String note) {
@@ -55,20 +63,16 @@ public class Supplier {
         return status == SupplierStatus.SUSPENDED;
     }
 
-    public String getId() {
-        return id;
+    public String getRuc() {
+        return ruc;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getRuc() {
-        return ruc;
-    }
-
-    public String getPhone() {
-        return phone;
+    public String getRegion() {
+        return region;
     }
 
     public String getDistrict() {
@@ -81,6 +85,10 @@ public class Supplier {
 
     public int getSince() {
         return since;
+    }
+
+    public double getReputation() {
+        return reputation;
     }
 
     public boolean isVerified() {

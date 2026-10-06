@@ -1,5 +1,7 @@
 package com.tecnolink.tecnolink.loyalty.domain.model.aggregates;
 
+import com.tecnolink.tecnolink.loyalty.domain.model.enums.MovementType;
+
 import java.time.LocalDate;
 
 public class PointsMovement {
@@ -9,6 +11,7 @@ public class PointsMovement {
     private final String description;
     private final int points;
     private final String benefitId;
+    private final MovementType type;
 
     public PointsMovement(String id, String userId, LocalDate date, String description, int points, String benefitId) {
         if (id == null || id.isBlank()) {
@@ -29,6 +32,7 @@ public class PointsMovement {
         this.description = description;
         this.points = points;
         this.benefitId = benefitId;
+        this.type = points > 0 ? MovementType.EARN : MovementType.REDEEM;
     }
 
     public String getId() {
@@ -53,5 +57,9 @@ public class PointsMovement {
 
     public String getBenefitId() {
         return benefitId;
+    }
+
+    public MovementType getType() {
+        return type;
     }
 }

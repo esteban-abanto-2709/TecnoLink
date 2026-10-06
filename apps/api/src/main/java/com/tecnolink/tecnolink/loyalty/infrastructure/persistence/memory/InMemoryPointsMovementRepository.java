@@ -2,7 +2,6 @@ package com.tecnolink.tecnolink.loyalty.infrastructure.persistence.memory;
 
 import com.tecnolink.tecnolink.loyalty.domain.model.aggregates.PointsMovement;
 import com.tecnolink.tecnolink.loyalty.domain.repositories.PointsMovementRepository;
-import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Repository
 public class InMemoryPointsMovementRepository implements PointsMovementRepository {
 
     private final Map<String, PointsMovement> store = new LinkedHashMap<>();

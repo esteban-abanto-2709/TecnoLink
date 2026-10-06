@@ -7,8 +7,9 @@ public class Category {
     private String name;
     private final CategoryKind kind;
     private boolean active;
+    private final String description;
 
-    public Category(String id, String name, CategoryKind kind) {
+    public Category(String id, String name, CategoryKind kind, String description) {
         if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("Category id is required");
         }
@@ -18,6 +19,7 @@ public class Category {
         this.id = id;
         this.kind = kind;
         this.active = true;
+        this.description = description;
         rename(name);
     }
 
@@ -50,5 +52,9 @@ public class Category {
 
     public boolean isActive() {
         return active;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

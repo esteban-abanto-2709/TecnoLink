@@ -4,6 +4,7 @@ import com.tecnolink.tecnolink.catalog.domain.model.aggregates.Category;
 import com.tecnolink.tecnolink.catalog.domain.model.aggregates.Product;
 import com.tecnolink.tecnolink.catalog.domain.model.aggregates.TechService;
 import com.tecnolink.tecnolink.catalog.domain.model.enums.CategoryKind;
+import com.tecnolink.tecnolink.catalog.domain.model.enums.ListingStatus;
 import com.tecnolink.tecnolink.catalog.domain.model.enums.ServicePricing;
 import com.tecnolink.tecnolink.catalog.domain.model.valueobjects.CatalogItem;
 import com.tecnolink.tecnolink.catalog.domain.repositories.CategoryRepository;
@@ -13,6 +14,7 @@ import com.tecnolink.tecnolink.shared.domain.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.text.Normalizer;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +65,7 @@ public class CatalogService {
         if (categoryRepository.findById(id).isPresent()) {
             throw new IllegalArgumentException("Category " + id + " already exists");
         }
-        return categoryRepository.save(new Category(id, name, kind));
+        return categoryRepository.save(new Category(id, name, kind, null));
     }
 
     public Category renameCategory(String id, String name) {
@@ -132,8 +134,8 @@ public class CatalogService {
     public Product createProduct(String supplierId, String name, String brand, String categoryId,
                                  double price, String description) {
         checkCategoryAccepts(categoryId, CategoryKind.PRODUCT);
-        Product product = new Product(uniqueListingId(name), name, brand, categoryId, supplierId,
-                price, description, Map.of());
+        Product product = new Product(uniqueListingId(name), name, brand, null, categoryId, supplierId,
+                price, description, List.of(), LocalDate.now(), ListingStatus.ACTIVE, 0, List.of());
         return productRepository.save(product);
     }
 
@@ -147,7 +149,8 @@ public class CatalogService {
                                      ServicePricing pricing, String description, String coverage) {
         checkCategoryAccepts(categoryId, CategoryKind.SERVICE);
         TechService service = new TechService(uniqueListingId(name), name, categoryId, supplierId,
-                price, pricing, description, coverage);
+                price, description, List.of(), LocalDate.now(), ListingStatus.ACTIVE, pricing, coverage,
+                null, null);
         return techServiceRepository.save(service);
     }
 

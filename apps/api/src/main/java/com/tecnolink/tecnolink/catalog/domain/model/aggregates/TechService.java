@@ -1,85 +1,53 @@
 package com.tecnolink.tecnolink.catalog.domain.model.aggregates;
 
+import com.tecnolink.tecnolink.catalog.domain.model.enums.ListingStatus;
 import com.tecnolink.tecnolink.catalog.domain.model.enums.ServicePricing;
 
-public class TechService {
-    private final String id;
-    private String name;
-    private final String categoryId;
-    private final String supplierId;
-    private double price;
+import java.time.LocalDate;
+import java.util.List;
+
+public class TechService extends Listing {
     private ServicePricing pricing;
-    private String description;
     private String coverage;
+    private final String modality;
+    private final String estimatedDuration;
 
     public TechService(String id, String name, String categoryId, String supplierId, double price,
-                       ServicePricing pricing, String description, String coverage) {
-        if (id == null || id.isBlank()) {
-            throw new IllegalArgumentException("Service id is required");
-        }
-        if (categoryId == null || categoryId.isBlank()) {
-            throw new IllegalArgumentException("Service category is required");
-        }
-        if (supplierId == null || supplierId.isBlank()) {
-            throw new IllegalArgumentException("Service supplier is required");
-        }
+                       String description, List<String> images, LocalDate publishedOn, ListingStatus status,
+                       ServicePricing pricing, String coverage, String modality, String estimatedDuration) {
+        super(id, name, categoryId, supplierId, price, description, images, publishedOn, status);
         if (pricing == null) {
             throw new IllegalArgumentException("Service pricing is required");
         }
-        this.id = id;
-        this.categoryId = categoryId;
-        this.supplierId = supplierId;
         this.pricing = pricing;
-        update(name, price, pricing, description, coverage);
+        this.coverage = coverage == null ? null : coverage.trim();
+        this.modality = modality;
+        this.estimatedDuration = estimatedDuration;
     }
 
     public void update(String name, double price, ServicePricing pricing, String description, String coverage) {
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Service name is required");
-        }
-        if (price < 0) {
-            throw new IllegalArgumentException("Service price cannot be negative");
-        }
-        this.name = name.trim();
-        this.price = price;
+        updateListing(name, price, description);
         if (pricing != null) {
             this.pricing = pricing;
         }
-        this.description = description;
         if (coverage != null) {
             this.coverage = coverage.trim();
         }
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getCategoryId() {
-        return categoryId;
-    }
-
-    public String getSupplierId() {
-        return supplierId;
-    }
-
-    public double getPrice() {
-        return price;
     }
 
     public ServicePricing getPricing() {
         return pricing;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public String getCoverage() {
         return coverage;
+    }
+
+    public String getModality() {
+        return modality;
+    }
+
+    public String getEstimatedDuration() {
+        return estimatedDuration;
     }
 }
