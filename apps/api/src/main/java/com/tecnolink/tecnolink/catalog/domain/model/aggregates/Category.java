@@ -1,32 +1,52 @@
 package com.tecnolink.tecnolink.catalog.domain.model.aggregates;
 
+import com.tecnolink.tecnolink.catalog.domain.events.CategoryCreatedEvent;
+import com.tecnolink.tecnolink.catalog.domain.exceptions.DomainException;
 import com.tecnolink.tecnolink.catalog.domain.model.enums.CategoryKind;
+import com.tecnolink.tecnolink.shared.domain.AggregateRoot;
 
-public class Category {
+public class Category extends AggregateRoot {
+
     private final String id;
     private String name;
     private final CategoryKind kind;
     private boolean active;
     private final String description;
 
-    public Category(String id, String name, CategoryKind kind, String description) {
+    public Category(
+            String id,
+            String name,
+            CategoryKind kind,
+            String description
+    ) {
         if (id == null || id.isBlank()) {
-            throw new IllegalArgumentException("Category id is required");
+            throw new DomainException("Category id is required");
         }
+
         if (kind == null) {
-            throw new IllegalArgumentException("Category kind is required");
+            throw new DomainException("Category kind is required");
         }
+
         this.id = id;
         this.kind = kind;
         this.active = true;
         this.description = description;
+
         rename(name);
+
+        registerEvent(
+                new CategoryCreatedEvent(
+                        this.id,
+                        this.name
+                )
+        );
     }
 
     public void rename(String newName) {
         if (newName == null || newName.isBlank()) {
-            throw new IllegalArgumentException("Category name is required");
+            throw new DomainException("Category name is required");
         }
+
         this.name = newName.trim();
     }
 

@@ -2,36 +2,77 @@ package com.tecnolink.tecnolink.catalog.infrastructure.persistence.jpa.adapters;
 
 import com.tecnolink.tecnolink.catalog.domain.model.aggregates.Product;
 import com.tecnolink.tecnolink.catalog.domain.repositories.ProductRepository;
+import com.tecnolink.tecnolink.catalog.infrastructure.persistence.jpa.entities.ProductJpaEntity;
 import com.tecnolink.tecnolink.catalog.infrastructure.persistence.jpa.mappers.ProductPersistenceMapper;
 import com.tecnolink.tecnolink.catalog.infrastructure.persistence.jpa.repositories.ProductJpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+@Component
 public class ProductRepositoryAdapter implements ProductRepository {
 
-    private final ProductJpaRepository jpaRepository;
+    private final ProductJpaRepository productJpaRepository;
 
-    public ProductRepositoryAdapter(ProductJpaRepository jpaRepository) {
-        this.jpaRepository = jpaRepository;
+    public ProductRepositoryAdapter(
+            ProductJpaRepository productJpaRepository
+    ) {
+        this.productJpaRepository = productJpaRepository;
+    }
+
+    @Override
+    public Product save(Product product) {
+        ProductJpaEntity entity =
+                ProductPersistenceMapper.toEntity(product);
+
+        ProductJpaEntity savedEntity =
+                productJpaRepository.save(entity);
+
+        return ProductPersistenceMapper.toDomain(savedEntity);
+    }
+
+    @Override
+    public Optional<Product> findById(String id) {
+        return productJpaRepository.findById(id)
+                .map(ProductPersistenceMapper::toDomain);
     }
 
     @Override
     public List<Product> findAll() {
-        return jpaRepository.findAll().stream()
+        return productJpaRepository.findAll()
+                .stream()
                 .map(ProductPersistenceMapper::toDomain)
                 .toList();
     }
 
     @Override
-    public Optional<Product> findById(String id) {
-        return jpaRepository.findById(id).map(ProductPersistenceMapper::toDomain);
+    public List<Product> search(String keyword) {
+        return productJpaRepository
+                .findByNameContainingIgnoreCase(keyword)
+                .stream()
+                .map(ProductPersistenceMapper::toDomain)
+                .toList();
     }
 
     @Override
-    public Product save(Product product) {
-        return ProductPersistenceMapper.toDomain(jpaRepository.save(ProductPersistenceMapper.toEntity(product)));
+    public List<Product> findByCategoryId(String categoryId) {
+        return productJpaRepository
+                .findByCategoryId(categoryId)
+                .stream()
+                .map(ProductPersistenceMapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Product> findByPriceBetween(
+            double minPrice,
+            double maxPrice
+    ) {
+        return productJpaRepository
+                .findByPriceBetween(minPrice, maxPrice)
+                .stream()
+                .map(ProductPersistenceMapper::toDomain)
+                .toList();
     }
 }
