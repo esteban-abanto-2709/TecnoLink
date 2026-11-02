@@ -10,4 +10,5 @@ public record QuoteRequestDto(Long id,
                               LocalDate requestedOn,
                               int quantity,
                               String requirement,
-                              QuoteRequestStatus status) {}
+                              QuoteRequestStatus status,
+                              QuoteDto quote) {}

@@ -1,7 +1,9 @@
 package com.tecnolink.tecnolink.quotes.application.assemblers;
 
+import com.tecnolink.tecnolink.quotes.application.dtos.QuoteDto;
 import com.tecnolink.tecnolink.quotes.application.dtos.QuoteRequestDto;
 import com.tecnolink.tecnolink.quotes.domain.aggregates.QuoteRequest;
+import com.tecnolink.tecnolink.quotes.domain.entities.Quote;
 
 public final class QuotesDtoAssembler {
     private QuotesDtoAssembler() {}
@@ -13,6 +15,18 @@ public final class QuotesDtoAssembler {
                 q.getRequestedOn(),
                 q.getQuantity(),
                 q.getRequirement(),
-                q.getStatus());
+                q.getStatus(),
+                q.getQuote() == null ? null : toDto(q.getQuote()));
+    }
+
+    public static QuoteDto toDto(Quote q) {
+        return new QuoteDto(q.getId(),
+                q.getIssueDate(),
+                q.getValidityDays(),
+                q.validUntil(),
+                q.getSubtotal(),
+                q.getIgv(),
+                q.getTotal(),
+                q.getConditions());
     }
 }

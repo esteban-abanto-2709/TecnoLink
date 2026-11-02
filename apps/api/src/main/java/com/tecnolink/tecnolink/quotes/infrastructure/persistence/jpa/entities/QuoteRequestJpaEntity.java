@@ -45,4 +45,12 @@ public class QuoteRequestJpaEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private QuoteRequestStatus status;
+
+    @OneToOne(mappedBy = "request", cascade = CascadeType.ALL, orphanRemoval = true)
+    private QuoteJpaEntity quote;
+
+    public void replaceQuote(QuoteJpaEntity quote) {
+        if (quote != null) quote.setRequest(this);
+        this.quote = quote;
+    }
 }

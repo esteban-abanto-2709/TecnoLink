@@ -1,5 +1,6 @@
 package com.tecnolink.tecnolink.quotes.interfaces.rest.controllers;
 
+import com.tecnolink.tecnolink.quotes.application.commands.ExpireQuoteRequestCommand;
 import com.tecnolink.tecnolink.quotes.application.dtos.QuoteRequestDto;
 import com.tecnolink.tecnolink.quotes.application.handlers.commands.QuoteRequestCommandHandler;
 import com.tecnolink.tecnolink.quotes.application.handlers.queries.GetQuoteRequestQueryHandler;
@@ -10,6 +11,7 @@ import com.tecnolink.tecnolink.quotes.application.queries.ListClientQuoteRequest
 import com.tecnolink.tecnolink.quotes.application.queries.ListSupplierQuoteRequestsQuery;
 import com.tecnolink.tecnolink.quotes.interfaces.rest.documentation.QuoteRequestApi;
 import com.tecnolink.tecnolink.quotes.interfaces.rest.mappers.QuoteRequestRestMapper;
+import com.tecnolink.tecnolink.quotes.interfaces.rest.resources.QuoteRequestAnswerRequest;
 import com.tecnolink.tecnolink.quotes.interfaces.rest.resources.QuoteRequestCreateRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,5 +56,17 @@ public class QuoteRequestController implements QuoteRequestApi {
     @GetMapping(params = "supplierId")
     public List<QuoteRequestDto> bySupplier(@RequestParam String supplierId) {
         return bySupplier.handle(new ListSupplierQuoteRequestsQuery(supplierId));
+    }
+
+    @Override
+    @PostMapping("/{id}/answer")
+    public QuoteRequestDto answer(@PathVariable Long id, @RequestBody QuoteRequestAnswerRequest r) {
+        return commands.handle(QuoteRequestRestMapper.toCommand(id, r));
+    }
+
+    @Override
+    @PostMapping("/{id}/expire")
+    public QuoteRequestDto expire(@PathVariable Long id) {
+        return commands.handle(new ExpireQuoteRequestCommand(id));
     }
 }
