@@ -34,7 +34,7 @@ Usuario de cada petición (decidido en el plan 6): va en la ruta, `/api/v1/users
 ## Reglas de trabajo
 
 - **Solo lo que enseña el curso** (clases y labs de `marcos-de-desarrollo-web/raw`, resumidos en
-  `marcos-de-desarrollo-web/procesado/`). Sin Swagger, sin librerías ni configuración que no se haya visto.
+  `marcos-de-desarrollo-web/procesado/`). Sin librerías ni configuración que no se haya visto (Swagger sí: semana 11).
   Si algo no se vio en clase, no entra.
 - **Estructura del profesor** (DDD + hexagonal), igual en todos los módulos:
   ```

@@ -22,7 +22,7 @@ Criterios de toda la API:
 - **APF2 (semana 8):** datos sintéticos en repositorios en memoria, cargados con el mismo contenido de `catalog.ts`.
   **APF3 (semana 12):** MySQL con Spring Data. **Final (semana 18):** Spring Security.
 - **Solo lo que enseña el curso.** Nada de librerías ni clases que no salgan en las clases o labs
-  (sin Swagger, sin configuración extra). Las pruebas se hacen con el navegador, Postman o el cliente HTTP de IntelliJ.
+  (sin configuración extra). Swagger UI sí entra: el profesor lo enseña en la semana 11 y la sustentación se hace con él.
 - Errores como en el lab de la semana 6: `NotFoundException` → `404 {"error": ...}`, validación →
   `400 {"errors": [...]}`, reglas de dominio (`IllegalArgumentException`) → `400 {"error": ...}`.
 - El usuario va **en la ruta**: `/api/v1/users/{userId}/...` (puntos, compras, cotizaciones del cliente).
@@ -59,7 +59,7 @@ Criterios de toda la API:
 
   `status` ∈ `sent | answered | expired`. Una cotización respondida no se vuelve a responder (`400`).
 - **Hecho cuando:** el flujo completo (el cliente pide, el proveedor la ve en su bandeja y responde, el cliente ve la respuesta) funciona solo con la API.
-- **Fecha:** 2026-10-02 · **Estado:** Abierto
+- **Fecha:** 2026-10-02 · **Estado:** En progreso (2026-11-02)
 
 ## [RM-006] Pedidos: compra simulada
 - **Objetivo:** reemplazar `placeOrder` y `useOrders` de `lib/orders.ts` (`/checkout`, `/orders`).
