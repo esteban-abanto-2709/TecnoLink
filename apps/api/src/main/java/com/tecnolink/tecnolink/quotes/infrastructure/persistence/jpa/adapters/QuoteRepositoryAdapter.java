@@ -1,6 +1,6 @@
 package com.tecnolink.tecnolink.quotes.infrastructure.persistence.jpa.adapters;
 
-import com.tecnolink.tecnolink.quotes.domain.model.aggregates.Quote;
+import com.tecnolink.tecnolink.quotes.domain.aggregates.Quote;
 import com.tecnolink.tecnolink.quotes.domain.repositories.QuoteRepository;
 import com.tecnolink.tecnolink.quotes.infrastructure.persistence.jpa.mappers.QuotePersistenceMapper;
 import com.tecnolink.tecnolink.quotes.infrastructure.persistence.jpa.repositories.QuoteJpaRepository;

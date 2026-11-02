@@ -1,6 +1,6 @@
 package com.tecnolink.tecnolink.quotes.infrastructure.persistence.jpa.adapters;
 
-import com.tecnolink.tecnolink.quotes.domain.model.aggregates.Comparison;
+import com.tecnolink.tecnolink.quotes.domain.aggregates.Comparison;
 import com.tecnolink.tecnolink.quotes.domain.repositories.ComparisonRepository;
 import com.tecnolink.tecnolink.quotes.infrastructure.persistence.jpa.mappers.ComparisonPersistenceMapper;
 import com.tecnolink.tecnolink.quotes.infrastructure.persistence.jpa.repositories.ComparisonJpaRepository;

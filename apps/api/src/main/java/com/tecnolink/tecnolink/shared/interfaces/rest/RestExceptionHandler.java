@@ -1,5 +1,6 @@
 package com.tecnolink.tecnolink.shared.interfaces.rest;
 
+import com.tecnolink.tecnolink.quotes.domain.exceptions.QuoteRequestNotFoundException;
 import com.tecnolink.tecnolink.shared.domain.exceptions.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -12,8 +13,8 @@ import java.util.Map;
 @RestControllerAdvice
 public class RestExceptionHandler {
 
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<?> handleNotFound(NotFoundException ex) {
+    @ExceptionHandler({NotFoundException.class, QuoteRequestNotFoundException.class})
+    public ResponseEntity<?> handleNotFound(RuntimeException ex) {
         return ResponseEntity.status(404).body(Map.of("error", ex.getMessage()));
     }
 

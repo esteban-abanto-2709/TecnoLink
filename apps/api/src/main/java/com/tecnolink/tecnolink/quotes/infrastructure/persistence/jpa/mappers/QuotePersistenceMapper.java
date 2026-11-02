@@ -1,6 +1,6 @@
 package com.tecnolink.tecnolink.quotes.infrastructure.persistence.jpa.mappers;
 
-import com.tecnolink.tecnolink.quotes.domain.model.aggregates.Quote;
+import com.tecnolink.tecnolink.quotes.domain.aggregates.Quote;
 import com.tecnolink.tecnolink.quotes.infrastructure.persistence.jpa.entities.QuoteJpaEntity;
 
 public final class QuotePersistenceMapper {

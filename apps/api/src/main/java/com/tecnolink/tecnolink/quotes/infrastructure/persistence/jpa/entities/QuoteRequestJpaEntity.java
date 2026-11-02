@@ -2,25 +2,19 @@ package com.tecnolink.tecnolink.quotes.infrastructure.persistence.jpa.entities;
 
 import com.tecnolink.tecnolink.catalog.infrastructure.persistence.jpa.entities.ListingJpaEntity;
 import com.tecnolink.tecnolink.iam.infrastructure.persistence.jpa.entities.ClientJpaEntity;
-import com.tecnolink.tecnolink.quotes.domain.model.enums.QuoteRequestStatus;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.tecnolink.tecnolink.quotes.domain.valueobjects.QuoteRequestStatus;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDate;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "quote_requests")
+@Table(name = "quote_requests", indexes = {@Index(name = "ix_quote_request_client", columnList = "client_id"), @Index(name = "ix_quote_request_listing", columnList = "listing_id")})
 public class QuoteRequestJpaEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -39,58 +33,16 @@ public class QuoteRequestJpaEntity {
     @JoinColumn(name = "listing_id", insertable = false, updatable = false)
     private ListingJpaEntity listing;
 
-    @Column(name = "request_date", nullable = false)
-    private LocalDate date;
+    @Column(name = "request_date", nullable = false, updatable = false)
+    private LocalDate requestedOn;
 
     @Column(nullable = false)
     private int quantity;
 
-    @Column(length = 1000)
+    @Column(nullable = false, length = 1000)
     private String requirement;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private QuoteRequestStatus status;
-
-    protected QuoteRequestJpaEntity() {
-    }
-
-    public QuoteRequestJpaEntity(Long id, String clientId, String listingId, LocalDate date, int quantity,
-                                 String requirement, QuoteRequestStatus status) {
-        this.id = id;
-        this.clientId = clientId;
-        this.listingId = listingId;
-        this.date = date;
-        this.quantity = quantity;
-        this.requirement = requirement;
-        this.status = status;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public String getListingId() {
-        return listingId;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public String getRequirement() {
-        return requirement;
-    }
-
-    public QuoteRequestStatus getStatus() {
-        return status;
-    }
 }

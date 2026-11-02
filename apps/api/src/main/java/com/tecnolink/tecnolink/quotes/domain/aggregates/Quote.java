@@ -1,4 +1,4 @@
-package com.tecnolink.tecnolink.quotes.domain.model.aggregates;
+package com.tecnolink.tecnolink.quotes.domain.aggregates;
 
 import java.time.LocalDate;
 

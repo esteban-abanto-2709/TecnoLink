@@ -1,6 +1,6 @@
 package com.tecnolink.tecnolink.quotes.infrastructure.persistence.jpa.mappers;
 
-import com.tecnolink.tecnolink.quotes.domain.model.aggregates.Comparison;
+import com.tecnolink.tecnolink.quotes.domain.aggregates.Comparison;
 import com.tecnolink.tecnolink.quotes.infrastructure.persistence.jpa.entities.ComparisonJpaEntity;
 
 public final class ComparisonPersistenceMapper {

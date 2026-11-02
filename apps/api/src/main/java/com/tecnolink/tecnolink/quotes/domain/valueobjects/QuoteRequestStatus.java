@@ -1,7 +1,6 @@
-package com.tecnolink.tecnolink.quotes.domain.model.enums;
+package com.tecnolink.tecnolink.quotes.domain.valueobjects;
 
 public enum QuoteRequestStatus {
-    DRAFT,
     SENT,
     ANSWERED,
     EXPIRED

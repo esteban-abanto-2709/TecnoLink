@@ -1,6 +1,6 @@
 package com.tecnolink.tecnolink.quotes.domain.repositories;
 
-import com.tecnolink.tecnolink.quotes.domain.model.aggregates.Quote;
+import com.tecnolink.tecnolink.quotes.domain.aggregates.Quote;
 
 import java.util.Optional;
 
