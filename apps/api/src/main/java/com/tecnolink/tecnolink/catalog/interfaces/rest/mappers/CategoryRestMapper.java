@@ -40,14 +40,4 @@ public final class CategoryRestMapper {
                 request.active()
         );
     }
-
-    public static SetCategoryActiveCommand toCommand(
-            String categoryId,
-            boolean active
-    ) {
-        return new SetCategoryActiveCommand(
-                categoryId,
-                active
-        );
-    }
-}
+}

@@ -8,15 +8,29 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public record CreateTechServiceRequest(
-        @NotBlank String name,
-        @NotBlank String categoryId,
-        @NotBlank String supplierId,
-        @Min(0) double price,
+        @NotBlank
+        String name,
+
+        @NotBlank
+        String categoryId,
+
+        @NotBlank
+        String supplierId,
+
+        @Min(0)
+        double price,
+
         String description,
+
         List<String> images,
-        @NotNull ServicePricing pricing,
+
+        @NotNull
+        ServicePricing pricing,
+
         String coverage,
+
         String modality,
+
         String estimatedDuration
 ) {
-}
+}

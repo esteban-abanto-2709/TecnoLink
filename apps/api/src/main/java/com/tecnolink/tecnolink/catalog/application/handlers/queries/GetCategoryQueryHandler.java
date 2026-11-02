@@ -1,5 +1,6 @@
 package com.tecnolink.tecnolink.catalog.application.handlers.queries;
 
+import com.tecnolink.tecnolink.catalog.application.assemblers.CategoryAssembler;
 import com.tecnolink.tecnolink.catalog.application.dtos.CategoryDto;
 import com.tecnolink.tecnolink.catalog.application.queries.GetCategoryQuery;
 import com.tecnolink.tecnolink.catalog.domain.model.aggregates.Category;
@@ -16,23 +17,9 @@ public class GetCategoryQueryHandler {
     }
 
     public CategoryDto handle(GetCategoryQuery query) {
-
         Category category = categoryRepository.findById(query.categoryId())
-                .orElseThrow(() ->
-                        new IllegalArgumentException("Category not found")
-                );
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
 
-        return toDto(category);
+        return CategoryAssembler.toDto(category);
     }
-
-    private CategoryDto toDto(Category category) {
-
-        return new CategoryDto(
-                category.getId(),
-                category.getName(),
-                category.getKind(),
-                category.isActive(),
-                category.getDescription()
-        );
-    }
-}
+}

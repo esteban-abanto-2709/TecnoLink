@@ -53,7 +53,10 @@ public abstract class ListingJpaEntity {
     private String description;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "listing_images", joinColumns = @JoinColumn(name = "listing_id"))
+    @CollectionTable(
+            name = "listing_images",
+            joinColumns = @JoinColumn(name = "listing_id")
+    )
     @OrderColumn(name = "position")
     @Column(name = "image_url")
     private List<String> images = new ArrayList<>();
@@ -68,16 +71,26 @@ public abstract class ListingJpaEntity {
     protected ListingJpaEntity() {
     }
 
-    protected ListingJpaEntity(String id, String name, String categoryId, String supplierId, double price,
-                               String description, List<String> images, LocalDate publishedOn,
-                               ListingStatus status) {
+    protected ListingJpaEntity(
+            String id,
+            String name,
+            String categoryId,
+            String supplierId,
+            double price,
+            String description,
+            List<String> images,
+            LocalDate publishedOn,
+            ListingStatus status
+    ) {
         this.id = id;
         this.name = name;
         this.categoryId = categoryId;
         this.supplierId = supplierId;
         this.price = price;
         this.description = description;
-        this.images = new ArrayList<>(images);
+        this.images = new ArrayList<>(
+                images == null ? List.of() : images
+        );
         this.publishedOn = publishedOn;
         this.status = status;
     }

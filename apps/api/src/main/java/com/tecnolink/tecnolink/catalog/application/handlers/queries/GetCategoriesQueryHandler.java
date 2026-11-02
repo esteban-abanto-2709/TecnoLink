@@ -21,7 +21,6 @@ public class GetCategoriesQueryHandler {
     public List<CategoryDto> handle(GetCategoriesQuery query) {
         return categoryRepository.findAll()
                 .stream()
-                .filter(Category::isActive)
                 .map(CategoryAssembler::toDto)
                 .toList();
     }
