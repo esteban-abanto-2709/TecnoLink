@@ -22,7 +22,6 @@ import java.util.Map;
 @Service
 public class CatalogService {
 
-    private static final int MAX_COMPARE = 4;
 
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
@@ -97,17 +96,6 @@ public class CatalogService {
     public Product getProduct(String id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Product " + id + " not found"));
-    }
-
-    public List<Product> getProductsToCompare(List<String> ids) {
-        if (ids.size() > MAX_COMPARE) {
-            throw new IllegalArgumentException("You can compare up to " + MAX_COMPARE + " products");
-        }
-        List<Product> products = new ArrayList<>();
-        for (String id : ids) {
-            productRepository.findById(id).ifPresent(products::add);
-        }
-        return products;
     }
 
     public TechService getService(String id) {

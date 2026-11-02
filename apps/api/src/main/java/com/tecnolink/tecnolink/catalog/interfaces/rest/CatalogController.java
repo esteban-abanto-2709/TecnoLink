@@ -2,7 +2,6 @@ package com.tecnolink.tecnolink.catalog.interfaces.rest;
 
 import com.tecnolink.tecnolink.catalog.application.CatalogService;
 import com.tecnolink.tecnolink.catalog.domain.model.aggregates.Category;
-import com.tecnolink.tecnolink.catalog.domain.model.aggregates.Product;
 import com.tecnolink.tecnolink.catalog.domain.model.aggregates.TechService;
 import com.tecnolink.tecnolink.catalog.domain.model.enums.CategoryKind;
 import com.tecnolink.tecnolink.catalog.domain.model.valueobjects.CatalogItem;
@@ -33,16 +32,6 @@ public class CatalogController {
     @GetMapping("/categories")
     public List<Category> categories() {
         return catalogService.getCategories();
-    }
-
-    @GetMapping("/products/{id}")
-    public Product product(@PathVariable String id) {
-        return catalogService.getProduct(id);
-    }
-
-    @GetMapping("/products")
-    public List<Product> productsToCompare(@RequestParam List<String> ids) {
-        return catalogService.getProductsToCompare(ids);
     }
 
     @GetMapping("/services/{id}")

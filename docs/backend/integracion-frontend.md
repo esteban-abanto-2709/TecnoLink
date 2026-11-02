@@ -22,9 +22,9 @@ diferencias aquí.
 | Endpoint | Reemplaza en el front | Diferencias |
 |---|---|---|
 | `GET /api/v1/categories` | `categories`, `getCategory(id)` | Solo las activas. No hay endpoint por id: el front busca en la lista. Cada categoría trae además `active`. Ojo: los productos de una categoría desactivada siguen existiendo, así que en su detalle `getCategory` no la encuentra; el front debe tolerarlo (por ejemplo, no mostrar la categoría) |
-| `GET /api/v1/products/{id}` | `getProduct(id)` | Un id inexistente da 404. El front hoy recibe `undefined` |
+| `GET /api/v1/products/{id}` | `getProduct(id)` | Ahora lo atiende `ProductController` (Carlos) y devuelve `ProductDto`. Un id inexistente da 404. El front hoy recibe `undefined` |
 | `GET /api/v1/services/{id}` | `getService(id)` | Igual que el anterior |
-| `GET /api/v1/products?ids=a,b` | `getProduct` en bucle dentro de `/compare` | Devuelve solo los ids que son productos, en el orden pedido (igual que el `.filter` del front). Más de 4 da 400 |
+| ~~`GET /api/v1/products?ids=a,b`~~ | `getProduct` en bucle dentro de `/compare` | **Eliminado**: chocaba con `GET /api/v1/products` de `ProductController`, que devuelve todos los productos. El comparador pasa al módulo `quotes` (RM-005) |
 | `GET /api/v1/catalog?query=&categoryId=&kind=&minPrice=&maxPrice=` | `searchCatalog(...)`, `catalogItems()` | Mismos nombres de parámetros. `kind` va en mayúsculas. En productos, `pricing` llega como `null` (no `undefined`): el `item.pricing ? ...` del front funciona igual. |
 | `GET /api/v1/admin/categories` | `useAdminCategories()` | Devuelve todas, con `active`. El front hoy fusiona el mock con su store local (`names`, `disabled`); con la API eso desaparece |
 | `POST /api/v1/admin/categories` | `createCategory(name, kind)` | Body `{ name, kind }` con `kind` en mayúsculas. Duplicado da `400 {"error": "Category X already exists"}`. El front puede dejar de validar con `isDuplicateCategory` o mantenerlo como aviso previo |
