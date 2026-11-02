@@ -1,5 +1,6 @@
 package com.tecnolink.tecnolink.shared.interfaces.rest;
 
+import com.tecnolink.tecnolink.quotes.domain.exceptions.ComparisonNotFoundException;
 import com.tecnolink.tecnolink.quotes.domain.exceptions.QuoteRequestNotFoundException;
 import com.tecnolink.tecnolink.quotes.domain.exceptions.SpecificationNotFoundException;
 import com.tecnolink.tecnolink.shared.domain.exceptions.NotFoundException;
@@ -14,7 +15,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class RestExceptionHandler {
 
-    @ExceptionHandler({NotFoundException.class, QuoteRequestNotFoundException.class, SpecificationNotFoundException.class})
+    @ExceptionHandler({NotFoundException.class, QuoteRequestNotFoundException.class, SpecificationNotFoundException.class, ComparisonNotFoundException.class})
     public ResponseEntity<?> handleNotFound(RuntimeException ex) {
         return ResponseEntity.status(404).body(Map.of("error", ex.getMessage()));
     }

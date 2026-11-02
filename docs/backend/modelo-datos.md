@@ -219,65 +219,58 @@ erDiagram
 | `Pedido` | Aggregate | `pedidos` | `InMemoryPedidoRepository` |
 | `DetallePedido` | Entity dentro del pedido | `detalles_pedido` | Se guarda con su pedido |
 
-## Cotizaciones y comparador (`cotizaciones/`, Esteban)
+## Cotizaciones y comparador (`quotes/`, Esteban)
 
 ```mermaid
 erDiagram
-    clientes ||--o{ solicitudes_cotizacion : "envía"
-    publicaciones ||--o{ solicitudes_cotizacion : "sobre"
-    solicitudes_cotizacion ||--o| cotizaciones : "genera"
-    clientes ||--o{ comparaciones : "crea"
-    comparaciones ||--|{ comparacion_productos : "compara (2 a 4)"
-    productos ||--o{ comparacion_productos : ""
-    productos ||--|{ especificaciones : "tiene"
+    clients ||--o{ quote_requests : "envía"
+    listings ||--o{ quote_requests : "sobre"
+    quote_requests ||--o| quotes : "se responde con"
+    products ||--o{ specifications : "tiene"
+    clients ||--o{ comparisons : "crea"
+    comparisons ||--|{ comparison_products : "compara (2 a 4)"
 
-    clientes {
-        varchar id PK
+    quote_requests {
+        bigint id PK
+        varchar client_id FK
+        varchar listing_id FK
+        date request_date
+        int quantity "1 o más"
+        varchar requirement
+        varchar status "SENT, ANSWERED, EXPIRED"
     }
-    publicaciones {
-        varchar id PK
+    quotes {
+        bigint id PK
+        bigint request_id FK "único"
+        date issue_date
+        int validity_days "1 o más"
+        double subtotal
+        double igv "18% del subtotal"
+        double total "subtotal + igv"
+        varchar conditions
     }
-    productos {
-        varchar id PK
+    specifications {
+        bigint id PK
+        varchar product_id FK
+        varchar name "único por producto"
+        varchar spec_value
+        varchar unit "nulo si no aplica"
     }
-    solicitudes_cotizacion {
-        bigint id_solicitud PK
-        varchar cliente_id FK
-        varchar publicacion_id FK
-        date fecha "nulo mientras es BORRADOR"
-        int cantidad "1 o más"
-        varchar requerimiento
-        varchar estado "BORRADOR, ENVIADA, RESPONDIDA, VENCIDA"
+    comparisons {
+        bigint id PK
+        varchar client_id FK
+        date comparison_date
     }
-    cotizaciones {
-        bigint id_cotizacion PK "mismo id que su solicitud"
-        date fecha_emision
-        int dias_vigencia "1 o más"
-        decimal subtotal
-        decimal igv "18% del subtotal"
-        decimal total "subtotal + igv"
-        varchar condiciones
-    }
-    comparaciones {
-        bigint id_comparacion PK
-        varchar cliente_id FK
-        date fecha
-    }
-    comparacion_productos {
-        bigint id_comparacion PK, FK
-        varchar producto_id PK, FK
-    }
-    especificaciones {
-        varchar producto_id PK, FK
-        varchar nombre PK
-        varchar valor
-        varchar unidad "vacío si no aplica"
+    comparison_products {
+        bigint comparison_id FK
+        int position "orden de columnas"
+        varchar product_id
     }
 ```
 
-| Clase (dominio) | Tipo | Tabla | Repositorio en memoria |
+| Clase (dominio) | Tipo | Tabla | Persistencia |
 |---|---|---|---|
-| `SolicitudCotizacion` | Aggregate | `solicitudes_cotizacion` | `InMemorySolicitudCotizacionRepository` |
-| `Cotizacion` | Entity dentro de la solicitud | `cotizaciones` | Se guarda con su solicitud |
-| `Comparacion` | Aggregate | `comparaciones` + `comparacion_productos` | `InMemoryComparacionRepository` |
-| `Especificacion` | Entity del producto | `especificaciones` | `InMemoryEspecificacionRepository` |
+| `QuoteRequest` | Aggregate | `quote_requests` | `QuoteRequestRepositoryAdapter` |
+| `Quote` | Entity dentro de la solicitud | `quotes` | Se guarda con su solicitud (`cascade`) |
+| `Specification` | Aggregate | `specifications` | `SpecificationRepositoryAdapter` |
+| `Comparison` | Aggregate | `comparisons` + `comparison_products` | `ComparisonRepositoryAdapter` |

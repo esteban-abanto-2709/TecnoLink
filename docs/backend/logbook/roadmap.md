@@ -47,20 +47,6 @@ Criterios de toda la API:
 - **Hecho cuando:** una reseña creada aparece en el GET de su destino, el promedio cambia y no se puede reseñar dos veces lo mismo.
 - **Fecha:** 2026-10-02 · **Estado:** Abierto
 
-## [RM-005] Cotizaciones
-- **Objetivo:** reemplazar `lib/quotes.ts` (`/quotes`, `/quotes/new`, `/supplier/quotes`, `QuoteForm`, `QuoteAnswerDialog`).
-
-  | Método | Ruta | Body / Respuesta |
-  |---|---|---|
-  | POST | `/api/v1/quotes` | `{ itemId, supplierId, quantity, requirement }` → `201 Quote` con `status: "sent"` y `requestedOn` de hoy |
-  | GET | `/api/v1/quotes` | `Quote[]` del cliente actual |
-  | GET | `/api/v1/suppliers/{id}/quotes` | `Quote[]` recibidas por el proveedor |
-  | POST | `/api/v1/quotes/{id}/answer` | `{ price, validUntil, conditions, notes }` → `Quote` con `status: "answered"` y `answer` |
-
-  `status` ∈ `sent | answered | expired`. Una cotización respondida no se vuelve a responder (`400`).
-- **Hecho cuando:** el flujo completo (el cliente pide, el proveedor la ve en su bandeja y responde, el cliente ve la respuesta) funciona solo con la API.
-- **Fecha:** 2026-10-02 · **Estado:** En progreso (2026-11-02)
-
 ## [RM-006] Pedidos: compra simulada
 - **Objetivo:** reemplazar `placeOrder` y `useOrders` de `lib/orders.ts` (`/checkout`, `/orders`).
   Sin pasarela de pago: el pedido se registra como hecho.

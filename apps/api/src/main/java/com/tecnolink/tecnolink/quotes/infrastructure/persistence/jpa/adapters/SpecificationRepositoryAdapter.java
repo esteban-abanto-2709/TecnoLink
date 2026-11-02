@@ -39,7 +39,12 @@ public class SpecificationRepositoryAdapter implements SpecificationRepository {
 
     @Override
     public List<Specification> findByProductId(String productId) {
-        return repo.findByProductId(productId).stream().map(mapper::toDomain).toList();
+        return repo.findByProductIdOrderByIdAsc(productId).stream().map(mapper::toDomain).toList();
+    }
+
+    @Override
+    public List<Specification> findByProductIdIn(List<String> productIds) {
+        return repo.findByProductIdInOrderByIdAsc(productIds).stream().map(mapper::toDomain).toList();
     }
 
     @Override

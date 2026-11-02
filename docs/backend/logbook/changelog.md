@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-005] Cotizaciones y comparador (2026-11-02 13:00)
+Módulo `quotes/` al estilo del profesor (DDD + CQRS + JPA + Swagger): solicitudes con cotización (IGV 18 %, vencimiento),
+especificaciones de producto y comparador de 2 a 4 productos con cuadro comparativo. Rutas en `docs/integracion-frontend.md`.
+
 ## [RM-017] Usuarios según el diagrama de clases (2026-10-05 16:15)
 Módulo `usuarios/`: `Usuario` abstracta con `Cliente` y `Administrador` (registro, inicio y cierre de sesión, perfil),
 y `Proveedor` pasa a heredar de `Usuario`. Datos de prueba en memoria y modelo de datos en `docs/modelo-datos.md`.

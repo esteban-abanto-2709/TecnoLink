@@ -75,3 +75,22 @@ precio mayor que 0) más las de categoría (que exista, esté activa y sea del t
 | — | `pointsBalance()` | Sale de `balance` |
 
 El usuario va en la ruta. Hasta el plan 10 el front usa `demo-client`, que es el dueño de los datos de ejemplo.
+
+## Cotizaciones y comparador (RM-005)
+
+Contrato definido por el backend (estilo del profesor: recurso por agregado y filtros con `?param=`). El front adapta `lib/quotes.ts` y `lib/compare.ts`.
+
+| Endpoint | Reemplaza en el front | Diferencias |
+|---|---|---|
+| `POST /api/v1/quote-requests` | `QuoteForm` (`/quotes/new`) | Body `{ clientId, listingId, quantity, requirement }` → `201`. Nace con `status: SENT` y `requestedOn` de hoy. Cliente o publicación inexistente da `400` |
+| `GET /api/v1/quote-requests?clientId=` | `/quotes` | El cliente va como parámetro, no se deduce de la sesión |
+| `GET /api/v1/quote-requests?supplierId=` | `/supplier/quotes` | El proveedor sale de la publicación cotizada |
+| `GET /api/v1/quote-requests/{id}` | — | `404` si no existe |
+| `POST /api/v1/quote-requests/{id}/answer` | `QuoteAnswerDialog` | Body `{ validityDays, subtotal, conditions }` (no `price`/`validUntil`/`notes`). La API calcula `igv` (18 %), `total` y `validUntil`. Responder dos veces da `409` |
+| `POST /api/v1/quote-requests/{id}/expire` | — | Solo si ya pasó `validUntil`; si no, `409` |
+| `POST /api/v1/specifications` · `GET ?productId=` | — | Especificaciones `{ productId, name, value, unit }` con `text` armado (`"16 GB"`). Nombre repetido en el mismo producto da `409` |
+| `POST /api/v1/comparisons` | `lib/compare.ts` (hoy en `localStorage`) | Body `{ clientId, productIds }`. Máximo 4 productos y sin repetir (`409`) |
+| `POST /api/v1/comparisons/{id}/products` · `DELETE .../products/{productId}` | botón comparar | Agrega `{ productId }` o quita un producto |
+| `GET /api/v1/comparisons/{id}/table` | `/compare` | `{ comparisonId, productIds, rows: [{ specification, values }] }`. `values` sigue el orden de `productIds`; sin dato sale `"-"`. Menos de 2 productos da `409` |
+
+`status` va en mayúsculas (`SENT`, `ANSWERED`, `EXPIRED`). Las respuestas de error usan el formato general: `404`/`400`/`409` con `{"error": "..."}`.
