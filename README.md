@@ -71,8 +71,10 @@ TecnoLink/
 └── docs/
     ├── informe-marcos-de-desarrollo-web.md    # El informe, legible y versionable
     ├── originales/                            # Los entregables tal cual (.docx, .pdf)
-    ├── logbook/                               # Seguimiento del front
-    └── backend/                               # Plan, modelo de datos y logbook del backend
+    ├── api.md                                 # Endpoints, cambios en el front y contratos entre módulos
+    ├── modelo-datos.md                        # Entidades de la API
+    ├── responsabilidades.md                   # Dueño de cada módulo de la API
+    └── logbook/                               # Seguimiento del proyecto
 ```
 
 `docs/` es el punto de partida del proyecto. Cada entregable del grupo vive dos veces:
@@ -82,7 +84,7 @@ nombre. Si el original cambia, el markdown se regenera en el mismo commit.
 ## Estado
 
 **Backend en construcción** en `apps/api`; el avance por módulo está en
-[`docs/backend/plan-backend.md`](docs/backend/plan-backend.md).
+el macro plan de [`docs/logbook/roadmap.md`](docs/logbook/roadmap.md).
 
 **Front: prototipo completo.** Las 23 pantallas están construidas y las 20 historias de
 usuario del informe (HU-01 … HU-20) están cubiertas, con datos mock y sin backend.

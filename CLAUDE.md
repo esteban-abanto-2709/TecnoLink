@@ -7,8 +7,7 @@ Guía para Claude Code en este repositorio.
 Plataforma web que centraliza equipos y servicios tecnológicos de proveedores de
 Lima Metropolitana: buscar, comparar, cotizar y comprar en un solo lugar.
 Proyecto del curso Marcos de Desarrollo Web. Ver [README.md](README.md) para el
-panorama, `docs/logbook/` para el estado del front y `docs/backend/` para el del
-backend.
+panorama y `docs/logbook/` para el estado.
 
 **Al empezar cualquier conversación, leer primero
 [`docs/informe-marcos-de-desarrollo-web.md`](docs/informe-marcos-de-desarrollo-web.md).**
@@ -17,20 +16,21 @@ Canvas y las 20 historias de usuario. Es el punto de partida, no un anexo.
 
 **Etapa actual.** El front (`apps/web`) es un prototipo navegable de punta a
 punta con datos mock, sin pasarela de pago. El backend (`apps/api`) se construye
-aparte siguiendo [`docs/backend/plan-backend.md`](docs/backend/plan-backend.md);
-conectar ambos es el plan 11 de ese archivo. No hay app móvil.
+aparte siguiendo el macro plan de [`docs/logbook/roadmap.md`](docs/logbook/roadmap.md);
+conectar ambos es el plan 11 de ese macro plan. No hay app móvil.
 
 ## Estructura
 
 - `apps/web/` — app **Next.js autónoma**. Tiene su propio lockfile y
   `node_modules`; **NO es un monorepo pnpm**.
 - `apps/api/` — API **Spring Boot** (Maven). Antes vivía en el repo
-  `TecnoLink-backend` del grupo; se trajo con su historial. Al trabajar en el
-  backend, leer primero [`docs/backend/plan-backend.md`](docs/backend/plan-backend.md):
-  reglas, estructura del profesor y forma de trabajar.
+  `TecnoLink-backend` del grupo; se trajo con su historial. Al trabajar en él,
+  seguir la sección **API (`apps/api`)** de este archivo.
 - `docs/` — material conceptual del proyecto, en markdown.
-- `docs/backend/` — plan, modelo de datos, responsables, integración con el front
-  y el logbook propio del backend.
+- `docs/api.md` — endpoints, lo que cambia en el front al conectarse y contratos
+  entre módulos de la API.
+- `docs/modelo-datos.md` — entidades de la API.
+- `docs/responsabilidades.md` — dueño de cada módulo de la API.
 - `docs/originales/` — los entregables tal cual salen del grupo (`.docx`, `.pdf`).
   No se editan acá; son el original.
 - `docs/logbook/` — seguimiento del proyecto (ver abajo).
@@ -63,11 +63,43 @@ original está mal, se corrige el original.
   una a una. Correrlo al tocar `src/data/` o al agregar una ruta.
 - **No levantar el dev server** (`pnpm dev`); la validación se hace con `build`.
 
-## Comandos (dentro de `apps/api`)
+## API (`apps/api`)
 
-- `./mvnw test` — con Java 21 o superior:
-  `JAVA_HOME=C:/Users/Esteban/.jdks/openjdk-24.0.1`. El Java por defecto es el 17.
-- **No levantar el servidor**; Esteban lo corre desde IntelliJ.
+El avance por módulo está en el macro plan de `docs/logbook/roadmap.md`.
+
+### Reglas de trabajo
+
+- **Solo lo que enseña el curso** (clases y labs de `marcos-de-desarrollo-web/raw`, resumidos en
+  `marcos-de-desarrollo-web/procesado/`). Sin librerías ni configuración que no se haya visto (Swagger sí: semana 11).
+  Si algo no se vio en clase, no entra.
+- **Estructura del profesor** (DDD + hexagonal), igual en todos los módulos:
+  ```
+  <modulo>/
+  ├── domain/model/{aggregates, enums, valueobjects}   entidades con validación en el constructor y getters a mano
+  ├── domain/repositories/                             interfaces (puertos)
+  ├── infrastructure/persistence/memory/               InMemory...Repository con Map y datos del mock en el constructor
+  ├── application/                                     un @Service; es lo que usan los otros módulos
+  └── interfaces/rest/                                 @RestController (+ dto/ con records validados)
+  ```
+- Un módulo no usa repositorios ni dominio de otro: le pide las cosas a su `@Service`.
+- **Errores** como en el lab de la semana 6: `NotFoundException` → `404 {"error"}`, validación →
+  `400 {"errors": [...]}`, reglas de dominio con `IllegalArgumentException` → `400 {"error"}`. No hay 409.
+- Ids `String` tipo slug, los mismos del mock del front. Enums en mayúsculas. Precios en `double`.
+- Datos en memoria cargados con el mismo contenido de `apps/web/src/data/catalog.ts`.
+- Si algo de la API no calza con lo que espera el front, se anota en `docs/api.md`.
+
+### Forma de trabajar
+
+- Plan en pasos numerados; **cada paso es un commit** y deja el proyecto compilando con los tests en verde.
+  Al terminar un paso, Claude se detiene y entrega el nombre del commit. Esteban revisa, comitea y dice "sigue".
+- Commits: `tipo(módulo): descripción en inglés, imperativo y minúscula`, por ejemplo `feat(catalog): ...`.
+- Verificación: Claude escribe un test temporal con MockMvc, corre `./mvnw test` y **borra el test** antes
+  de entregar. En el repo solo queda `TecnolinkApplicationTests`.
+- Claude no levanta el servidor. Esteban lo corre desde IntelliJ (`TecnolinkApplication`) y prueba en el navegador.
+- El proyecto Maven vive en `apps/api/`; los comandos `./mvnw` se corren ahí. Para correr Maven desde terminal hace falta Java 21 o superior:
+  `JAVA_HOME=C:/Users/Esteban/.jdks/openjdk-24.0.1`. El Java por defecto del sistema es el 17.
+- Logbook: al empezar un RM se marca `En progreso`; al cerrarlo pasa al `changelog.md` en el mismo commit.
+- Al cerrar cada módulo, Claude deja una tabla de "qué hace cada clase" para quien lo expone.
 
 ## Stack
 
@@ -129,8 +161,5 @@ Next-específico. `apps/web/AGENTS.md` lo recuerda y lo regenera `next dev`.
 Trabajo comprometido en `roadmap.md` (`RM-###`), deuda en `technical-debt.md`
 (`TD-###`), ideas en `wishlist.md` (`WL-###`), terminado en `changelog.md`. Al
 empezar una tarea se marca `En progreso`; al terminar se mueve al `changelog`
-conservando su código. Los códigos nunca se reutilizan.
-
-El backend tiene su propio logbook en `docs/backend/logbook/`, con su propia
-numeración. No se mezclan: el trabajo de `apps/api` va ahí, el de `apps/web` en
-`docs/logbook/`.
+conservando su código. Los códigos nunca se reutilizan. Un solo logbook para
+`apps/web` y `apps/api`.

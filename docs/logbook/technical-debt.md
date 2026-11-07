@@ -11,7 +11,25 @@ changelog y se borra de aquí.
 - **Impacto futuro:** qué puede causar si no se atiende.
 - **Fecha** y **Estado** (Abierto / En progreso).
 
+
 ---
+
+## [TD-007] Contraseñas en texto plano en el dominio de usuarios
+- **Ubicación:** `apps/api/src/main/java/com/tecnolink/tecnolink/usuarios/domain/aggregates/Usuario.java`
+- **Riesgo:** 7/10
+- **Problema:** `Usuario` guarda y compara la contraseña tal cual; los datos de prueba tienen contraseñas visibles.
+- **Impacto futuro:** si se conecta a una base real así, las contraseñas quedan expuestas. Se corrige en RM-030 con el
+  `PasswordEncoder` de Spring Security.
+- **Fecha:** 2026-10-05 · **Estado:** Abierto
+
+## [TD-006] Estructura del repo distinta a la que pide la rúbrica
+- **Ubicación:** `apps/api/`, `apps/web/`, `apps/api/src/main/java/com/tecnolink/tecnolink/`
+- **Riesgo:** 4/10
+- **Problema:** la rúbrica pide `/docs`, `/scripts`, `/app-frontend`, `/app-backend`, y el repo usa `apps/web` y `apps/api`. Además, el paquete raíz repite el nombre (`com.tecnolink.tecnolink`).
+- **Impacto futuro:** riesgo de descuento por no seguir el formato de entrega. Cuanto más código haya, más caro será mover la carpeta o renombrar el paquete.
+- **Fecha:** 2026-10-02 · **Estado:** Abierto
+
+> Las entradas de arriba vienen del repo `TecnoLink-backend` del grupo, importado en `apps/api` el 2026-11-07. Se renumeraron a continuación de las del front: `RM-n` pasó a `RM-(n+18)` y `TD-n` a `TD-(n+4)`.
 
 ## [TD-004] El informe dice que los puntos salen solo de las compras
 - **Ubicación:** `docs/originales/informe-marcos-de-desarrollo-web.docx`, objetivo

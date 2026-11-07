@@ -18,15 +18,15 @@ conflictos de git por tocar los mismos archivos.
 
 | Integrante | Módulo (paquete) | Tareas | Endpoints |
 |---|---|---|---|
-| **Abanto García, Wilder Esteban** | `quotes` | RM-005 cotizaciones y comparador | `POST/GET /quote-requests` · `GET /quote-requests/{id}` · `GET /quote-requests?clientId=` · `GET /quote-requests?supplierId=` · `POST /quote-requests/{id}/answer` · `POST /quote-requests/{id}/expire` · `POST/GET /specifications` · `GET /specifications?productId=` · `POST /comparisons` · `GET /comparisons/{id}` · `GET /comparisons?clientId=` · `POST /comparisons/{id}/products` · `DELETE /comparisons/{id}/products/{productId}` · `GET /comparisons/{id}/table` |
-| **Naragio Chávez, Leyla Viviana** | `suppliers` | RM-003 proveedores · RM-008 publicaciones · RM-009 (verificación de proveedores) | `GET /suppliers` · `GET /suppliers/{id}` · `GET /suppliers/{id}/products` · `GET /suppliers/{id}/services` · `POST /suppliers/{id}/products` · `POST /suppliers/{id}/services` · `PUT /products/{id}` · `PUT /services/{id}` · `GET /admin/suppliers` · `PATCH /admin/suppliers/{id}/review` |
-| **Condori Zegovia, Carlos Alberto** | `quotes` + `orders` | RM-005 cotizaciones · RM-006 compra simulada | `POST /quotes` · `GET /quotes` · `GET /suppliers/{id}/quotes` · `POST /quotes/{id}/answer` · `POST /orders` · `GET /orders` |
-| **Machado Ninapaytan, Esperanza** | `reviews` + `loyalty` | RM-004 reseñas · RM-007 puntos y beneficios | `GET /reviews?targetId=` · `POST /reviews` · `GET /benefits` · `GET /points` · `POST /points/redemptions` |
-| **Gallardo Sicha, Benjamin Estuar** | `iam` | RM-010 registro y login · luego encabeza RM-012 (Spring Security) | `POST /auth/register` · `POST /auth/login` · `GET /auth/me` |
+| **Abanto García, Wilder Esteban** | `quotes` | RM-023 cotizaciones y comparador | `POST/GET /quote-requests` · `GET /quote-requests/{id}` · `GET /quote-requests?clientId=` · `GET /quote-requests?supplierId=` · `POST /quote-requests/{id}/answer` · `POST /quote-requests/{id}/expire` · `POST/GET /specifications` · `GET /specifications?productId=` · `POST /comparisons` · `GET /comparisons/{id}` · `GET /comparisons?clientId=` · `POST /comparisons/{id}/products` · `DELETE /comparisons/{id}/products/{productId}` · `GET /comparisons/{id}/table` |
+| **Naragio Chávez, Leyla Viviana** | `suppliers` | RM-021 proveedores · RM-026 publicaciones · RM-027 (verificación de proveedores) | `GET /suppliers` · `GET /suppliers/{id}` · `GET /suppliers/{id}/products` · `GET /suppliers/{id}/services` · `POST /suppliers/{id}/products` · `POST /suppliers/{id}/services` · `PUT /products/{id}` · `PUT /services/{id}` · `GET /admin/suppliers` · `PATCH /admin/suppliers/{id}/review` |
+| **Condori Zegovia, Carlos Alberto** | `quotes` + `orders` | RM-023 cotizaciones · RM-024 compra simulada | `POST /quotes` · `GET /quotes` · `GET /suppliers/{id}/quotes` · `POST /quotes/{id}/answer` · `POST /orders` · `GET /orders` |
+| **Machado Ninapaytan, Esperanza** | `reviews` + `loyalty` | RM-022 reseñas · RM-025 puntos y beneficios | `GET /reviews?targetId=` · `POST /reviews` · `GET /benefits` · `GET /points` · `POST /points/redemptions` |
+| **Gallardo Sicha, Benjamin Estuar** | `iam` | RM-028 registro y login · luego encabeza RM-030 (Spring Security) | `POST /auth/register` · `POST /auth/login` · `GET /auth/me` |
 
 Todas las rutas llevan el prefijo `/api/v1`.
 
-RM-009 se comparte: la parte de categorías es de Esteban y la verificación de proveedores es de Leyla.
+RM-027 se comparte: la parte de categorías es de Esteban y la verificación de proveedores es de Leyla.
 La tarea pasa al changelog cuando las dos partes están terminadas.
 
 ## Contratos entre módulos
@@ -43,7 +43,7 @@ Lo que cada dueño **expone** para que otros lo usen. El nombre exacto de cada c
 
 ## Orden de trabajo
 
-El orden de los módulos está en el macro plan de [`plan-backend.md`](plan-backend.md). Al final se prueba
+El orden de los módulos está en el macro plan de [`logbook/roadmap.md`](logbook/roadmap.md). Al final se prueba
 el flujo completo: buscar → cotizar → comprar → reseñar → canjear puntos.
 
 En el APF3, cada uno hace el adaptador JPA (MySQL) de su propio módulo.

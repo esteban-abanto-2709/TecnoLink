@@ -1,9 +1,9 @@
-# Integración con el frontend
+# API REST
 
 El front (`apps/web`) se diseñó pensando en una API hecha con NestJS. Este archivo
 anota **todo lo que la API de Spring Boot hace distinto** y lo que hay que cambiar en el front para que
-calce. Se aplica en el plan 11 de [`plan-backend.md`](plan-backend.md). Cada módulo nuevo agrega sus
-diferencias aquí.
+calce. Se aplica en el plan 11 del macro plan de [`logbook/roadmap.md`](logbook/roadmap.md). Cada módulo
+nuevo agrega sus diferencias aquí. Al final están los contratos entre módulos de la API.
 
 ## Generales
 
@@ -17,22 +17,22 @@ diferencias aquí.
 | Ids | Los mismos slugs del mock | Igual | Ninguno |
 | CORS | Se agrega en el plan 11 con `@CrossOrigin` para `localhost:3000` y `tecno-link.vercel.app` | — | Ninguno |
 
-## Catálogo (RM-002)
+## Catálogo (RM-020)
 
 | Endpoint | Reemplaza en el front | Diferencias |
 |---|---|---|
 | `GET /api/v1/categories` | `categories`, `getCategory(id)` | Solo las activas. No hay endpoint por id: el front busca en la lista. Cada categoría trae además `active`. Ojo: los productos de una categoría desactivada siguen existiendo, así que en su detalle `getCategory` no la encuentra; el front debe tolerarlo (por ejemplo, no mostrar la categoría) |
 | `GET /api/v1/products/{id}` | `getProduct(id)` | Ahora lo atiende `ProductController` (Carlos) y devuelve `ProductDto`. Un id inexistente da 404. El front hoy recibe `undefined` |
 | `GET /api/v1/services/{id}` | `getService(id)` | Igual que el anterior |
-| ~~`GET /api/v1/products?ids=a,b`~~ | `getProduct` en bucle dentro de `/compare` | **Eliminado**: chocaba con `GET /api/v1/products` de `ProductController`, que devuelve todos los productos. El comparador pasa al módulo `quotes` (RM-005) |
+| ~~`GET /api/v1/products?ids=a,b`~~ | `getProduct` en bucle dentro de `/compare` | **Eliminado**: chocaba con `GET /api/v1/products` de `ProductController`, que devuelve todos los productos. El comparador pasa al módulo `quotes` (RM-023) |
 | `GET /api/v1/catalog?query=&categoryId=&kind=&minPrice=&maxPrice=` | `searchCatalog(...)`, `catalogItems()` | Mismos nombres de parámetros. `kind` va en mayúsculas. En productos, `pricing` llega como `null` (no `undefined`): el `item.pricing ? ...` del front funciona igual. |
 | `GET /api/v1/admin/categories` | `useAdminCategories()` | Devuelve todas, con `active`. El front hoy fusiona el mock con su store local (`names`, `disabled`); con la API eso desaparece |
 | `POST /api/v1/admin/categories` | `createCategory(name, kind)` | Body `{ name, kind }` con `kind` en mayúsculas. Duplicado da `400 {"error": "Category X already exists"}`. El front puede dejar de validar con `isDuplicateCategory` o mantenerlo como aviso previo |
 | `PATCH /api/v1/admin/categories/{id}` | `renameCategory(id, name)` | Body `{ name }`. Misma regla de duplicado |
 | `PATCH /api/v1/admin/categories/{id}/status` | `toggleCategory(id)` | El front alterna; la API recibe el estado final `{ "active": true\|false }` |
-| — | `ratingFor`, `reviewsFor` | Salen del módulo de reseñas (RM-004) |
+| — | `ratingFor`, `reviewsFor` | Salen del módulo de reseñas (RM-022) |
 
-## Proveedores (RM-003)
+## Proveedores (RM-021)
 
 | Endpoint | Reemplaza en el front | Diferencias |
 |---|---|---|
@@ -42,7 +42,7 @@ diferencias aquí.
 | `GET /api/v1/suppliers/{id}/services` | `servicesBySupplier(id)` | Igual que el anterior |
 | — | `isMockSupplier(id)` | Deja de tener sentido: con la API todos los proveedores tienen perfil público, también los registrados |
 
-## Publicaciones del proveedor (RM-008)
+## Publicaciones del proveedor (RM-026)
 
 | Endpoint | Reemplaza en el front | Diferencias |
 |---|---|---|
@@ -56,7 +56,7 @@ Validaciones: las mismas del formulario (nombre, marca o cobertura, descripción
 precio mayor que 0) más las de categoría (que exista, esté activa y sea del tipo correcto). La API responde
 `400 {"errors": [...]}` o `400 {"error": "..."}` en inglés; el front sigue mostrando sus propios mensajes en español.
 
-## Verificación de proveedores (RM-009)
+## Verificación de proveedores (RM-027)
 
 | Endpoint | Reemplaza en el front | Diferencias |
 |---|---|---|
@@ -65,7 +65,7 @@ precio mayor que 0) más las de categoría (que exista, esté activa y sea del t
 | `GET /api/v1/suppliers` y `/suppliers/{id}` | — | Ahora también traen `status`, `reviewNote` y `reviewedOn`. `verified` pasa a ser `true` solo si `status = VERIFIED`: el sello público cambia cuando el admin revisa (en el front hoy no cambia) |
 | `POST/PUT /api/v1/suppliers/{id}/...` | `ListingForm` | **Regla nueva**: un proveedor `SUSPENDED` no puede publicar ni editar, da `400 {"error": "Supplier X is suspended"}`. El front debería avisarlo en el panel `/supplier` |
 
-## Puntos y beneficios (RM-007)
+## Puntos y beneficios (RM-025)
 
 | Endpoint | Reemplaza en el front | Diferencias |
 |---|---|---|
@@ -76,7 +76,7 @@ precio mayor que 0) más las de categoría (que exista, esté activa y sea del t
 
 El usuario va en la ruta. Hasta el plan 10 el front usa `demo-client`, que es el dueño de los datos de ejemplo.
 
-## Cotizaciones y comparador (RM-005)
+## Cotizaciones y comparador (RM-023)
 
 Contrato definido por el backend (estilo del profesor: recurso por agregado y filtros con `?param=`). El front adapta `lib/quotes.ts` y `lib/compare.ts`.
 
@@ -94,3 +94,16 @@ Contrato definido por el backend (estilo del profesor: recurso por agregado y fi
 | `GET /api/v1/comparisons/{id}/table` | `/compare` | `{ comparisonId, productIds, rows: [{ specification, values }] }`. `values` sigue el orden de `productIds`; sin dato sale `"-"`. Menos de 2 productos da `409` |
 
 `status` va en mayúsculas (`SENT`, `ANSWERED`, `EXPIRED`). Las respuestas de error usan el formato general: `404`/`400`/`409` con `{"error": "..."}`.
+
+## Contratos entre módulos (servicios de aplicación)
+
+| Módulo | Clase | Métodos públicos |
+|---|---|---|
+| `shared` | `NotFoundException` | `new NotFoundException(mensaje)` → 404 |
+| `suppliers` | `SupplierService` | `getSuppliers()` · `getSupplier(id)` (404 si no existe) · `getProducts(supplierId)` · `getServices(supplierId)` · `publishProduct(...)` · `editProduct(supplierId, productId, ...)` · `publishService(...)` · `editService(supplierId, serviceId, ...)` · `reviewSupplier(id, status, note)`. Publicar o editar con un proveedor suspendido da 400 |
+| `loyalty` | `LoyaltyService` | `getBenefits()` · `getSummary(userId)` → `PointsSummary(balance, movements, usedBenefits)` · `redeem(userId, benefitId)` · `awardPoints(userId, points, description)` (solo suma, puntos > 0) |
+| `catalog` | `CatalogService` | `getCategories()` (solo activas) · `getAllCategories()` · `getCategory(id)` · `createCategory(name, kind)` · `renameCategory(id, name)` · `setCategoryActive(id, active)` · `createProduct(supplierId, name, brand, categoryId, price, description)` · `updateProduct(id, name, brand, price, description)` · `createService(supplierId, name, categoryId, price, pricing, description, coverage)` · `updateService(id, name, price, pricing, description, coverage)` · `getProduct(id)` · `getProductsBySupplier(supplierId)` · `getServicesBySupplier(supplierId)` · `getService(id)` · `search(query, categoryId, kind, minPrice, maxPrice, supplierNames)` (el controller arma `supplierNames` con `SupplierService`) |
+
+`createProduct`/`createService` validan que la categoría exista, esté activa y sea del tipo correcto, y generan el id como slug único del nombre. **No validan que el proveedor exista**: eso lo hace el módulo `suppliers` antes de llamarlos. En `update...`, `brand`, `pricing` y `coverage` en `null` conservan el valor anterior.
+
+La entidad de servicio se llama `TechService`, porque `Service` choca con la anotación `@Service` de Spring.
