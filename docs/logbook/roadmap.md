@@ -10,10 +10,9 @@ Al terminar una tarea se mueve al changelog y se borra de aquí.
 
 ---
 
-**Meta del front:** un prototipo web navegable de punta a punta, con datos mock,
-que permita recorrer las experiencias de usuario completas. Todo en `apps/web`. Las
-tareas están ordenadas para que el camino del cliente (buscar → ver → comprar) quede
-recorrible lo antes posible; el resto se cuelga de ahí.
+**Front (cumplido):** prototipo web navegable de punta a punta en `apps/web`, con datos mock,
+que permite recorrer las experiencias completas de cliente, proveedor y administrador
+(RM-001 a RM-018). Lo siguiente del front es conectarlo a la API (plan 11 del macro plan).
 
 **Meta de la API:** la API REST que necesita el frontend (`apps/web`) para dejar los datos mock.
 Los endpoints salen de lo que hoy resuelven `src/data/catalog.ts` y los stores de `src/lib/*.ts`.
@@ -25,16 +24,18 @@ Criterios de toda la API:
 - Arquitectura del profesor (DDD + hexagonal): cada módulo con `domain/`, `application/`,
   `infrastructure/` e `interfaces/rest/`. Ver `marcos-de-desarrollo-web/procesado/estructura-backend.md`.
 - **APF2 (semana 8):** datos sintéticos en repositorios en memoria, cargados con el mismo contenido de `catalog.ts`.
-  **APF3 (semana 12):** MySQL con Spring Data. **Final (semana 18):** Spring Security.
+  **APF3 (semana 12):** MySQL con Spring Data (hoy todos los módulos ya persisten así, ver RM-029).
+  **Final (semana 18):** Spring Security.
 - **Solo lo que enseña el curso.** Nada de librerías ni clases que no salgan en las clases o labs
   (sin configuración extra). Swagger UI sí entra: el profesor lo enseña en la semana 11 y la sustentación se hace con él.
 - Errores como en el lab de la semana 6: `NotFoundException` → `404 {"error": ...}`, validación →
-  `400 {"errors": [...]}`, reglas de dominio (`IllegalArgumentException`) → `400 {"error": ...}`.
+  `400 {"errors": [...]}`, reglas de dominio (`IllegalArgumentException`) → `400 {"error": ...}`, y conflictos de
+  estado (`IllegalStateException`) → `409 {"error": ...}`, agregado con el módulo `quotes`.
 - El usuario va **en la ruta**: `/api/v1/users/{userId}/...` (puntos, compras, cotizaciones del cliente).
   Los datos de ejemplo son del usuario `demo-client`. Hasta RM-028 cualquier `userId` es válido.
 - CORS se agrega al conectar el front, con `@CrossOrigin` en los controllers.
-- Se quedan en el cliente (`localStorage`), sin endpoint: **carrito** (`lib/cart.ts`), **comparador**
-  (`lib/compare.ts`, solo guarda ids) y el cambio de rol del menú (`switchRole`, propio del prototipo).
+- Se quedan en el cliente (`localStorage`), sin endpoint: **carrito** (`lib/cart.ts`) y el cambio de rol del menú
+  (`switchRole`, propio del prototipo). El comparador sí tiene API: `/comparisons` del módulo `quotes` (RM-023).
 - Ids: se exponen los mismos ids **string tipo slug** del front (`"laptops"`, `"techperu"`), para no tocar el front.
 - Enums en mayúsculas, como los del profesor (`PRODUCT`, `FIXED`, `SENT`...). La capa `src/data` del front los
   pasa a minúsculas al conectarse.
@@ -42,23 +43,23 @@ Criterios de toda la API:
 ## Macro plan
 
 Cada fila es un plan; cada paso de un plan es un commit. Se avanza en este orden porque
-cada módulo usa lo del anterior.
+cada módulo usa lo del anterior. Los dueños son los de [`responsabilidades.md`](../responsabilidades.md).
 
 | # | Módulo (dueño) | Plan | RM | Estado |
 |---|---|---|---|---|
 | 1 | `shared` (Esteban) | Base compartida: manejo de errores | RM-019 | Hecho |
-| 2 | `catalog` (Esteban) | Lectura del catálogo: categorías, producto, servicio, búsqueda, comparador | RM-020 | Hecho |
-| 3 | `catalog` (Esteban) | Escrituras del catálogo: (1) admin de categorías · (2) crear y editar productos y servicios | RM-027 (categorías) | Hecho |
-| 4 | `suppliers` (Leyla) | Proveedores: perfil, su oferta y el nombre del proveedor en la búsqueda | RM-021 | Hecho |
-| 5 | `suppliers` (Leyla) | Publicaciones del proveedor y verificación por el admin | RM-026 + RM-027 (proveedores) | Hecho |
+| 2 | `catalog` (Carlos) | Lectura del catálogo: categorías, producto, servicio, búsqueda | RM-020 | Hecho |
+| 3 | `catalog` (Carlos) | Escrituras del catálogo: (1) admin de categorías · (2) crear y editar productos y servicios | RM-027 (categorías) | Hecho |
+| 4 | `suppliers` (Esperanza) | Proveedores: perfil, su oferta y el nombre del proveedor en la búsqueda | RM-021 | Hecho |
+| 5 | `suppliers` (Esperanza) | Publicaciones del proveedor y verificación por el admin | RM-026 + RM-027 (proveedores) | Hecho |
 | 6 | `loyalty` (Esperanza) | Puntos y beneficios. Antes que reseñas y compras, porque ambas suman puntos | RM-025 | Hecho |
-| 7 | `reviews` (Esperanza) | Reseñas (+50 puntos) | RM-022 | Pendiente |
-| 8 | `quotes` (Carlos) | Cotizaciones | RM-023 | Pendiente |
-| 9 | `orders` (Carlos) | Compra simulada (+ puntos) | RM-024 | Pendiente |
-| 10 | `iam` (Benjamin) | Registro e inicio de sesión | RM-028 | Pendiente |
+| 7 | `reviews` (Esperanza) | Reseñas (+50 puntos) | RM-022 | Parcial: dominio y JPA; faltan servicio y endpoints |
+| 8 | `quotes` (Esteban) | Cotizaciones y comparador | RM-023 | Hecho |
+| 9 | `orders` (Leyla) | Compra simulada (+ puntos) | RM-024 | Parcial: dominio y JPA; faltan servicio y endpoints |
+| 10 | `iam` (Benjamin) | Registro e inicio de sesión | RM-028 | Parcial: dominio y JPA; faltan servicio y endpoints |
 | 11 | Front (Esteban) | Conectar `apps/web` a la API, aplicando [`api.md`](../api.md), y CORS con `@CrossOrigin` | — | Pendiente |
 
-Fuera de este plan: RM-029 (MySQL, APF3) y RM-030 (Spring Security, entrega final).
+Fuera de este plan: RM-029 (MySQL, APF3; en progreso) y RM-030 (Spring Security, entrega final).
 
 Usuario de cada petición (decidido en el plan 6): va en la ruta, `/api/v1/users/{userId}/...`, leído con
 `@PathVariable`. Los datos de ejemplo (movimientos, compras) son del usuario `demo-client`. Hasta RM-028 cualquier
@@ -109,8 +110,12 @@ Usuario de cada petición (decidido en el plan 6): va en la ruta, `/api/v1/users
 - **Objetivo:** pasar los repositorios en memoria a Spring Data JPA + MySQL con las 4 piezas del profesor
   (entity, JpaRepository, assembler, adapter) sin tocar el dominio ni los controllers, y dejar los scripts
   de creación y carga inicial en `/scripts`, como pide la rúbrica.
+- **Avance:** todos los módulos ya persisten con JPA en MySQL (las tablas las crea Hibernate con `ddl-auto=update`).
+  Faltan: los scripts de creación y carga en el repo (hoy los datos de prueba se cargan a mano desde un SQL fuera
+  del repo), levantar MySQL con Docker Compose en vez de a mano, y borrar los repositorios en memoria que quedaron
+  sin uso (TD-009).
 - **Hecho cuando:** con MySQL levantado y los scripts aplicados, todos los endpoints de RM-020 a RM-028 responden igual que en memoria y los datos sobreviven a un reinicio.
-- **Fecha:** 2026-10-02 · **Estado:** Abierto
+- **Fecha:** 2026-10-02 · **Estado:** En progreso
 
 ## [RM-030] Seguridad con Spring Security y JWT (entrega final)
 - **Objetivo:** proteger la API: el login devuelve un JWT, el usuario actual sale del token, y cada ruta exige

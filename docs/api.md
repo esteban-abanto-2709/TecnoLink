@@ -12,7 +12,7 @@ nuevo agrega sus diferencias aquí. Al final están los contratos entre módulos
 | Origen de los datos | Endpoints REST en `/api/v1` | Funciones síncronas de `src/data/catalog.ts` (`getProduct(id)` devuelve el objeto directo) | Reemplazar la capa `src/data` por funciones `async` con `fetch`. Las pantallas servidor pasan a `await`. Es el cambio más grande: hoy las páginas llaman a esas funciones sin esperar |
 | URL base | `http://localhost:8080` en local | — | Variable de entorno (por ejemplo `NEXT_PUBLIC_API_URL`) |
 | Enums | En mayúsculas: `PRODUCT`, `SERVICE`, `FIXED`, `FROM`, `HOURLY` | En minúsculas: `"product"`, `"fixed"`... | Pasar a minúsculas al leer y a mayúsculas al enviar, en la capa `src/data`. Los tipos de `types.ts` no cambian |
-| Errores | `404 {"error": "..."}` · `400 {"error": "..."}` · validación `400 {"errors": ["campo: mensaje"]}` | No maneja errores: los mocks no fallan | Leer `error` / `errors` y mostrarlos en español en la UI |
+| Errores | `404 {"error": "..."}` · `400 {"error": "..."}` · validación `400 {"errors": ["campo: mensaje"]}` · conflicto de estado `409 {"error": "..."}` | No maneja errores: los mocks no fallan | Leer `error` / `errors` y mostrarlos en español en la UI |
 | Precios | `double`: `1899.0` | `number` | Ninguno |
 | Ids | Los mismos slugs del mock | Igual | Ninguno |
 | CORS | Se agrega en el plan 11 con `@CrossOrigin` para `localhost:3000` y `tecno-link.vercel.app` | — | Ninguno |
@@ -23,7 +23,11 @@ nuevo agrega sus diferencias aquí. Al final están los contratos entre módulos
 |---|---|---|
 | `GET /api/v1/categories` | `categories`, `getCategory(id)` | Solo las activas. No hay endpoint por id: el front busca en la lista. Cada categoría trae además `active`. Ojo: los productos de una categoría desactivada siguen existiendo, así que en su detalle `getCategory` no la encuentra; el front debe tolerarlo (por ejemplo, no mostrar la categoría) |
 | `GET /api/v1/products/{id}` | `getProduct(id)` | Ahora lo atiende `ProductController` (Carlos) y devuelve `ProductDto`. Un id inexistente da 404. El front hoy recibe `undefined` |
-| `GET /api/v1/services/{id}` | `getService(id)` | Igual que el anterior |
+| `GET /api/v1/services/{id}` | `getService(id)` | Igual que el anterior. Duplicado con `GET /api/v1/tech-services/{id}` (TD-008) |
+| `GET /api/v1/products` · `GET /api/v1/tech-services` · `GET /api/v1/tech-services/{id}` | — | De `ProductController` y `TechServiceController` (Carlos): listan todo o leen por id |
+| `GET /api/v1/products/search?keyword=` · `GET /api/v1/products/filter?categoryId=&minPrice=&maxPrice=` | — | Búsqueda y filtro solo de productos. Para el buscador del front sigue sirviendo `GET /catalog`, que también trae servicios |
+| `GET /api/v1/products/compare?ids=a,b` | — | Devuelve los productos pedidos. El cuadro comparativo del front sale de `/comparisons/{id}/table` (RM-023) |
+| `POST /api/v1/products` · `PUT /api/v1/products/{id}` · `POST /api/v1/tech-services` · `PUT /api/v1/tech-services/{id}` | — | Alta y edición directa con `supplierId` en el body. Duplica las rutas de publicaciones del proveedor (TD-008): el front usa las de `/suppliers/{id}/...` |
 | ~~`GET /api/v1/products?ids=a,b`~~ | `getProduct` en bucle dentro de `/compare` | **Eliminado**: chocaba con `GET /api/v1/products` de `ProductController`, que devuelve todos los productos. El comparador pasa al módulo `quotes` (RM-023) |
 | `GET /api/v1/catalog?query=&categoryId=&kind=&minPrice=&maxPrice=` | `searchCatalog(...)`, `catalogItems()` | Mismos nombres de parámetros. `kind` va en mayúsculas. En productos, `pricing` llega como `null` (no `undefined`): el `item.pricing ? ...` del front funciona igual. |
 | `GET /api/v1/admin/categories` | `useAdminCategories()` | Devuelve todas, con `active`. El front hoy fusiona el mock con su store local (`names`, `disabled`); con la API eso desaparece |
@@ -95,7 +99,15 @@ Contrato definido por el backend (estilo del profesor: recurso por agregado y fi
 
 `status` va en mayúsculas (`SENT`, `ANSWERED`, `EXPIRED`). Las respuestas de error usan el formato general: `404`/`400`/`409` con `{"error": "..."}`.
 
+## Reseñas, pedidos y usuarios (RM-022, RM-024, RM-028)
+
+Todavía sin endpoints: `reviews`, `orders` e `iam` tienen dominio y persistencia JPA, pero no servicio ni
+controllers. El contrato previsto está en cada RM de [`logbook/roadmap.md`](logbook/roadmap.md).
+
 ## Contratos entre módulos (servicios de aplicación)
+
+Además de estos servicios, `catalog` y `quotes` usan el estilo CQRS del profesor (`commands/`, `queries/` y sus
+`handlers/`), que atienden a sus propios controllers.
 
 | Módulo | Clase | Métodos públicos |
 |---|---|---|

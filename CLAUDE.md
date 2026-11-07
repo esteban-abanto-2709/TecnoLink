@@ -14,10 +14,11 @@ panorama y `docs/logbook/` para el estado.
 Ahí está la idea completa del proyecto: problema, actores, módulos, alcance, Lean
 Canvas y las 20 historias de usuario. Es el punto de partida, no un anexo.
 
-**Etapa actual.** El front (`apps/web`) es un prototipo navegable de punta a
-punta con datos mock, sin pasarela de pago. El backend (`apps/api`) se construye
-aparte siguiendo el macro plan de [`docs/logbook/roadmap.md`](docs/logbook/roadmap.md);
-conectar ambos es el plan 11 de ese macro plan. No hay app móvil.
+**Etapa actual.** El front (`apps/web`) es un prototipo completo, navegable de
+punta a punta con datos mock y sin pasarela de pago. La API (`apps/api`) ya
+persiste en MySQL; le faltan los endpoints de reseñas, pedidos y usuarios (ver el
+macro plan de [`docs/logbook/roadmap.md`](docs/logbook/roadmap.md)). Conectar
+ambos es el plan 11 de ese macro plan. No hay app móvil.
 
 ## Estructura
 
@@ -29,8 +30,9 @@ conectar ambos es el plan 11 de ese macro plan. No hay app móvil.
 - `docs/` — material conceptual del proyecto, en markdown.
 - `docs/api.md` — endpoints, lo que cambia en el front al conectarse y contratos
   entre módulos de la API.
-- `docs/modelo-datos.md` — entidades de la API.
-- `docs/responsabilidades.md` — dueño de cada módulo de la API.
+- `docs/modelo-datos.md` — tablas de MySQL de cada módulo de la API.
+- `docs/responsabilidades.md` — dueño de cada módulo de la API (cada integrante
+  expone el suyo) y equivalencia entre el diagrama de clases y el código.
 - `docs/originales/` — los entregables tal cual salen del grupo (`.docx`, `.pdf`).
   No se editan acá; son el original.
 - `docs/logbook/` — seguimiento del proyecto (ver abajo).
@@ -75,17 +77,19 @@ El avance por módulo está en el macro plan de `docs/logbook/roadmap.md`.
 - **Estructura del profesor** (DDD + hexagonal), igual en todos los módulos:
   ```
   <modulo>/
-  ├── domain/model/{aggregates, enums, valueobjects}   entidades con validación en el constructor y getters a mano
-  ├── domain/repositories/                             interfaces (puertos)
-  ├── infrastructure/persistence/memory/               InMemory...Repository con Map y datos del mock en el constructor
-  ├── application/                                     un @Service; es lo que usan los otros módulos
-  └── interfaces/rest/                                 @RestController (+ dto/ con records validados)
+  ├── domain/model/{aggregates, entities, enums, valueobjects}   validación en el constructor y getters a mano
+  ├── domain/repositories/                                       interfaces (puertos)
+  ├── infrastructure/persistence/jpa/                            entities/, repositories/, mappers/, adapters/
+  ├── application/                                               un @Service, o commands/queries/handlers (CQRS)
+  └── interfaces/rest/                                           @RestController (+ dto/ con records validados)
   ```
 - Un módulo no usa repositorios ni dominio de otro: le pide las cosas a su `@Service`.
 - **Errores** como en el lab de la semana 6: `NotFoundException` → `404 {"error"}`, validación →
-  `400 {"errors": [...]}`, reglas de dominio con `IllegalArgumentException` → `400 {"error"}`. No hay 409.
+  `400 {"errors": [...]}`, reglas de dominio con `IllegalArgumentException` → `400 {"error"}`, y conflictos de
+  estado con `IllegalStateException` → `409 {"error"}`.
 - Ids `String` tipo slug, los mismos del mock del front. Enums en mayúsculas. Precios en `double`.
-- Datos en memoria cargados con el mismo contenido de `apps/web/src/data/catalog.ts`.
+- **Persistencia en MySQL** con Spring Data JPA (`application.properties`: `localhost:3306/tecnolink`). Las tablas
+  las crea Hibernate; los datos de prueba siguen el contenido de `apps/web/src/data/catalog.ts`.
 - Si algo de la API no calza con lo que espera el front, se anota en `docs/api.md`.
 
 ### Forma de trabajar
@@ -94,7 +98,8 @@ El avance por módulo está en el macro plan de `docs/logbook/roadmap.md`.
   Al terminar un paso, Claude se detiene y entrega el nombre del commit. Esteban revisa, comitea y dice "sigue".
 - Commits: `tipo(módulo): descripción en inglés, imperativo y minúscula`, por ejemplo `feat(catalog): ...`.
 - Verificación: Claude escribe un test temporal con MockMvc, corre `./mvnw test` y **borra el test** antes
-  de entregar. En el repo solo queda `TecnolinkApplicationTests`.
+  de entregar. En el repo solo queda `TecnolinkApplicationTests`. Los tests necesitan MySQL levantado (TD-010);
+  sin él, `./mvnw test-compile` al menos confirma que todo compila.
 - Claude no levanta el servidor. Esteban lo corre desde IntelliJ (`TecnolinkApplication`) y prueba en el navegador.
 - El proyecto Maven vive en `apps/api/`; los comandos `./mvnw` se corren ahí. Para correr Maven desde terminal hace falta Java 21 o superior:
   `JAVA_HOME=C:/Users/Esteban/.jdks/openjdk-24.0.1`. El Java por defecto del sistema es el 17.

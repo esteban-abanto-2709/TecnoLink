@@ -1,225 +1,250 @@
 # Modelo de datos
 
-Tablas de cada módulo según el diagrama de clases del equipo. En este avance **no hay base de datos**: los datos
-viven en repositorios en memoria (`infrastructure/persistence/memory`). Este modelo es el que tomarán las tablas
-cuando se conecte MySQL con Spring Data.
+Tablas de cada módulo de `apps/api`. Todos los módulos persisten en **MySQL con Spring Data JPA**, con las piezas
+del profesor en `infrastructure/persistence/jpa/`: `entities/` (`...JpaEntity`), `repositories/`
+(`...JpaRepository`), `mappers/` (`...PersistenceMapper`) y `adapters/` (`...RepositoryAdapter`, que implementa el
+repositorio del dominio). Las tablas las crea Hibernate (`spring.jpa.hibernate.ddl-auto=update`).
 
-En cada diagrama, las tablas de otros módulos solo muestran las columnas que se referencian.
+Las entidades del diagrama de clases del equipo están en español; en el código y en las tablas van en inglés (ver
+[`responsabilidades.md`](responsabilidades.md)). En cada diagrama, las tablas de otros módulos solo muestran las
+columnas que se referencian.
 
-## Usuarios (`usuarios/`, Benjamin)
+## Usuarios y acceso (`iam`, Benjamin)
 
-`Usuario` es abstracta. Cada subclase (`Cliente`, `Administrador` y `Proveedor`, este último en el módulo de
-Esperanza) tiene su propia tabla, cuya clave es también la clave de `usuarios`.
+`User` es abstracta y usa herencia `JOINED`: cada subclase tiene su tabla, cuya clave es también la clave de
+`users`. `Supplier` (módulo `suppliers`) también hereda de `User`.
 
 ```mermaid
 erDiagram
-    usuarios ||--o| clientes : "es"
-    usuarios ||--o| administradores : "es"
-    usuarios ||--o| proveedores : "es"
+    users ||--o| clients : "es"
+    users ||--o| administrators : "es"
+    users ||--o| suppliers : "es"
 
-    usuarios {
-        varchar id_usuario PK
-        varchar nombres
-        varchar apellidos
-        varchar correo "único"
-        varchar contrasena "8 caracteres o más"
-        varchar telefono
-        date fecha_registro
-        boolean activo
+    users {
+        varchar id PK
+        varchar first_name
+        varchar last_name
+        varchar email "con @"
+        varchar password "8 caracteres o más"
+        varchar phone
+        date registered_on
+        boolean active
     }
-    clientes {
-        varchar id_usuario PK, FK
-        char dni "8 dígitos, único"
-        varchar direccion
+    clients {
+        varchar id PK, FK
+        varchar dni "8 dígitos"
+        varchar address
         varchar region
     }
-    administradores {
-        varchar id_usuario PK, FK
-        varchar cargo
+    administrators {
+        varchar id PK, FK
+        varchar position
     }
-    proveedores {
-        varchar id_usuario PK, FK
-    }
-```
-
-| Clase (dominio) | Tipo | Tabla | Repositorio en memoria |
-|---|---|---|---|
-| `Usuario` | Aggregate abstracto | `usuarios` | `InMemoryUsuarioRepository` |
-| `Cliente` | Hereda de `Usuario` | `usuarios` + `clientes` | El mismo |
-| `Administrador` | Hereda de `Usuario` | `usuarios` + `administradores` | El mismo |
-
-## Catálogo (`catalogo/`, Carlos)
-
-`Publicacion` es abstracta y se guarda en una sola tabla con la columna `tipo` (`PRODUCTO` o `SERVICIO`): las
-columnas propias de cada subclase quedan vacías en la otra.
-
-```mermaid
-erDiagram
-    proveedores ||--o{ publicaciones : "publica"
-    categorias ||--o{ publicaciones : "agrupa"
-    publicaciones ||--o{ publicacion_imagenes : "tiene"
-
-    proveedores {
-        varchar id PK
-    }
-    categorias {
-        varchar id_categoria PK
-        varchar nombre
-        varchar descripcion
-    }
-    publicaciones {
-        varchar id_publicacion PK
-        varchar tipo "PRODUCTO o SERVICIO"
-        varchar proveedor_id FK
-        varchar categoria_id FK
-        varchar titulo
-        varchar descripcion "20 caracteres o más"
-        decimal precio "mayor que 0"
-        date fecha_publicacion
-        varchar estado "ACTIVA, PAUSADA"
-        varchar marca "solo producto"
-        varchar modelo "solo producto"
-        int stock "solo producto, 0 o más"
-        varchar modalidad "solo servicio"
-        varchar duracion_estimada "solo servicio"
-        varchar cobertura "solo servicio"
-    }
-    publicacion_imagenes {
-        varchar publicacion_id PK, FK
-        varchar url PK
+    suppliers {
+        varchar id PK, FK
     }
 ```
 
-| Clase (dominio) | Tipo | Tabla | Repositorio en memoria |
+| Clase (dominio) | Tipo | Tabla | Persistencia |
 |---|---|---|---|
-| `Publicacion` | Aggregate abstracto | `publicaciones` | `InMemoryPublicacionRepository` |
-| `Producto` | Hereda de `Publicacion` | `publicaciones` (`tipo = PRODUCTO`) | El mismo |
-| `Servicio` | Hereda de `Publicacion` | `publicaciones` (`tipo = SERVICIO`) | El mismo |
-| `Categoria` | Aggregate | `categorias` | `InMemoryCategoriaRepository` |
+| `User` | Aggregate abstracto | `users` | — |
+| `Client` | Hereda de `User` | `users` + `clients` | `ClientRepositoryAdapter` |
+| `Administrator` | Hereda de `User` | `users` + `administrators` | `AdministratorRepositoryAdapter` |
 
-`listarPublicaciones()` de `Categoria` es `PublicacionRepository.findByCategoriaId(...)`.
+## Catálogo (`catalog`, Carlos)
 
-## Proveedor, reseñas y fidelización (`proveedores/` y `fidelizacion/`, Esperanza)
-
-La reputación del proveedor es el promedio de las calificaciones de las reseñas de sus publicaciones. El saldo de la
-cuenta sale de sus movimientos: una acumulación suma y un canje resta. El nivel depende del saldo
-(BRONCE menos de 500, PLATA desde 500, ORO desde 1500).
+`Listing` (publicación) es abstracta y usa herencia `JOINED`: `products` y `tech_services` comparten la clave de
+`listings`. La entidad se llama `TechService` porque `Service` choca con la anotación `@Service` de Spring.
 
 ```mermaid
 erDiagram
-    proveedores ||--o{ publicaciones : "publica"
-    clientes ||--o{ resenas : "escribe"
-    publicaciones ||--o{ resenas : "califica"
-    clientes ||--|| cuentas_fidelizacion : "posee"
-    cuentas_fidelizacion ||--o{ movimientos_puntos : "registra"
-    pedidos |o--o| movimientos_puntos : "genera"
+    suppliers ||--o{ listings : "publica"
+    categories ||--o{ listings : "agrupa"
+    listings ||--o{ listing_images : "tiene"
+    listings ||--o| products : "es"
+    listings ||--o| tech_services : "es"
+    products ||--o{ product_specifications : "tiene"
 
-    clientes {
+    suppliers {
         varchar id PK
     }
-    publicaciones {
-        varchar id_publicacion PK
-        varchar proveedor_id FK
+    categories {
+        varchar id PK
+        varchar name
+        varchar kind "PRODUCT, SERVICE"
+        boolean active
+        varchar description
     }
-    pedidos {
-        bigint id_pedido PK
+    listings {
+        varchar id PK
+        varchar name
+        varchar category_id FK
+        varchar supplier_id FK
+        double price
+        varchar description
+        date published_on
+        varchar status "ACTIVE, PAUSED, ARCHIVED"
     }
-    proveedores {
-        varchar id_usuario PK, FK "hereda de usuarios"
-        char ruc "11 dígitos, único"
-        varchar razon_social
+    listing_images {
+        varchar listing_id FK
+        varchar image_url
+    }
+    products {
+        varchar id PK, FK
+        varchar brand
+        varchar model
+        int stock
+    }
+    product_specifications {
+        varchar product_id FK
+        varchar spec_name
+        varchar spec_value
+        varchar spec_unit
+    }
+    tech_services {
+        varchar id PK, FK
+        varchar pricing "FIXED, FROM, HOURLY"
+        varchar coverage
+        varchar modality
+        varchar estimated_duration
+    }
+```
+
+| Clase (dominio) | Tipo | Tabla | Persistencia |
+|---|---|---|---|
+| `Listing` | Aggregate abstracto | `listings` + `listing_images` | — |
+| `Product` | Hereda de `Listing` | `listings` + `products` + `product_specifications` | `ProductRepositoryAdapter` |
+| `TechService` | Hereda de `Listing` | `listings` + `tech_services` | `TechServiceRepositoryAdapter` |
+| `Category` | Aggregate | `categories` | `CategoryRepositoryAdapter` |
+
+## Proveedor, reseñas y fidelización (`suppliers`, `reviews` y `loyalty`, Esperanza)
+
+`verified` del proveedor no se guarda: es `true` solo si `status = VERIFIED`. El saldo de puntos sale de los
+movimientos: `EARN` suma y `REDEEM` resta.
+
+```mermaid
+erDiagram
+    users ||--o| suppliers : "es"
+    clients ||--o{ reviews : "escribe"
+    clients ||--|| loyalty_accounts : "posee"
+    users ||--o{ points_movements : "registra"
+    benefits |o--o{ points_movements : "se canjea en"
+
+    users {
+        varchar id PK
+    }
+    clients {
+        varchar id PK
+    }
+    suppliers {
+        varchar id PK, FK "hereda de users"
+        varchar ruc
+        varchar name
         varchar region
-        varchar descripcion
-        decimal reputacion "promedio de 1 a 5"
+        varchar district
+        varchar description
+        int since_year
+        double reputation
+        varchar status "VERIFIED, PENDING, SUSPENDED"
+        varchar review_note
+        date reviewed_on
     }
-    resenas {
-        bigint id_resena PK
-        varchar cliente_id FK
-        varchar publicacion_id FK
-        int calificacion "1 a 5"
-        varchar comentario "10 caracteres o más"
-        date fecha
+    reviews {
+        bigint id PK
+        varchar client_id FK
+        varchar target_id "producto, servicio o proveedor"
+        int rating "1 a 5"
+        varchar comment
+        date review_date
     }
-    cuentas_fidelizacion {
-        varchar cliente_id PK, FK
-        int puntos_acumulados
-        varchar nivel "BRONCE, PLATA, ORO"
+    loyalty_accounts {
+        bigint id PK
+        varchar user_id FK "único"
+        int accumulated_points
+        varchar level "BRONZE, SILVER, GOLD"
     }
-    movimientos_puntos {
-        bigint id_movimiento PK
-        varchar cliente_id FK
-        bigint pedido_id FK "solo si viene de una compra"
-        date fecha
-        varchar tipo "ACUMULACION, CANJE"
-        int puntos "mayor que 0"
-        varchar motivo
+    points_movements {
+        varchar id PK
+        varchar user_id FK
+        date movement_date
+        varchar description
+        int points
+        varchar type "EARN, REDEEM"
+        varchar benefit_id FK "solo en canjes"
+    }
+    benefits {
+        varchar id PK
+        varchar name
+        varchar description
+        int cost
     }
 ```
 
-| Clase (dominio) | Tipo | Tabla | Repositorio en memoria |
+| Clase (dominio) | Tipo | Tabla | Persistencia |
 |---|---|---|---|
-| `Proveedor` | Hereda de `Usuario` | `usuarios` + `proveedores` | `InMemoryProveedorRepository` |
-| `Resena` | Aggregate | `resenas` | `InMemoryResenaRepository` |
-| `CuentaFidelizacion` | Aggregate | `cuentas_fidelizacion` | `InMemoryCuentaFidelizacionRepository` |
-| `MovimientoPuntos` | Entity dentro de la cuenta | `movimientos_puntos` | Se guarda con su cuenta |
+| `Supplier` | Hereda de `User` | `users` + `suppliers` | `SupplierRepositoryAdapter` |
+| `Review` | Aggregate | `reviews` | `ReviewRepositoryAdapter` |
+| `LoyaltyAccount` | Aggregate | `loyalty_accounts` | `LoyaltyAccountRepositoryAdapter` |
+| `PointsMovement` | Aggregate | `points_movements` | `PointsMovementRepositoryAdapter` |
+| `Benefit` | Aggregate | `benefits` | `BenefitRepositoryAdapter` |
 
-Una reseña por cliente y por publicación (`existsByClienteIdAndPublicacionId`).
-
-## Compra simulada (`compras/`, Leyla)
+## Compra simulada (`orders`, Leyla)
 
 Cada cliente tiene un solo carrito. Al comprar, cada ítem del carrito pasa a ser un detalle del pedido con el
 precio de ese momento. El pago es simulado: no hay pasarela.
 
 ```mermaid
 erDiagram
-    clientes ||--|| carritos : "tiene"
-    carritos ||--o{ items_carrito : "contiene"
-    publicaciones ||--o{ items_carrito : ""
-    clientes ||--o{ pedidos : "realiza"
-    pedidos ||--|{ detalles_pedido : "contiene"
-    publicaciones ||--o{ detalles_pedido : ""
+    clients ||--|| carts : "tiene"
+    carts ||--o{ cart_items : "contiene"
+    listings ||--o{ cart_items : ""
+    clients ||--o{ orders : "realiza"
+    orders ||--|{ order_details : "contiene"
+    listings ||--o{ order_details : ""
 
-    clientes {
+    clients {
         varchar id PK
     }
-    publicaciones {
-        varchar id_publicacion PK
+    listings {
+        varchar id PK
     }
-    carritos {
-        bigint id_carrito PK
-        varchar cliente_id FK "único"
+    carts {
+        bigint id PK
+        varchar client_id FK "único"
     }
-    items_carrito {
-        bigint carrito_id PK, FK
-        varchar publicacion_id PK, FK
-        int cantidad "1 o más"
-        decimal precio_unitario
+    cart_items {
+        bigint id PK
+        bigint cart_id FK
+        varchar listing_id FK
+        int quantity
+        double unit_price
     }
-    pedidos {
-        bigint id_pedido PK
-        varchar cliente_id FK
-        date fecha
-        decimal total "suma de los subtotales"
-        varchar estado "PENDIENTE, PAGADO, CONFIRMADO"
-        varchar metodo_pago_simulado
+    orders {
+        bigint id PK
+        varchar client_id FK
+        date order_date
+        double total "suma de los subtotales"
+        varchar status "PENDING, PAID, CONFIRMED"
+        varchar simulated_payment_method
     }
-    detalles_pedido {
-        bigint pedido_id PK, FK
-        varchar publicacion_id PK, FK
-        int cantidad
-        decimal precio_unitario
-        decimal subtotal
+    order_details {
+        bigint id PK
+        bigint order_id FK
+        varchar listing_id FK
+        int quantity
+        double unit_price
+        double subtotal
     }
 ```
 
-| Clase (dominio) | Tipo | Tabla | Repositorio en memoria |
+| Clase (dominio) | Tipo | Tabla | Persistencia |
 |---|---|---|---|
-| `Carrito` | Aggregate | `carritos` | `InMemoryCarritoRepository` |
-| `ItemCarrito` | Entity dentro del carrito | `items_carrito` | Se guarda con su carrito |
-| `Pedido` | Aggregate | `pedidos` | `InMemoryPedidoRepository` |
-| `DetallePedido` | Entity dentro del pedido | `detalles_pedido` | Se guarda con su pedido |
+| `Cart` | Aggregate | `carts` | `CartRepositoryAdapter` |
+| `CartItem` | Entity dentro del carrito | `cart_items` | Se guarda con su carrito (`cascade`) |
+| `Order` | Aggregate | `orders` | `OrderRepositoryAdapter` |
+| `OrderDetail` | Entity dentro del pedido | `order_details` | Se guarda con su pedido (`cascade`) |
 
-## Cotizaciones y comparador (`quotes/`, Esteban)
+## Cotizaciones y comparador (`quotes`, Esteban)
 
 ```mermaid
 erDiagram

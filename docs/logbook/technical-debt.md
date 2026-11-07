@@ -14,11 +14,40 @@ changelog y se borra de aquí.
 
 ---
 
+## [TD-010] El único test de la API necesita MySQL levantado
+- **Ubicación:** `apps/api/src/test/java/com/tecnolink/tecnolink/TecnolinkApplicationTests.java`
+- **Riesgo:** 4/10
+- **Problema:** `contextLoads` arranca Spring completo y se conecta a `localhost:3306`. Sin el contenedor de
+  MySQL, `./mvnw test` falla con `Communications link failure` aunque el código esté bien.
+- **Impacto futuro:** "los tests pasan" depende de tener Docker corriendo; un error real se confunde con una base
+  apagada. Se resuelve al levantar MySQL con Docker Compose (RM-029).
+- **Fecha:** 2026-11-07 · **Estado:** Abierto
+
+## [TD-009] Repositorios en memoria sin uso en `loyalty`
+- **Ubicación:** `apps/api/src/main/java/com/tecnolink/tecnolink/loyalty/infrastructure/persistence/memory/`
+- **Riesgo:** 2/10
+- **Problema:** `InMemoryBenefitRepository` e `InMemoryPointsMovementRepository` quedaron del APF2. No son beans
+  ni los usa nadie: la persistencia real es la de `jpa/`.
+- **Impacto futuro:** confunden al leer el módulo o al exponerlo. Se borran al cerrar RM-029.
+- **Fecha:** 2026-11-07 · **Estado:** Abierto
+
+## [TD-008] Catálogo con rutas y especificaciones duplicadas
+- **Ubicación:** `apps/api/src/main/java/com/tecnolink/tecnolink/catalog/interfaces/rest/`,
+  `catalog/infrastructure/persistence/jpa/entities/ProductJpaEntity.java`, `quotes/domain/aggregates/Specification.java`
+- **Riesgo:** 5/10
+- **Problema:** hay dos caminos para lo mismo. Un servicio se lee en `GET /services/{id}` (`CatalogController`) y en
+  `GET /tech-services/{id}` (`TechServiceController`); un producto se crea en `POST /products` y en
+  `POST /suppliers/{id}/products`; y las especificaciones viven en `product_specifications` (catálogo) y en la
+  tabla `specifications` (`quotes`).
+- **Impacto futuro:** al conectar el front no queda claro qué ruta usar, y una especificación cargada por un camino
+  no aparece en el otro (el cuadro comparativo solo lee `specifications`). Hay que elegir una de cada par.
+- **Fecha:** 2026-11-07 · **Estado:** Abierto
+
 ## [TD-007] Contraseñas en texto plano en el dominio de usuarios
-- **Ubicación:** `apps/api/src/main/java/com/tecnolink/tecnolink/usuarios/domain/aggregates/Usuario.java`
+- **Ubicación:** `apps/api/src/main/java/com/tecnolink/tecnolink/iam/domain/model/aggregates/User.java`
 - **Riesgo:** 7/10
-- **Problema:** `Usuario` guarda y compara la contraseña tal cual; los datos de prueba tienen contraseñas visibles.
-- **Impacto futuro:** si se conecta a una base real así, las contraseñas quedan expuestas. Se corrige en RM-030 con el
+- **Problema:** `User` guarda la contraseña tal cual y así llega a la columna `users.password` de MySQL.
+- **Impacto futuro:** cualquiera con acceso a la base ve las contraseñas. Se corrige en RM-030 con el
   `PasswordEncoder` de Spring Security.
 - **Fecha:** 2026-10-05 · **Estado:** Abierto
 

@@ -1,60 +1,49 @@
-# Separación de responsabilidades — Backend
+# Separación de responsabilidades — API
 
-Quién hace qué en la API de TecnoLink. El detalle de cada tarea (endpoints, reglas,
-criterio de terminado) está en [`logbook/roadmap.md`](logbook/roadmap.md). Este documento
-solo asigna dueños y fija cómo se comunican los módulos.
+Quién es dueño de cada módulo de `apps/api`. El detalle de cada tarea (endpoints, reglas, criterio de
+terminado) está en [`logbook/roadmap.md`](logbook/roadmap.md), y los contratos entre módulos en
+[`api.md`](api.md).
 
 ## Regla principal
 
-**Cada integrante es dueño de un módulo completo**: su paquete con sus capas
-`domain/`, `application/`, `infrastructure/` e `interfaces/`. Nadie edita archivos de
-otro módulo. Si necesitas algo de otro módulo, se lo pides a su **servicio de aplicación**:
-nunca uses su repositorio ni sus clases de dominio directamente.
+**Cada integrante es dueño de un módulo completo**: su paquete con sus capas `domain/`, `application/`,
+`infrastructure/` e `interfaces/`. Si un módulo necesita algo de otro, se lo pide a su **servicio de
+aplicación**: nunca usa su repositorio ni sus clases de dominio directamente.
 
-Así cada uno puede explicar su parte de punta a punta en la exposición, y no hay
-conflictos de git por tocar los mismos archivos.
+Así cada uno puede explicar su parte de punta a punta en la exposición.
 
 ## División
 
-| Integrante | Módulo (paquete) | Tareas | Endpoints |
+Según el diagrama de clases del equipo. Las entidades del diagrama están en español; en el código van en inglés.
+
+| Integrante | Módulo | Paquete | Entidades del diagrama → clase en el código |
 |---|---|---|---|
-| **Abanto García, Wilder Esteban** | `quotes` | RM-023 cotizaciones y comparador | `POST/GET /quote-requests` · `GET /quote-requests/{id}` · `GET /quote-requests?clientId=` · `GET /quote-requests?supplierId=` · `POST /quote-requests/{id}/answer` · `POST /quote-requests/{id}/expire` · `POST/GET /specifications` · `GET /specifications?productId=` · `POST /comparisons` · `GET /comparisons/{id}` · `GET /comparisons?clientId=` · `POST /comparisons/{id}/products` · `DELETE /comparisons/{id}/products/{productId}` · `GET /comparisons/{id}/table` |
-| **Naragio Chávez, Leyla Viviana** | `suppliers` | RM-021 proveedores · RM-026 publicaciones · RM-027 (verificación de proveedores) | `GET /suppliers` · `GET /suppliers/{id}` · `GET /suppliers/{id}/products` · `GET /suppliers/{id}/services` · `POST /suppliers/{id}/products` · `POST /suppliers/{id}/services` · `PUT /products/{id}` · `PUT /services/{id}` · `GET /admin/suppliers` · `PATCH /admin/suppliers/{id}/review` |
-| **Condori Zegovia, Carlos Alberto** | `quotes` + `orders` | RM-023 cotizaciones · RM-024 compra simulada | `POST /quotes` · `GET /quotes` · `GET /suppliers/{id}/quotes` · `POST /quotes/{id}/answer` · `POST /orders` · `GET /orders` |
-| **Machado Ninapaytan, Esperanza** | `reviews` + `loyalty` | RM-022 reseñas · RM-025 puntos y beneficios | `GET /reviews?targetId=` · `POST /reviews` · `GET /benefits` · `GET /points` · `POST /points/redemptions` |
-| **Gallardo Sicha, Benjamin Estuar** | `iam` | RM-028 registro y login · luego encabeza RM-030 (Spring Security) | `POST /auth/register` · `POST /auth/login` · `GET /auth/me` |
+| **Naragio Chávez, Leyla Viviana** (U24219412) | Compra simulada | `orders` | `Pedido` → `Order` · `DetallePedido` → `OrderDetail` · `Carrito` → `Cart` · `ItemCarrito` → `CartItem` |
+| **Abanto García, Wilder Esteban** (U23310744) | Cotizaciones y comparador | `quotes` | `SolicitudCotizacion` → `QuoteRequest` · `Cotizacion` → `Quote` · `Comparacion` → `Comparison` · `Especificacion` → `Specification` |
+| **Condori Zegovia, Carlos Alberto** (U23328458) | Catálogo | `catalog` | `Publicacion` → `Listing` · `Producto` → `Product` · `Servicio` → `TechService` · `Categoria` → `Category` |
+| **Machado Ninapaytan, Esperanza** (U23269478) | Proveedor, reseñas y fidelización | `suppliers`, `reviews`, `loyalty` | `Proveedor` → `Supplier` · `Resena` → `Review` · `CuentaFidelizacion` → `LoyaltyAccount` · `MovimientoPuntos` → `PointsMovement` (además `Benefit`) |
+| **Gallardo Sicha, Benjamin Estuar** (U24252186) | Usuarios y acceso | `iam` | `Usuario` → `User` · `Cliente` → `Client` · `Administrador` → `Administrator` |
 
-Todas las rutas llevan el prefijo `/api/v1`.
+La base común (`shared`: manejo de errores, eventos de dominio y Swagger) la expone Esteban.
 
-RM-027 se comparte: la parte de categorías es de Esteban y la verificación de proveedores es de Leyla.
-La tarea pasa al changelog cuando las dos partes están terminadas.
+Todas las rutas llevan el prefijo `/api/v1`. El estado de cada módulo está en el macro plan del roadmap.
 
-## Contratos entre módulos
-
-Lo que cada dueño **expone** para que otros lo usen. El nombre exacto de cada clase lo fija su dueño al implementarla.
+## Dependencias entre módulos
 
 | Provee | Qué expone | Lo usan |
 |---|---|---|
-| `catalog` (Esteban) | Consultar producto o servicio por id: nombre, precio, proveedor, categoría | Carlos (precio real en órdenes, ítem válido en cotizaciones) · Esperanza (que exista el destino de una reseña) |
-| `catalog` (Esteban) | Crear y editar productos y servicios | Leyla (sus endpoints de publicaciones) |
-| `shared` (Esteban) | `NotFoundException` y `RestExceptionHandler`, como en el lab de la semana 6: `404 {"error"}`, validación `400 {"errors"}`, reglas de dominio (`IllegalArgumentException`) `400 {"error"}` | Todos |
-| `suppliers` (Leyla) | Consultar proveedor por id · registrar proveedor | Carlos (cotizaciones) · Benjamin (registro con rol proveedor) |
-| `loyalty` (Esperanza) | Sumar o restar puntos a un usuario con una descripción | Carlos (puntos por compra) · Esperanza (puntos por reseña) |
-
-## Orden de trabajo
-
-El orden de los módulos está en el macro plan de [`logbook/roadmap.md`](logbook/roadmap.md). Al final se prueba
-el flujo completo: buscar → cotizar → comprar → reseñar → canjear puntos.
-
-En el APF3, cada uno hace el adaptador JPA (MySQL) de su propio módulo.
+| `catalog` (Carlos) | `CatalogService`: consultar producto o servicio por id; crear y editar publicaciones | `suppliers` (publicaciones del proveedor). Previsto: `orders` y `reviews` (ítem válido) |
+| `suppliers` (Esperanza) | `SupplierService`: consultar proveedor por id | `catalog` (búsqueda por nombre del proveedor) |
+| `loyalty` (Esperanza) | `LoyaltyService.awardPoints`: sumar puntos a un usuario | Previsto: `orders` (puntos por compra) y `reviews` (puntos por reseña) |
+| `iam` (Benjamin) | Tablas `users`, `clients`, `administrators` | Las tablas de `quotes`, `orders`, `reviews` y `loyalty` tienen FK a `clients` |
+| `shared` (Esteban) | `NotFoundException`, `RestExceptionHandler`, eventos de dominio | Todos |
 
 ## Exposición
 
-Cada integrante presenta su módulo con la misma estructura: qué problema resuelve,
-sus endpoints funcionando y cómo están organizadas sus capas.
-Esteban abre con la arquitectura general y la base común (`shared`: manejo de errores).
+Cada integrante presenta su módulo con la misma estructura: qué problema resuelve, sus endpoints funcionando y
+cómo están organizadas sus capas. Esteban abre con la arquitectura general y la base común (`shared`).
 
 ## Regla para todos
 
-Usar solo lo que el curso enseña (clases y labs de `marcos-de-desarrollo-web/raw`). Si algo no salió
-en clase, no se agrega: el profesor puede pedir que lo expliquen.
+Usar solo lo que el curso enseña (clases y labs de `marcos-de-desarrollo-web/raw`). Si algo no salió en clase, no
+se agrega: el profesor puede pedir que lo expliquen.

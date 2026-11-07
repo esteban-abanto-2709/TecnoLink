@@ -72,7 +72,7 @@ TecnoLink/
     ├── informe-marcos-de-desarrollo-web.md    # El informe, legible y versionable
     ├── originales/                            # Los entregables tal cual (.docx, .pdf)
     ├── api.md                                 # Endpoints, cambios en el front y contratos entre módulos
-    ├── modelo-datos.md                        # Entidades de la API
+    ├── modelo-datos.md                        # Tablas de MySQL de la API
     ├── responsabilidades.md                   # Dueño de cada módulo de la API
     └── logbook/                               # Seguimiento del proyecto
 ```
@@ -83,8 +83,11 @@ nombre. Si el original cambia, el markdown se regenera en el mismo commit.
 
 ## Estado
 
-**Backend en construcción** en `apps/api`; el avance por módulo está en
-el macro plan de [`docs/logbook/roadmap.md`](docs/logbook/roadmap.md).
+**API en construcción** en `apps/api`, con persistencia en MySQL. Están listos
+catálogo, proveedores y publicaciones, administración, puntos y beneficios, y
+cotizaciones con el comparador; faltan los endpoints de reseñas, pedidos y
+usuarios. El avance por módulo está en el macro plan de
+[`docs/logbook/roadmap.md`](docs/logbook/roadmap.md).
 
 **Front: prototipo completo.** Las 23 pantallas están construidas y las 20 historias de
 usuario del informe (HU-01 … HU-20) están cubiertas, con datos mock y sin backend.
@@ -94,8 +97,9 @@ administrador.
 El pie de página de la aplicación funciona como mapa: lista todas las pantallas con
 la historia de usuario que cubre cada una.
 
-Lo terminado está en [`docs/logbook/changelog.md`](docs/logbook/changelog.md)
-(`RM-001` … `RM-016`); lo que quedó pendiente, en
+Lo terminado está en [`docs/logbook/changelog.md`](docs/logbook/changelog.md);
+lo comprometido, en [`docs/logbook/roadmap.md`](docs/logbook/roadmap.md); y lo que
+quedó pendiente, en
 [`docs/logbook/technical-debt.md`](docs/logbook/technical-debt.md) y
 [`docs/logbook/wishlist.md`](docs/logbook/wishlist.md).
 
@@ -103,7 +107,11 @@ Lo terminado está en [`docs/logbook/changelog.md`](docs/logbook/changelog.md)
 
 - Abanto García, Wilder Esteban — U23310744
 - Gallardo Sicha, Benjamin Estuar — U24252186
-- Condori Zegovia, Carlos Alberto
+- Condori Zegovia, Carlos Alberto — U23328458
+- Machado Ninapaytan, Esperanza — U23269478
 - Naragio Chávez, Leyla Viviana — U24219412
+
+El módulo de la API que expone cada uno está en
+[`docs/responsabilidades.md`](docs/responsabilidades.md).
 
 Docente: Robles Fernandez, Ivan · Sección 45315 · Lima, 2026
