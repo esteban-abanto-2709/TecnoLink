@@ -1,0 +1,96 @@
+# Integración con el frontend
+
+El front (`tecnolink-frontend/apps/web`) se diseñó pensando en una API hecha con NestJS. Este archivo
+anota **todo lo que la API de Spring Boot hace distinto** y lo que hay que cambiar en el front para que
+calce. Se aplica en el plan 11 de [`plan-backend.md`](plan-backend.md). Cada módulo nuevo agrega sus
+diferencias aquí.
+
+## Generales
+
+| Tema | API | Front hoy | Cambio en el front |
+|---|---|---|---|
+| Origen de los datos | Endpoints REST en `/api/v1` | Funciones síncronas de `src/data/catalog.ts` (`getProduct(id)` devuelve el objeto directo) | Reemplazar la capa `src/data` por funciones `async` con `fetch`. Las pantallas servidor pasan a `await`. Es el cambio más grande: hoy las páginas llaman a esas funciones sin esperar |
+| URL base | `http://localhost:8080` en local | — | Variable de entorno (por ejemplo `NEXT_PUBLIC_API_URL`) |
+| Enums | En mayúsculas: `PRODUCT`, `SERVICE`, `FIXED`, `FROM`, `HOURLY` | En minúsculas: `"product"`, `"fixed"`... | Pasar a minúsculas al leer y a mayúsculas al enviar, en la capa `src/data`. Los tipos de `types.ts` no cambian |
+| Errores | `404 {"error": "..."}` · `400 {"error": "..."}` · validación `400 {"errors": ["campo: mensaje"]}` | No maneja errores: los mocks no fallan | Leer `error` / `errors` y mostrarlos en español en la UI |
+| Precios | `double`: `1899.0` | `number` | Ninguno |
+| Ids | Los mismos slugs del mock | Igual | Ninguno |
+| CORS | Se agrega en el plan 11 con `@CrossOrigin` para `localhost:3000` y `tecno-link.vercel.app` | — | Ninguno |
+
+## Catálogo (RM-002)
+
+| Endpoint | Reemplaza en el front | Diferencias |
+|---|---|---|
+| `GET /api/v1/categories` | `categories`, `getCategory(id)` | Solo las activas. No hay endpoint por id: el front busca en la lista. Cada categoría trae además `active`. Ojo: los productos de una categoría desactivada siguen existiendo, así que en su detalle `getCategory` no la encuentra; el front debe tolerarlo (por ejemplo, no mostrar la categoría) |
+| `GET /api/v1/products/{id}` | `getProduct(id)` | Ahora lo atiende `ProductController` (Carlos) y devuelve `ProductDto`. Un id inexistente da 404. El front hoy recibe `undefined` |
+| `GET /api/v1/services/{id}` | `getService(id)` | Igual que el anterior |
+| ~~`GET /api/v1/products?ids=a,b`~~ | `getProduct` en bucle dentro de `/compare` | **Eliminado**: chocaba con `GET /api/v1/products` de `ProductController`, que devuelve todos los productos. El comparador pasa al módulo `quotes` (RM-005) |
+| `GET /api/v1/catalog?query=&categoryId=&kind=&minPrice=&maxPrice=` | `searchCatalog(...)`, `catalogItems()` | Mismos nombres de parámetros. `kind` va en mayúsculas. En productos, `pricing` llega como `null` (no `undefined`): el `item.pricing ? ...` del front funciona igual. |
+| `GET /api/v1/admin/categories` | `useAdminCategories()` | Devuelve todas, con `active`. El front hoy fusiona el mock con su store local (`names`, `disabled`); con la API eso desaparece |
+| `POST /api/v1/admin/categories` | `createCategory(name, kind)` | Body `{ name, kind }` con `kind` en mayúsculas. Duplicado da `400 {"error": "Category X already exists"}`. El front puede dejar de validar con `isDuplicateCategory` o mantenerlo como aviso previo |
+| `PATCH /api/v1/admin/categories/{id}` | `renameCategory(id, name)` | Body `{ name }`. Misma regla de duplicado |
+| `PATCH /api/v1/admin/categories/{id}/status` | `toggleCategory(id)` | El front alterna; la API recibe el estado final `{ "active": true\|false }` |
+| — | `ratingFor`, `reviewsFor` | Salen del módulo de reseñas (RM-004) |
+
+## Proveedores (RM-003)
+
+| Endpoint | Reemplaza en el front | Diferencias |
+|---|---|---|
+| `GET /api/v1/suppliers` | `suppliers`, `useAllSuppliers()` | Devuelve los del mock y, desde el plan 10, los registrados. Ya no hace falta fusionar con `lib/suppliers.ts` |
+| `GET /api/v1/suppliers/{id}` | `getSupplier(id)`, `useSupplierById(id)` | Un id inexistente da 404 (el front hoy recibe `undefined`). Se usa en tarjetas, detalle, comparador y cotizaciones: conviene pedir la lista una vez y buscar en ella, en vez de un request por tarjeta |
+| `GET /api/v1/suppliers/{id}/products` | `productsBySupplier(id)` | Proveedor inexistente da 404, no lista vacía |
+| `GET /api/v1/suppliers/{id}/services` | `servicesBySupplier(id)` | Igual que el anterior |
+| — | `isMockSupplier(id)` | Deja de tener sentido: con la API todos los proveedores tienen perfil público, también los registrados |
+
+## Publicaciones del proveedor (RM-008)
+
+| Endpoint | Reemplaza en el front | Diferencias |
+|---|---|---|
+| `POST /api/v1/suppliers/{id}/products` | `createProduct(...)` | Body `{ name, brand, categoryId, price, description }`. Responde `201` con el producto y su `id` generado |
+| `POST /api/v1/suppliers/{id}/services` | `createService(...)` | Body `{ name, categoryId, price, pricing, description, coverage }`, con `pricing` en mayúsculas |
+| `PUT /api/v1/suppliers/{id}/products/{productId}` | `editListing(id, edit)` para productos | **Ruta distinta al roadmap original**: lleva el proveedor para revisar que el producto sea suyo (si no, 404). Body `{ name, brand, price, description }`, todos obligatorios |
+| `PUT /api/v1/suppliers/{id}/services/{serviceId}` | `editListing(id, edit)` para servicios | Igual. Body `{ name, price, pricing, description, coverage }`, todos obligatorios |
+| — | `useSupplierListings`, `useListing` | Se leen con `GET /suppliers/{id}/products` y `/services`. Ya no hay ediciones locales que fusionar (`edits`) |
+
+Validaciones: las mismas del formulario (nombre, marca o cobertura, descripción de 20 caracteres o más,
+precio mayor que 0) más las de categoría (que exista, esté activa y sea del tipo correcto). La API responde
+`400 {"errors": [...]}` o `400 {"error": "..."}` en inglés; el front sigue mostrando sus propios mensajes en español.
+
+## Verificación de proveedores (RM-009)
+
+| Endpoint | Reemplaza en el front | Diferencias |
+|---|---|---|
+| `GET /api/v1/admin/suppliers` | `useAdminSuppliers()` | **Forma plana**: devuelve `Supplier[]` con los campos de revisión adentro (`status`, `reviewNote`, `reviewedOn`), no `{ supplier, status, note, reviewedOn }`. El front la adapta en `src/data`. `status` va en mayúsculas. `reviewedOn` es `null` si nunca se revisó (el front usa `""`) y `reviewNote` es `""` |
+| `PATCH /api/v1/admin/suppliers/{id}/review` | `reviewSupplier(id, status, note)` | Body `{ status, note }`. Responde el proveedor actualizado |
+| `GET /api/v1/suppliers` y `/suppliers/{id}` | — | Ahora también traen `status`, `reviewNote` y `reviewedOn`. `verified` pasa a ser `true` solo si `status = VERIFIED`: el sello público cambia cuando el admin revisa (en el front hoy no cambia) |
+| `POST/PUT /api/v1/suppliers/{id}/...` | `ListingForm` | **Regla nueva**: un proveedor `SUSPENDED` no puede publicar ni editar, da `400 {"error": "Supplier X is suspended"}`. El front debería avisarlo en el panel `/supplier` |
+
+## Puntos y beneficios (RM-007)
+
+| Endpoint | Reemplaza en el front | Diferencias |
+|---|---|---|
+| `GET /api/v1/benefits` | `benefits` | Igual |
+| `GET /api/v1/users/{userId}/points` | `usePoints()` | Responde `{ balance, movements, usedBenefits }`. **`usedBenefits` es una lista**, no un `Set`. Los movimientos traen además `userId`. El front ya no calcula puntos de compras y reseñas al vuelo: la API los guarda como movimientos |
+| `POST /api/v1/users/{userId}/points/redemptions` | `redeemBenefit(benefitId)` | Body `{ benefitId }`. Responde `201` con el movimiento. **La API valida** saldo suficiente y que no se haya canjeado antes (400 si no): el front hoy solo deshabilita el botón |
+| — | `pointsBalance()` | Sale de `balance` |
+
+El usuario va en la ruta. Hasta el plan 10 el front usa `demo-client`, que es el dueño de los datos de ejemplo.
+
+## Cotizaciones y comparador (RM-005)
+
+Contrato definido por el backend (estilo del profesor: recurso por agregado y filtros con `?param=`). El front adapta `lib/quotes.ts` y `lib/compare.ts`.
+
+| Endpoint | Reemplaza en el front | Diferencias |
+|---|---|---|
+| `POST /api/v1/quote-requests` | `QuoteForm` (`/quotes/new`) | Body `{ clientId, listingId, quantity, requirement }` → `201`. Nace con `status: SENT` y `requestedOn` de hoy. Cliente o publicación inexistente da `400` |
+| `GET /api/v1/quote-requests?clientId=` | `/quotes` | El cliente va como parámetro, no se deduce de la sesión |
+| `GET /api/v1/quote-requests?supplierId=` | `/supplier/quotes` | El proveedor sale de la publicación cotizada |
+| `GET /api/v1/quote-requests/{id}` | — | `404` si no existe |
+| `POST /api/v1/quote-requests/{id}/answer` | `QuoteAnswerDialog` | Body `{ validityDays, subtotal, conditions }` (no `price`/`validUntil`/`notes`). La API calcula `igv` (18 %), `total` y `validUntil`. Responder dos veces da `409` |
+| `POST /api/v1/quote-requests/{id}/expire` | — | Solo si ya pasó `validUntil`; si no, `409` |
+| `POST /api/v1/specifications` · `GET ?productId=` | — | Especificaciones `{ productId, name, value, unit }` con `text` armado (`"16 GB"`). Nombre repetido en el mismo producto da `409` |
+| `POST /api/v1/comparisons` | `lib/compare.ts` (hoy en `localStorage`) | Body `{ clientId, productIds }`. Máximo 4 productos y sin repetir (`409`) |
+| `POST /api/v1/comparisons/{id}/products` · `DELETE .../products/{productId}` | botón comparar | Agrega `{ productId }` o quita un producto |
+| `GET /api/v1/comparisons/{id}/table` | `/compare` | `{ comparisonId, productIds, rows: [{ specification, values }] }`. `values` sigue el orden de `productIds`; sin dato sale `"-"`. Menos de 2 productos da `409` |
+
+`status` va en mayúsculas (`SENT`, `ANSWERED`, `EXPIRED`). Las respuestas de error usan el formato general: `404`/`400`/`409` con `{"error": "..."}`.
