@@ -23,7 +23,7 @@ cada módulo usa lo del anterior.
 | 8 | `quotes` (Carlos) | Cotizaciones | RM-005 | Pendiente |
 | 9 | `orders` (Carlos) | Compra simulada (+ puntos) | RM-006 | Pendiente |
 | 10 | `iam` (Benjamin) | Registro e inicio de sesión | RM-010 | Pendiente |
-| 11 | Front (Esteban) | Conectar `tecnolink-frontend` a la API, aplicando [`integracion-frontend.md`](integracion-frontend.md), y CORS con `@CrossOrigin` | — | Pendiente |
+| 11 | Front (Esteban) | Conectar `apps/web` a la API, aplicando [`integracion-frontend.md`](integracion-frontend.md), y CORS con `@CrossOrigin` | — | Pendiente |
 
 Fuera de este plan: RM-011 (MySQL, APF3) y RM-012 (Spring Security, entrega final).
 
@@ -49,7 +49,7 @@ Usuario de cada petición (decidido en el plan 6): va en la ruta, `/api/v1/users
 - **Errores** como en el lab de la semana 6: `NotFoundException` → `404 {"error"}`, validación →
   `400 {"errors": [...]}`, reglas de dominio con `IllegalArgumentException` → `400 {"error"}`. No hay 409.
 - Ids `String` tipo slug, los mismos del mock del front. Enums en mayúsculas. Precios en `double`.
-- Datos en memoria cargados con el mismo contenido de `tecnolink-frontend/apps/web/src/data/catalog.ts`.
+- Datos en memoria cargados con el mismo contenido de `apps/web/src/data/catalog.ts`.
 - Si algo de la API no calza con lo que espera el front, se anota en `integracion-frontend.md`.
 
 ## Forma de trabajar
@@ -60,7 +60,7 @@ Usuario de cada petición (decidido en el plan 6): va en la ruta, `/api/v1/users
 - Verificación: Claude escribe un test temporal con MockMvc, corre `./mvnw test` y **borra el test** antes
   de entregar. En el repo solo queda `TecnolinkApplicationTests`.
 - Claude no levanta el servidor. Esteban lo corre desde IntelliJ (`TecnolinkApplication`) y prueba en el navegador.
-- Para correr Maven desde terminal hace falta Java 21 o superior:
+- El proyecto Maven vive en `apps/api/`; los comandos `./mvnw` se corren ahí. Para correr Maven desde terminal hace falta Java 21 o superior:
   `JAVA_HOME=C:/Users/Esteban/.jdks/openjdk-24.0.1`. El Java por defecto del sistema es el 17.
 - Logbook: al empezar un RM se marca `En progreso`; al cerrarlo pasa al `changelog.md` en el mismo commit.
 - Al cerrar cada módulo, Claude deja una tabla de "qué hace cada clase" para quien lo expone.

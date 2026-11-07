@@ -43,15 +43,16 @@ quedan sin exposición.
 
 ## Alcance de esta etapa
 
-Solo **Front-End**: interfaces y navegación simulada. Sin backend, sin logística
-de entrega y **sin pasarela de pago real** — el flujo de compra se completa dentro
-de la plataforma pero no mueve dinero. La primera versión apunta a proveedores y
-clientes de Lima Metropolitana.
+El front es un prototipo con datos mock y el backend expone la API REST que lo
+reemplazará. Sin logística de entrega y **sin pasarela de pago real**: el flujo de
+compra se completa dentro de la plataforma pero no mueve dinero. La primera
+versión apunta a proveedores y clientes de Lima Metropolitana.
 
 ## Cómo está construido
 
-- **Next.js 16** + **React 19** (App Router) — `apps/web`, único deployable.
-- **Tailwind CSS v4** · **TypeScript** (strict) · **pnpm**.
+- **Front:** **Next.js 16** + **React 19** (App Router) · **Tailwind CSS v4** ·
+  **TypeScript** (strict) · **pnpm** — `apps/web`.
+- **Back:** **Spring Boot 4.1** · **Java 21** · **Maven** · **MySQL** — `apps/api`.
 
 > El informe entregado lista HTML5, CSS3, Bootstrap y JavaScript. El repositorio
 > usa Next.js, React y Tailwind; falta reconciliar esa tabla con el docente.
@@ -61,14 +62,17 @@ clientes de Lima Metropolitana.
 ```
 TecnoLink/
 ├── apps/
-│   └── web/                                   # Aplicación Next.js (autónoma, con su propio lockfile)
-│       ├── src/
-│       │   └── app/                           # Rutas (App Router)
-│       └── public/
+│   ├── web/                                   # Aplicación Next.js (autónoma, con su propio lockfile)
+│   │   ├── src/
+│   │   │   └── app/                           # Rutas (App Router)
+│   │   └── public/
+│   └── api/                                   # API Spring Boot (Maven)
+│       └── src/main/java/com/tecnolink/tecnolink/
 └── docs/
     ├── informe-marcos-de-desarrollo-web.md    # El informe, legible y versionable
     ├── originales/                            # Los entregables tal cual (.docx, .pdf)
-    └── logbook/                               # Seguimiento del proyecto
+    ├── logbook/                               # Seguimiento del front
+    └── backend/                               # Plan, modelo de datos y logbook del backend
 ```
 
 `docs/` es el punto de partida del proyecto. Cada entregable del grupo vive dos veces:
@@ -77,7 +81,10 @@ nombre. Si el original cambia, el markdown se regenera en el mismo commit.
 
 ## Estado
 
-**Prototipo completo.** Las 23 pantallas están construidas y las 20 historias de
+**Backend en construcción** en `apps/api`; el avance por módulo está en
+[`docs/backend/plan-backend.md`](docs/backend/plan-backend.md).
+
+**Front: prototipo completo.** Las 23 pantallas están construidas y las 20 historias de
 usuario del informe (HU-01 … HU-20) están cubiertas, con datos mock y sin backend.
 Se recorren de punta a punta las tres experiencias: cliente, proveedor y
 administrador.

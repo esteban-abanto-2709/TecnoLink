@@ -7,24 +7,30 @@ Guía para Claude Code en este repositorio.
 Plataforma web que centraliza equipos y servicios tecnológicos de proveedores de
 Lima Metropolitana: buscar, comparar, cotizar y comprar en un solo lugar.
 Proyecto del curso Marcos de Desarrollo Web. Ver [README.md](README.md) para el
-panorama y `docs/logbook/` para el estado.
+panorama, `docs/logbook/` para el estado del front y `docs/backend/` para el del
+backend.
 
 **Al empezar cualquier conversación, leer primero
 [`docs/informe-marcos-de-desarrollo-web.md`](docs/informe-marcos-de-desarrollo-web.md).**
 Ahí está la idea completa del proyecto: problema, actores, módulos, alcance, Lean
 Canvas y las 20 historias de usuario. Es el punto de partida, no un anexo.
 
-**Etapa actual: prototipo, solo Front-End.** El objetivo inmediato es un prototipo
-web navegable de punta a punta, que permita recorrer las experiencias de usuario
-completas. Sin backend, sin pasarela de pago, datos mock. Todo vive en `apps/web`;
-no hay app móvil ni la habrá en esta etapa.
+**Etapa actual.** El front (`apps/web`) es un prototipo navegable de punta a
+punta con datos mock, sin pasarela de pago. El backend (`apps/api`) se construye
+aparte siguiendo [`docs/backend/plan-backend.md`](docs/backend/plan-backend.md);
+conectar ambos es el plan 11 de ese archivo. No hay app móvil.
 
 ## Estructura
 
-- `apps/web/` — app **Next.js autónoma** y único deployable. Tiene su propio
-  lockfile y `node_modules`; **NO es un monorepo pnpm**. El nombre `web` es fijo:
-  si más adelante hay backend, entra como `apps/api/`.
+- `apps/web/` — app **Next.js autónoma**. Tiene su propio lockfile y
+  `node_modules`; **NO es un monorepo pnpm**.
+- `apps/api/` — API **Spring Boot** (Maven). Antes vivía en el repo
+  `TecnoLink-backend` del grupo; se trajo con su historial. Al trabajar en el
+  backend, leer primero [`docs/backend/plan-backend.md`](docs/backend/plan-backend.md):
+  reglas, estructura del profesor y forma de trabajar.
 - `docs/` — material conceptual del proyecto, en markdown.
+- `docs/backend/` — plan, modelo de datos, responsables, integración con el front
+  y el logbook propio del backend.
 - `docs/originales/` — los entregables tal cual salen del grupo (`.docx`, `.pdf`).
   No se editan acá; son el original.
 - `docs/logbook/` — seguimiento del proyecto (ver abajo).
@@ -57,11 +63,17 @@ original está mal, se corrige el original.
   una a una. Correrlo al tocar `src/data/` o al agregar una ruta.
 - **No levantar el dev server** (`pnpm dev`); la validación se hace con `build`.
 
+## Comandos (dentro de `apps/api`)
+
+- `./mvnw test` — con Java 21 o superior:
+  `JAVA_HOME=C:/Users/Esteban/.jdks/openjdk-24.0.1`. El Java por defecto es el 17.
+- **No levantar el servidor**; Esteban lo corre desde IntelliJ.
+
 ## Stack
 
-- Next.js 16 + React 19 (App Router, `src/`)
-- Tailwind CSS v4
-- TypeScript (strict), pnpm
+- Front: Next.js 16 + React 19 (App Router, `src/`), Tailwind CSS v4,
+  TypeScript (strict), pnpm
+- Back: Spring Boot 4.1 + Java 21, Maven, MySQL
 
 ## Convenciones
 
@@ -118,3 +130,7 @@ Trabajo comprometido en `roadmap.md` (`RM-###`), deuda en `technical-debt.md`
 (`TD-###`), ideas en `wishlist.md` (`WL-###`), terminado en `changelog.md`. Al
 empezar una tarea se marca `En progreso`; al terminar se mueve al `changelog`
 conservando su código. Los códigos nunca se reutilizan.
+
+El backend tiene su propio logbook en `docs/backend/logbook/`, con su propia
+numeración. No se mezclan: el trabajo de `apps/api` va ahí, el de `apps/web` en
+`docs/logbook/`.

@@ -1,6 +1,6 @@
 # Integración con el frontend
 
-El front (`tecnolink-frontend/apps/web`) se diseñó pensando en una API hecha con NestJS. Este archivo
+El front (`apps/web`) se diseñó pensando en una API hecha con NestJS. Este archivo
 anota **todo lo que la API de Spring Boot hace distinto** y lo que hay que cambiar en el front para que
 calce. Se aplica en el plan 11 de [`plan-backend.md`](plan-backend.md). Cada módulo nuevo agrega sus
 diferencias aquí.

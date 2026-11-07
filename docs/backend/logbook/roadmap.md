@@ -10,7 +10,7 @@ Al terminar una tarea se mueve al changelog y se borra de aquí.
 
 ---
 
-**Meta:** la API REST que necesita el frontend (`tecnolink-frontend/apps/web`) para dejar los datos mock.
+**Meta:** la API REST que necesita el frontend (`apps/web`) para dejar los datos mock.
 Los endpoints salen de lo que hoy resuelven `src/data/catalog.ts` y los stores de `src/lib/*.ts`.
 El contrato JSON usa los **mismos nombres de campos** que `src/data/types.ts`, para que el front
 solo cambie de dónde lee y no cómo.
