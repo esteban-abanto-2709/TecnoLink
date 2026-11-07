@@ -20,7 +20,7 @@ changelog y se borra de aquí.
 - **Problema:** `contextLoads` arranca Spring completo y se conecta a `localhost:3306`. Sin el contenedor de
   MySQL, `./mvnw test` falla con `Communications link failure` aunque el código esté bien.
 - **Impacto futuro:** "los tests pasan" depende de tener Docker corriendo; un error real se confunde con una base
-  apagada. Se resuelve al levantar MySQL con Docker Compose (RM-029).
+  apagada. Antes de testear: `docker compose up -d` en `apps/docker`.
 - **Fecha:** 2026-11-07 · **Estado:** Abierto
 
 ## [TD-009] Repositorios en memoria sin uso en `loyalty`

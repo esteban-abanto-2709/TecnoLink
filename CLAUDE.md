@@ -27,6 +27,8 @@ ambos es el plan 11 de ese macro plan. No hay app móvil.
 - `apps/api/` — API **Spring Boot** (Maven). Antes vivía en el repo
   `TecnoLink-backend` del grupo; se trajo con su historial. Al trabajar en él,
   seguir la sección **API (`apps/api`)** de este archivo.
+- `apps/docker/` — Docker Compose con el MySQL de la API (`compose.yaml` base +
+  `compose.override.yaml` de desarrollo, `.env` por máquina). Ver su `README.md`.
 - `docs/` — material conceptual del proyecto, en markdown.
 - `docs/api.md` — endpoints, lo que cambia en el front al conectarse y contratos
   entre módulos de la API.
@@ -98,7 +100,8 @@ El avance por módulo está en el macro plan de `docs/logbook/roadmap.md`.
   Al terminar un paso, Claude se detiene y entrega el nombre del commit. Esteban revisa, comitea y dice "sigue".
 - Commits: `tipo(módulo): descripción en inglés, imperativo y minúscula`, por ejemplo `feat(catalog): ...`.
 - Verificación: Claude escribe un test temporal con MockMvc, corre `./mvnw test` y **borra el test** antes
-  de entregar. En el repo solo queda `TecnolinkApplicationTests`. Los tests necesitan MySQL levantado (TD-010);
+  de entregar. En el repo solo queda `TecnolinkApplicationTests`. Los tests necesitan MySQL levantado
+  (`docker compose up -d` en `apps/docker`, lo levanta Esteban; TD-010);
   sin él, `./mvnw test-compile` al menos confirma que todo compila.
 - Claude no levanta el servidor. Esteban lo corre desde IntelliJ (`TecnolinkApplication`) y prueba en el navegador.
 - El proyecto Maven vive en `apps/api/`; los comandos `./mvnw` se corren ahí. Para correr Maven desde terminal hace falta Java 21 o superior:

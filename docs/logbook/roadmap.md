@@ -111,9 +111,9 @@ Usuario de cada petición (decidido en el plan 6): va en la ruta, `/api/v1/users
   (entity, JpaRepository, assembler, adapter) sin tocar el dominio ni los controllers, y dejar los scripts
   de creación y carga inicial en `/scripts`, como pide la rúbrica.
 - **Avance:** todos los módulos ya persisten con JPA en MySQL (las tablas las crea Hibernate con `ddl-auto=update`).
+  MySQL se levanta con Docker Compose desde `apps/docker`.
   Faltan: los scripts de creación y carga en el repo (hoy los datos de prueba se cargan a mano desde un SQL fuera
-  del repo), levantar MySQL con Docker Compose en vez de a mano, y borrar los repositorios en memoria que quedaron
-  sin uso (TD-009).
+  del repo) y borrar los repositorios en memoria que quedaron sin uso (TD-009).
 - **Hecho cuando:** con MySQL levantado y los scripts aplicados, todos los endpoints de RM-020 a RM-028 responden igual que en memoria y los datos sobreviven a un reinicio.
 - **Fecha:** 2026-10-02 · **Estado:** En progreso
 

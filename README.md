@@ -66,8 +66,9 @@ TecnoLink/
 │   │   ├── src/
 │   │   │   └── app/                           # Rutas (App Router)
 │   │   └── public/
-│   └── api/                                   # API Spring Boot (Maven)
-│       └── src/main/java/com/tecnolink/tecnolink/
+│   ├── api/                                   # API Spring Boot (Maven)
+│   │   └── src/main/java/com/tecnolink/tecnolink/
+│   └── docker/                                # Docker Compose: MySQL para la API
 └── docs/
     ├── informe-marcos-de-desarrollo-web.md    # El informe, legible y versionable
     ├── originales/                            # Los entregables tal cual (.docx, .pdf)
