@@ -18,7 +18,19 @@ docker compose up -d --build --wait
 | Salud | `tecnolink-api` | `http://localhost:8080/actuator/health` |
 | MySQL | `tecnolink-sql` | `localhost:3306`, base `tecnolink` |
 
-Las tablas las crea Hibernate al arrancar la API (`ddl-auto=update`).
+Las tablas las crea Hibernate al arrancar la API (`ddl-auto=update`), y la base
+arranca vacía.
+
+## Datos de prueba
+
+`scripts/seed.sql` (en la raíz del repo) carga un cliente, un proveedor, una
+categoría y dos productos. Con la API ya arriba, porque necesita las tablas:
+
+```bash
+docker compose exec -T mysql sh -c 'mysql -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE" < /scripts/seed.sql'
+```
+
+Se puede correr varias veces: `INSERT IGNORE` no duplica.
 
 ## Cómo está organizado
 
@@ -27,7 +39,7 @@ Un archivo base y uno por entorno, que Compose fusiona:
 ```
 apps/docker/
 ├── compose.yaml           # lo común: servicios, healthchecks, red, volumen
-├── compose.override.yaml  # desarrollo: construye la API y publica 8080 y 3306 (se carga solo)
+├── compose.override.yaml  # desarrollo: construye la API, publica 8080 y 3306, monta scripts/ (se carga solo)
 ├── .env.example           # plantilla; funciona tal cual en desarrollo
 └── .env                   # uno por máquina (ignorado por git)
 ```

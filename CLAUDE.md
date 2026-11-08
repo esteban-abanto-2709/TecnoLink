@@ -98,10 +98,10 @@ El avance por módulo está en el macro plan de `docs/logbook/roadmap.md`.
 - Plan en pasos numerados; **cada paso es un commit** y deja el proyecto compilando con los tests en verde.
   Al terminar un paso, Claude se detiene y entrega el nombre del commit. Esteban revisa, comitea y dice "sigue".
 - Commits: `tipo(módulo): descripción en inglés, imperativo y minúscula`, por ejemplo `feat(catalog): ...`.
-- Verificación: Claude escribe un test temporal con MockMvc, corre `./mvnw test` y **borra el test** antes
-  de entregar. En el repo solo queda `TecnolinkApplicationTests`. Los tests necesitan MySQL levantado
-  (`docker compose up -d` en `apps/docker`; TD-010);
-  sin él, `./mvnw test-compile` al menos confirma que todo compila.
+- Verificación, desde `apps/docker` y sin Java local: revisar los puertos, `docker compose up -d --build --wait`, cargar
+  `scripts/seed.sql` (comando en `apps/docker/README.md`), probar con `curl` lo que cambió, caso feliz y errores, y
+  terminar con `docker compose down -v`. La base es desechable. Si hace falta un dato que el seed no tiene, se agrega
+  al seed. En el repo solo queda `TecnolinkApplicationTests`, que necesita MySQL levantado (TD-010).
 - Claude puede levantar lo que esté en `apps/docker`, siempre con `docker compose up -d`. **Antes revisa los puertos
   8080 y 3306:** si están ocupados por algo que no es un contenedor de TecnoLink (el IntelliJ de un compañero, un MySQL
   local), no toca nada y avisa.

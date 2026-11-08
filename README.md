@@ -69,6 +69,7 @@ TecnoLink/
 │   ├── api/                                   # API Spring Boot (Maven)
 │   │   └── src/main/java/com/tecnolink/tecnolink/
 │   └── docker/                                # Docker Compose: API y MySQL
+├── scripts/                                   # Datos de prueba de MySQL
 └── docs/
     ├── informe-marcos-de-desarrollo-web.md    # El informe, legible y versionable
     ├── originales/                            # Los entregables tal cual (.docx, .pdf)

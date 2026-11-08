@@ -2,6 +2,8 @@ services:
   mysql:
     ports:
       - "3306:3306"
+    volumes:
+      - ../../scripts:/scripts:ro
 
   api:
     build:

@@ -14,6 +14,16 @@ changelog y se borra de aquí.
 
 ---
 
+## [TD-011] Un id no numérico en `quotes` expone un mensaje interno
+- **Ubicación:** `apps/api/src/main/java/com/tecnolink/tecnolink/quotes/interfaces/rest/controllers/QuoteRequestController.java:45`,
+  `shared/interfaces/rest/RestExceptionHandler.java`
+- **Riesgo:** 2/10
+- **Problema:** `GET /api/v1/quote-requests/nope` responde `400 {"error": "For input string: \"nope\""}`. El status es
+  aceptable, pero el texto es el error interno de la conversión a `Long`. Los otros controllers de `quotes` también
+  reciben el id como `Long`.
+- **Impacto futuro:** el front mostraría un mensaje técnico si llega a usarlo; solo pasa con una URL mal formada.
+- **Fecha:** 2026-11-08 · **Estado:** Abierto
+
 ## [TD-010] El único test de la API necesita MySQL levantado
 - **Ubicación:** `apps/api/src/test/java/com/tecnolink/tecnolink/TecnolinkApplicationTests.java`
 - **Riesgo:** 4/10

@@ -13,6 +13,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-036] API en Docker y verificación de endpoints (2026-11-08 11:39)
+API y MySQL en Docker Compose (`apps/docker`, `apps/api/Dockerfile`), con Actuator para el healthcheck, datos de prueba
+en `scripts/seed.sql` y verificación con `curl` sin Java local ni IntelliJ.
+
 ## [RM-023] Cotizaciones y comparador (2026-11-02 13:00)
 Módulo `quotes/` al estilo del profesor (DDD + CQRS + JPA + Swagger): solicitudes con cotización (IGV 18 %, vencimiento),
 especificaciones de producto y comparador de 2 a 4 productos con cuadro comparativo. Rutas en `docs/integracion-frontend.md`.

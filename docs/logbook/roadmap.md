@@ -59,7 +59,7 @@ cada módulo usa lo del anterior. Los dueños son los de [`responsabilidades.md`
 | 10 | `iam` (Benjamin) | Registro e inicio de sesión | RM-028 | Parcial: dominio y JPA; faltan servicio y endpoints |
 | 11 | Front (Esteban) | Conectar `apps/web` a la API, aplicando [`api.md`](../api.md), y CORS con `@CrossOrigin` | — | Pendiente |
 
-Fuera de este plan: RM-029 (MySQL, APF3; en progreso), RM-030 (Spring Security, entrega final) y RM-036 (API en Docker; en progreso).
+Fuera de este plan: RM-029 (MySQL, APF3; en progreso) y RM-030 (Spring Security, entrega final).
 
 Usuario de cada petición (decidido en el plan 6): va en la ruta, `/api/v1/users/{userId}/...`, leído con
 `@PathVariable`. Los datos de ejemplo (movimientos, compras) son del usuario `demo-client`. Hasta RM-028 cualquier
@@ -111,9 +111,9 @@ Usuario de cada petición (decidido en el plan 6): va en la ruta, `/api/v1/users
   (entity, JpaRepository, assembler, adapter) sin tocar el dominio ni los controllers, y dejar los scripts
   de creación y carga inicial en `/scripts`, como pide la rúbrica.
 - **Avance:** todos los módulos ya persisten con JPA en MySQL (las tablas las crea Hibernate con `ddl-auto=update`).
-  MySQL se levanta con Docker Compose desde `apps/docker`.
-  Faltan: los scripts de creación y carga en el repo (hoy los datos de prueba se cargan a mano desde un SQL fuera
-  del repo) y borrar los repositorios en memoria que quedaron sin uso (TD-009).
+  MySQL se levanta con Docker Compose desde `apps/docker` y los datos de prueba están en `scripts/seed.sql`.
+  Faltan: el script de creación de las tablas en `/scripts` y borrar los repositorios en memoria que quedaron sin
+  uso (TD-009).
 - **Hecho cuando:** con MySQL levantado y los scripts aplicados, todos los endpoints de RM-020 a RM-028 responden igual que en memoria y los datos sobreviven a un reinicio.
 - **Fecha:** 2026-10-02 · **Estado:** En progreso
 
@@ -123,12 +123,5 @@ Usuario de cada petición (decidido en el plan 6): va en la ruta, `/api/v1/users
   cotizaciones propias solo el cliente). El catálogo, los proveedores y las reseñas siguen siendo públicos en lectura.
 - **Hecho cuando:** sin token, las rutas protegidas dan 401; con el rol equivocado dan 403; con el rol correcto responden.
 - **Fecha:** 2026-10-02 · **Estado:** Abierto
-
-## [RM-036] API en Docker y verificación de endpoints
-- **Objetivo:** levantar la API y MySQL con Docker Compose, sin depender de un Java local ni de IntelliJ, para
-  probar los endpoints después de cada cambio.
-- **Avance:** imagen de la API y compose listos. Faltan los datos de prueba en el repo y documentar el flujo de verificación.
-- **Hecho cuando:** desde una base vacía, un solo comando levanta todo, se cargan los datos de prueba y los endpoints responden.
-- **Fecha:** 2026-11-08 · **Estado:** En progreso (2026-11-08)
 
 > Las entradas de esta página y el macro plan vienen del repo `TecnoLink-backend` del grupo, importado en `apps/api` el 2026-11-07. Se renumeraron a continuación de las del front: `RM-n` pasó a `RM-(n+18)`.
