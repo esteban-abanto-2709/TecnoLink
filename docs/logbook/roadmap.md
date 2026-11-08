@@ -26,8 +26,8 @@ Criterios de toda la API:
 - **APF2 (semana 8):** datos sintéticos en repositorios en memoria, cargados con el mismo contenido de `catalog.ts`.
   **APF3 (semana 12):** MySQL con Spring Data (hoy todos los módulos ya persisten así, ver RM-029).
   **Final (semana 18):** Spring Security.
-- **Solo lo que enseña el curso.** Nada de librerías ni clases que no salgan en las clases o labs
-  (sin configuración extra). Swagger UI sí entra: el profesor lo enseña en la semana 11 y la sustentación se hace con él.
+- **Lo del curso es la base, no el límite.** Se puede usar lo que no se vio en clase si se entiende y se sabe
+  explicar. Swagger UI es parte del curso (semana 11) y la sustentación se hace con él.
 - Errores como en el lab de la semana 6: `NotFoundException` → `404 {"error": ...}`, validación →
   `400 {"errors": [...]}`, reglas de dominio (`IllegalArgumentException`) → `400 {"error": ...}`, y conflictos de
   estado (`IllegalStateException`) → `409 {"error": ...}`, agregado con el módulo `quotes`.
@@ -59,7 +59,7 @@ cada módulo usa lo del anterior. Los dueños son los de [`responsabilidades.md`
 | 10 | `iam` (Benjamin) | Registro e inicio de sesión | RM-028 | Parcial: dominio y JPA; faltan servicio y endpoints |
 | 11 | Front (Esteban) | Conectar `apps/web` a la API, aplicando [`api.md`](../api.md), y CORS con `@CrossOrigin` | — | Pendiente |
 
-Fuera de este plan: RM-029 (MySQL, APF3; en progreso) y RM-030 (Spring Security, entrega final).
+Fuera de este plan: RM-029 (MySQL, APF3; en progreso), RM-030 (Spring Security, entrega final) y RM-036 (API en Docker; en progreso).
 
 Usuario de cada petición (decidido en el plan 6): va en la ruta, `/api/v1/users/{userId}/...`, leído con
 `@PathVariable`. Los datos de ejemplo (movimientos, compras) son del usuario `demo-client`. Hasta RM-028 cualquier
@@ -123,5 +123,12 @@ Usuario de cada petición (decidido en el plan 6): va en la ruta, `/api/v1/users
   cotizaciones propias solo el cliente). El catálogo, los proveedores y las reseñas siguen siendo públicos en lectura.
 - **Hecho cuando:** sin token, las rutas protegidas dan 401; con el rol equivocado dan 403; con el rol correcto responden.
 - **Fecha:** 2026-10-02 · **Estado:** Abierto
+
+## [RM-036] API en Docker y verificación de endpoints
+- **Objetivo:** levantar la API y MySQL con Docker Compose, sin depender de un Java local ni de IntelliJ, para
+  probar los endpoints después de cada cambio.
+- **Avance:** imagen de la API y compose listos. Faltan los datos de prueba en el repo y documentar el flujo de verificación.
+- **Hecho cuando:** desde una base vacía, un solo comando levanta todo, se cargan los datos de prueba y los endpoints responden.
+- **Fecha:** 2026-11-08 · **Estado:** En progreso (2026-11-08)
 
 > Las entradas de esta página y el macro plan vienen del repo `TecnoLink-backend` del grupo, importado en `apps/api` el 2026-11-07. Se renumeraron a continuación de las del front: `RM-n` pasó a `RM-(n+18)`.

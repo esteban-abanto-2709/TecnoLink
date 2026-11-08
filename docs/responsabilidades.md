@@ -45,5 +45,5 @@ cómo están organizadas sus capas. Esteban abre con la arquitectura general y l
 
 ## Regla para todos
 
-Usar solo lo que el curso enseña (clases y labs de `marcos-de-desarrollo-web/raw`). Si algo no salió en clase, no
-se agrega: el profesor puede pedir que lo expliquen.
+Lo del curso es la base, no el límite. Se puede agregar lo que no salió en clase, siempre que quien lo agrega lo
+entienda: el profesor puede pedir que lo expliquen.

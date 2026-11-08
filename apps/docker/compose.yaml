@@ -11,11 +11,39 @@ services:
       TZ: UTC
     volumes:
       - mysql_data:/var/lib/mysql
+    networks:
+      - tecnolink-network
     healthcheck:
       test: [ "CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} --silent" ]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 60s
+      start_interval: 2s
+
+  api:
+    container_name: tecnolink-api
+    restart: unless-stopped
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/${MYSQL_DATABASE}?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - tecnolink-network
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -qO /dev/null http://127.0.0.1:8080/actuator/health || exit 1" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+      start_interval: 2s
 
 volumes:
   mysql_data:
+
+networks:
+  tecnolink-network:
+    driver: bridge
