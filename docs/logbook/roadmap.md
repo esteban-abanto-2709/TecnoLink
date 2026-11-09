@@ -124,12 +124,4 @@ Usuario de cada petición (decidido en el plan 6): va en la ruta, `/api/v1/users
 - **Hecho cuando:** sin token, las rutas protegidas dan 401; con el rol equivocado dan 403; con el rol correcto responden.
 - **Fecha:** 2026-10-02 · **Estado:** Abierto
 
-## [RM-037] Calidad técnica del módulo `quotes`
-- **Objetivo:** dejar `quotes` correcto en DDD, hexagonal y SOLID sin agregar lo que el alcance no necesita: errores
-  consistentes, reglas entre módulos fuera de los adaptadores, consultas agrupadas por agregado y dominio completo
-  (montos como value object, vencimiento por fecha, observaciones de HU-09 y tests).
-- **Hecho cuando:** ningún dato inválido da 500, `quotes` no importa repositorios de otros módulos y las reglas del
-  dominio tienen tests que corren sin MySQL.
-- **Fecha:** 2026-11-08 · **Estado:** En progreso (2026-11-08)
-
 > Las entradas de esta página y el macro plan vienen del repo `TecnoLink-backend` del grupo, importado en `apps/api` el 2026-11-07. Se renumeraron a continuación de las del front: `RM-n` pasó a `RM-(n+18)`.

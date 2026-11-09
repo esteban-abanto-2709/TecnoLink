@@ -2,6 +2,7 @@ package com.tecnolink.tecnolink.quotes.infrastructure.persistence.jpa.mappers;
 
 import com.tecnolink.tecnolink.quotes.domain.aggregates.QuoteRequest;
 import com.tecnolink.tecnolink.quotes.domain.entities.Quote;
+import com.tecnolink.tecnolink.quotes.domain.valueobjects.QuoteAmounts;
 import com.tecnolink.tecnolink.quotes.infrastructure.persistence.jpa.entities.QuoteJpaEntity;
 import com.tecnolink.tecnolink.quotes.infrastructure.persistence.jpa.entities.QuoteRequestJpaEntity;
 import org.springframework.stereotype.Component;
@@ -39,10 +40,9 @@ public class QuoteRequestPersistenceMapper {
                 e.getId(),
                 e.getIssueDate(),
                 e.getValidityDays(),
-                e.getSubtotal(),
-                e.getIgv(),
-                e.getTotal(),
-                e.getConditions()
+                new QuoteAmounts(e.getSubtotal(), e.getIgv(), e.getTotal()),
+                e.getConditions(),
+                e.getNotes()
         );
     }
 
@@ -55,6 +55,7 @@ public class QuoteRequestPersistenceMapper {
         e.setIgv(d.getIgv());
         e.setTotal(d.getTotal());
         e.setConditions(d.getConditions());
+        e.setNotes(d.getNotes());
         return e;
     }
 }

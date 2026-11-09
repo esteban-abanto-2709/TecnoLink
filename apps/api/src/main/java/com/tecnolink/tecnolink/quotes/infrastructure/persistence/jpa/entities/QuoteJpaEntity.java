@@ -37,4 +37,7 @@ public class QuoteJpaEntity {
 
     @Column(nullable = false, length = 1000)
     private String conditions;
+
+    @Column(length = 1000)
+    private String notes;
 }

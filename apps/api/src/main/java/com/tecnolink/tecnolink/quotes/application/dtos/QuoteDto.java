@@ -9,4 +9,5 @@ public record QuoteDto(Long id,
                        double subtotal,
                        double igv,
                        double total,
-                       String conditions) {}
+                       String conditions,
+                       String notes) {}

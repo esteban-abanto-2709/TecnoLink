@@ -9,5 +9,6 @@ import jakarta.validation.constraints.Size;
 public record QuoteRequestAnswerRequest(
         @NotNull @Min(1) Integer validityDays,
         @NotNull @Positive Double subtotal,
-        @NotBlank @Size(max = 1000) String conditions
+        @NotBlank @Size(max = 1000) String conditions,
+        @Size(max = 1000) String notes
 ) {}

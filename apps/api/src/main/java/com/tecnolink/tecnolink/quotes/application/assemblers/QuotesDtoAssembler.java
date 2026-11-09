@@ -11,20 +11,21 @@ import com.tecnolink.tecnolink.quotes.domain.aggregates.QuoteRequest;
 import com.tecnolink.tecnolink.quotes.domain.aggregates.Specification;
 import com.tecnolink.tecnolink.quotes.domain.entities.Quote;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
 public final class QuotesDtoAssembler {
     private QuotesDtoAssembler() {}
 
-    public static QuoteRequestDto toDto(QuoteRequest q) {
+    public static QuoteRequestDto toDto(QuoteRequest q, LocalDate today) {
         return new QuoteRequestDto(q.getId(),
                 q.getClientId(),
                 q.getListingId(),
                 q.getRequestedOn(),
                 q.getQuantity(),
                 q.getRequirement(),
-                q.getStatus(),
+                q.statusOn(today),
                 q.getQuote() == null ? null : toDto(q.getQuote()));
     }
 
@@ -36,7 +37,8 @@ public final class QuotesDtoAssembler {
                 q.getSubtotal(),
                 q.getIgv(),
                 q.getTotal(),
-                q.getConditions());
+                q.getConditions(),
+                q.getNotes());
     }
 
     public static SpecificationDto toDto(Specification s) {

@@ -269,10 +269,11 @@ erDiagram
         bigint request_id FK "único"
         date issue_date
         int validity_days "1 o más"
-        double subtotal
+        double subtotal "hasta 2 decimales"
         double igv "18% del subtotal"
         double total "subtotal + igv"
         varchar conditions
+        varchar notes "nulo si no hay observaciones"
     }
     specifications {
         bigint id PK
@@ -297,5 +298,6 @@ erDiagram
 |---|---|---|---|
 | `QuoteRequest` | Aggregate | `quote_requests` | `QuoteRequestRepositoryAdapter` |
 | `Quote` | Entity dentro de la solicitud | `quotes` | Se guarda con su solicitud (`cascade`) |
+| `QuoteAmounts` | Value object de `Quote` | Columnas `subtotal`, `igv` y `total` de `quotes` | Lo arma `QuoteRequestPersistenceMapper` |
 | `Specification` | Aggregate | `specifications` | `SpecificationRepositoryAdapter` |
 | `Comparison` | Aggregate | `comparisons` + `comparison_products` | `ComparisonRepositoryAdapter` |

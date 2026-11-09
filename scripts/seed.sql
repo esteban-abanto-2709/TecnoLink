@@ -18,3 +18,11 @@ INSERT IGNORE INTO listings (id, category_id, description, name, price, publishe
 INSERT IGNORE INTO products (id, brand, model, stock) VALUES
   ('laptop-lenovo-ideapad', 'Lenovo', 'IdeaPad 5', 10),
   ('laptop-hp-victus',      'HP',     'Victus 15', 5);
+
+INSERT IGNORE INTO specifications (product_id, name, spec_value, unit) VALUES
+  ('laptop-lenovo-ideapad', 'Procesador', 'Ryzen 5', NULL),
+  ('laptop-lenovo-ideapad', 'RAM', '16', 'GB'),
+  ('laptop-lenovo-ideapad', 'Almacenamiento', '512', 'GB'),
+  ('laptop-hp-victus', 'Procesador', 'Core i5', NULL),
+  ('laptop-hp-victus', 'RAM', '8', 'GB'),
+  ('laptop-hp-victus', 'Tarjeta grafica', 'RTX 3050', NULL);

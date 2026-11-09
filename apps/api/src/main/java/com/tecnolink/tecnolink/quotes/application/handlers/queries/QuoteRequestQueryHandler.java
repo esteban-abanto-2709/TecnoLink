@@ -5,11 +5,13 @@ import com.tecnolink.tecnolink.quotes.application.dtos.QuoteRequestDto;
 import com.tecnolink.tecnolink.quotes.application.queries.GetQuoteRequestQuery;
 import com.tecnolink.tecnolink.quotes.application.queries.ListClientQuoteRequestsQuery;
 import com.tecnolink.tecnolink.quotes.application.queries.ListSupplierQuoteRequestsQuery;
+import com.tecnolink.tecnolink.quotes.domain.aggregates.QuoteRequest;
 import com.tecnolink.tecnolink.quotes.domain.exceptions.QuoteRequestNotFoundException;
 import com.tecnolink.tecnolink.quotes.domain.repositories.QuoteRequestRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -22,14 +24,20 @@ public class QuoteRequestQueryHandler {
     }
 
     public QuoteRequestDto handle(GetQuoteRequestQuery q) {
-        return QuotesDtoAssembler.toDto(quoteRequests.findById(q.id()).orElseThrow(() -> new QuoteRequestNotFoundException(q.id())));
+        QuoteRequest quoteRequest = quoteRequests.findById(q.id()).orElseThrow(() -> new QuoteRequestNotFoundException(q.id()));
+        return QuotesDtoAssembler.toDto(quoteRequest, LocalDate.now());
     }
 
     public List<QuoteRequestDto> handle(ListClientQuoteRequestsQuery q) {
-        return quoteRequests.findByClientId(q.clientId()).stream().map(QuotesDtoAssembler::toDto).toList();
+        return toDtos(quoteRequests.findByClientId(q.clientId()));
     }
 
     public List<QuoteRequestDto> handle(ListSupplierQuoteRequestsQuery q) {
-        return quoteRequests.findBySupplierId(q.supplierId()).stream().map(QuotesDtoAssembler::toDto).toList();
+        return toDtos(quoteRequests.findBySupplierId(q.supplierId()));
+    }
+
+    private List<QuoteRequestDto> toDtos(List<QuoteRequest> found) {
+        LocalDate today = LocalDate.now();
+        return found.stream().map(quoteRequest -> QuotesDtoAssembler.toDto(quoteRequest, today)).toList();
     }
 }

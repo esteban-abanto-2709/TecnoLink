@@ -13,6 +13,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-037] Calidad técnica del módulo `quotes` (2026-11-09 00:46)
+Errores consistentes, reglas entre módulos en el puerto `QuoteReferences`, consultas por agregado y dominio completo:
+`QuoteAmounts`, vencimiento por fecha, `notes` (HU-09), hora de Lima, eventos con id y 25 tests que corren sin MySQL.
+
 ## [TD-011] Un id no numérico en `quotes` expone un mensaje interno (2026-11-08 23:00)
 `RestExceptionHandler` responde `400 {"error": "Invalid value for parameter id"}` cuando un parámetro no se puede
 convertir, en lugar del mensaje interno de Java.

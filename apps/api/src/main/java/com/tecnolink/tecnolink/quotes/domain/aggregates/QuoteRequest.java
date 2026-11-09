@@ -3,6 +3,7 @@ package com.tecnolink.tecnolink.quotes.domain.aggregates;
 import com.tecnolink.tecnolink.quotes.domain.entities.Quote;
 import com.tecnolink.tecnolink.quotes.domain.events.QuoteAnsweredEvent;
 import com.tecnolink.tecnolink.quotes.domain.events.QuoteRequestedEvent;
+import com.tecnolink.tecnolink.quotes.domain.valueobjects.QuoteAmounts;
 import com.tecnolink.tecnolink.quotes.domain.valueobjects.QuoteRequestStatus;
 import com.tecnolink.tecnolink.shared.domain.model.aggregates.AbstractDomainAggregateRoot;
 
@@ -19,9 +20,8 @@ public class QuoteRequest extends AbstractDomainAggregateRoot<QuoteRequest> {
     private QuoteRequestStatus status;
     private Quote quote;
 
-    public QuoteRequest(String clientId, String listingId, int quantity, String requirement) {
-        this(null, clientId, listingId, LocalDate.now(), quantity, requirement, QuoteRequestStatus.SENT, null);
-        registerDomainEvent(new QuoteRequestedEvent(id, clientId, listingId, Instant.now()));
+    public QuoteRequest(String clientId, String listingId, int quantity, String requirement, LocalDate today) {
+        this(null, clientId, listingId, today, quantity, requirement, QuoteRequestStatus.SENT, null);
     }
 
     public QuoteRequest(Long id, String clientId, String listingId, LocalDate requestedOn, int quantity,
@@ -41,20 +41,29 @@ public class QuoteRequest extends AbstractDomainAggregateRoot<QuoteRequest> {
         this.quote = quote;
     }
 
-    public void answer(int validityDays, double subtotal, String conditions) {
+    public void announceRequested() {
+        if (id == null) throw new IllegalStateException("Only a saved quote request can be announced");
+        registerDomainEvent(new QuoteRequestedEvent(id, clientId, listingId, Instant.now()));
+    }
+
+    public void answer(int validityDays, double subtotal, String conditions, String notes, LocalDate today) {
         if (status != QuoteRequestStatus.SENT)
             throw new IllegalStateException("Only a sent quote request can be answered");
-        quote = new Quote(LocalDate.now(), validityDays, subtotal, conditions);
+        quote = new Quote(today, validityDays, QuoteAmounts.ofSubtotal(subtotal), conditions, notes);
         status = QuoteRequestStatus.ANSWERED;
         registerDomainEvent(new QuoteAnsweredEvent(id, clientId, quote.getTotal(), Instant.now()));
     }
 
-    public void expire() {
+    public void expire(LocalDate today) {
         if (status != QuoteRequestStatus.ANSWERED)
             throw new IllegalStateException("Only an answered quote request can expire");
-        if (quote.isValidOn(LocalDate.now()))
+        if (quote.isValidOn(today))
             throw new IllegalStateException("Quote is still valid until " + quote.validUntil());
         status = QuoteRequestStatus.EXPIRED;
+    }
+
+    public QuoteRequestStatus statusOn(LocalDate today) {
+        return status == QuoteRequestStatus.ANSWERED && !quote.isValidOn(today) ? QuoteRequestStatus.EXPIRED : status;
     }
 
     private static String required(String value, String name) {

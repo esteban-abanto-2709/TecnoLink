@@ -14,8 +14,8 @@ public class Comparison extends AbstractDomainAggregateRoot<Comparison> {
     private final LocalDate createdOn;
     private final List<String> productIds = new ArrayList<>();
 
-    public Comparison(String clientId, List<String> productIds) {
-        this(null, clientId, LocalDate.now(), productIds);
+    public Comparison(String clientId, List<String> productIds, LocalDate today) {
+        this(null, clientId, today, productIds);
     }
 
     public Comparison(Long id, String clientId, LocalDate createdOn, List<String> productIds) {

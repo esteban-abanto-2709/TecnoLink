@@ -14,6 +14,6 @@ public final class QuoteRequestRestMapper {
     }
 
     public static AnswerQuoteRequestCommand toCommand(Long id, QuoteRequestAnswerRequest r) {
-        return new AnswerQuoteRequestCommand(id, r.validityDays(), r.subtotal(), r.conditions());
+        return new AnswerQuoteRequestCommand(id, r.validityDays(), r.subtotal(), r.conditions(), r.notes());
     }
 }

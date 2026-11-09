@@ -12,6 +12,8 @@ import com.tecnolink.tecnolink.quotes.domain.repositories.ComparisonRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 @Service
 public class ComparisonCommandHandler {
     private final ComparisonRepository repository;
@@ -24,7 +26,7 @@ public class ComparisonCommandHandler {
 
     @Transactional
     public ComparisonDto handle(CreateComparisonCommand c) {
-        Comparison comparison = new Comparison(c.clientId(), c.productIds());
+        Comparison comparison = new Comparison(c.clientId(), c.productIds(), LocalDate.now());
         references.requireClient(comparison.getClientId());
         comparison.getProductIds().forEach(references::requireAvailableProduct);
         return QuotesDtoAssembler.toDto(repository.save(comparison));
