@@ -5,6 +5,7 @@ import com.tecnolink.tecnolink.quotes.application.commands.AddComparisonProductC
 import com.tecnolink.tecnolink.quotes.application.commands.CreateComparisonCommand;
 import com.tecnolink.tecnolink.quotes.application.commands.RemoveComparisonProductCommand;
 import com.tecnolink.tecnolink.quotes.application.dtos.ComparisonDto;
+import com.tecnolink.tecnolink.quotes.application.ports.QuoteReferences;
 import com.tecnolink.tecnolink.quotes.domain.aggregates.Comparison;
 import com.tecnolink.tecnolink.quotes.domain.exceptions.ComparisonNotFoundException;
 import com.tecnolink.tecnolink.quotes.domain.repositories.ComparisonRepository;
@@ -14,14 +15,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ComparisonCommandHandler {
     private final ComparisonRepository repository;
+    private final QuoteReferences references;
 
-    public ComparisonCommandHandler(ComparisonRepository repository) {
+    public ComparisonCommandHandler(ComparisonRepository repository, QuoteReferences references) {
         this.repository = repository;
+        this.references = references;
     }
 
     @Transactional
     public ComparisonDto handle(CreateComparisonCommand c) {
         Comparison comparison = new Comparison(c.clientId(), c.productIds());
+        references.requireClient(comparison.getClientId());
+        comparison.getProductIds().forEach(references::requireAvailableProduct);
         return QuotesDtoAssembler.toDto(repository.save(comparison));
     }
 
@@ -29,14 +34,15 @@ public class ComparisonCommandHandler {
     public ComparisonDto handle(AddComparisonProductCommand c) {
         Comparison comparison = get(c.comparisonId());
         comparison.addProduct(c.productId());
-        return QuotesDtoAssembler.toDto(repository.update(comparison));
+        references.requireAvailableProduct(c.productId());
+        return QuotesDtoAssembler.toDto(repository.save(comparison));
     }
 
     @Transactional
     public ComparisonDto handle(RemoveComparisonProductCommand c) {
         Comparison comparison = get(c.comparisonId());
         comparison.removeProduct(c.productId());
-        return QuotesDtoAssembler.toDto(repository.update(comparison));
+        return QuotesDtoAssembler.toDto(repository.save(comparison));
     }
 
     private Comparison get(Long id) {

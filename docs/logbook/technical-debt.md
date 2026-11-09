@@ -14,6 +14,15 @@ changelog y se borra de aquí.
 
 ---
 
+## [TD-014] `quotes` valida al cliente con el puerto de repositorio de `iam`
+- **Ubicación:** `apps/api/src/main/java/com/tecnolink/tecnolink/quotes/infrastructure/acl/QuoteReferencesAdapter.java`
+- **Riesgo:** 2/10
+- **Problema:** `iam` todavía no tiene servicio, así que el adaptador usa `ClientRepository` directamente. Es la única
+  excepción a la regla de pedirle las cosas al `@Service` de otro módulo.
+- **Impacto futuro:** si cambia ese puerto hay que tocar `quotes`. Se corrige en RM-028 cambiando una sola línea por
+  el servicio de `iam`.
+- **Fecha:** 2026-11-09 · **Estado:** Abierto
+
 ## [TD-013] El handler global convierte cualquier excepción genérica de Java en respuesta de negocio
 - **Ubicación:** `apps/api/src/main/java/com/tecnolink/tecnolink/shared/interfaces/rest/RestExceptionHandler.java`
 - **Riesgo:** 3/10

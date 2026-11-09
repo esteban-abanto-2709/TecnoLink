@@ -5,6 +5,7 @@ import com.tecnolink.tecnolink.quotes.application.commands.AnswerQuoteRequestCom
 import com.tecnolink.tecnolink.quotes.application.commands.ExpireQuoteRequestCommand;
 import com.tecnolink.tecnolink.quotes.application.commands.RequestQuoteCommand;
 import com.tecnolink.tecnolink.quotes.application.dtos.QuoteRequestDto;
+import com.tecnolink.tecnolink.quotes.application.ports.QuoteReferences;
 import com.tecnolink.tecnolink.quotes.domain.aggregates.QuoteRequest;
 import com.tecnolink.tecnolink.quotes.domain.exceptions.QuoteRequestNotFoundException;
 import com.tecnolink.tecnolink.quotes.domain.repositories.QuoteRequestRepository;
@@ -15,16 +16,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class QuoteRequestCommandHandler {
     private final QuoteRequestRepository repository;
+    private final QuoteReferences references;
     private final DomainEventDispatcher events;
 
-    public QuoteRequestCommandHandler(QuoteRequestRepository repository, DomainEventDispatcher events) {
+    public QuoteRequestCommandHandler(QuoteRequestRepository repository, QuoteReferences references,
+                                      DomainEventDispatcher events) {
         this.repository = repository;
+        this.references = references;
         this.events = events;
     }
 
     @Transactional
     public QuoteRequestDto handle(RequestQuoteCommand c) {
         QuoteRequest quoteRequest = new QuoteRequest(c.clientId(), c.listingId(), c.quantity(), c.requirement());
+        references.requireClient(quoteRequest.getClientId());
+        references.requireAvailableListing(quoteRequest.getListingId());
         QuoteRequest saved = repository.save(quoteRequest);
         events.dispatch(quoteRequest);
         return QuotesDtoAssembler.toDto(saved);
@@ -49,7 +55,7 @@ public class QuoteRequestCommandHandler {
     }
 
     private QuoteRequestDto persist(QuoteRequest q) {
-        QuoteRequest saved = repository.update(q);
+        QuoteRequest saved = repository.save(q);
         events.dispatch(q);
         return QuotesDtoAssembler.toDto(saved);
     }

@@ -7,7 +7,6 @@ import java.util.Optional;
 
 public interface ComparisonRepository {
     Comparison save(Comparison comparison);
-    Comparison update(Comparison comparison);
     Optional<Comparison> findById(Long id);
     List<Comparison> findByClientId(String clientId);
 }

@@ -1,6 +1,5 @@
 package com.tecnolink.tecnolink.quotes.infrastructure.persistence.jpa.adapters;
 
-import com.tecnolink.tecnolink.catalog.infrastructure.persistence.jpa.repositories.ProductJpaRepository;
 import com.tecnolink.tecnolink.quotes.domain.aggregates.Specification;
 import com.tecnolink.tecnolink.quotes.domain.repositories.SpecificationRepository;
 import com.tecnolink.tecnolink.quotes.infrastructure.persistence.jpa.mappers.SpecificationPersistenceMapper;
@@ -14,21 +13,14 @@ import java.util.Optional;
 public class SpecificationRepositoryAdapter implements SpecificationRepository {
     private final SpecificationJpaRepository repo;
     private final SpecificationPersistenceMapper mapper;
-    private final ProductJpaRepository productRepo;
 
-    public SpecificationRepositoryAdapter(
-            SpecificationJpaRepository repo,
-            SpecificationPersistenceMapper mapper,
-            ProductJpaRepository productRepo) {
+    public SpecificationRepositoryAdapter(SpecificationJpaRepository repo, SpecificationPersistenceMapper mapper) {
         this.repo = repo;
         this.mapper = mapper;
-        this.productRepo = productRepo;
     }
 
     @Override
     public Specification save(Specification specification) {
-        if (!productRepo.existsById(specification.getProductId()))
-            throw new IllegalArgumentException("Product not found: " + specification.getProductId());
         return mapper.toDomain(repo.save(mapper.toEntity(specification)));
     }
 

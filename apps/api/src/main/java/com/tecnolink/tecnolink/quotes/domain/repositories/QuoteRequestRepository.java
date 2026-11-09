@@ -7,7 +7,6 @@ import java.util.Optional;
 
 public interface QuoteRequestRepository {
     QuoteRequest save(QuoteRequest quoteRequest);
-    QuoteRequest update(QuoteRequest quoteRequest);
     Optional<QuoteRequest> findById(Long id);
     List<QuoteRequest> findByClientId(String clientId);
     List<QuoteRequest> findBySupplierId(String supplierId);

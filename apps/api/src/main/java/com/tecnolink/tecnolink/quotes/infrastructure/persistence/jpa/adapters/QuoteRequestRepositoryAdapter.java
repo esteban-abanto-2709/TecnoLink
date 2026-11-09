@@ -1,8 +1,5 @@
 package com.tecnolink.tecnolink.quotes.infrastructure.persistence.jpa.adapters;
 
-import com.tecnolink.tecnolink.catalog.infrastructure.persistence.jpa.repositories.ProductJpaRepository;
-import com.tecnolink.tecnolink.catalog.infrastructure.persistence.jpa.repositories.TechServiceJpaRepository;
-import com.tecnolink.tecnolink.iam.infrastructure.persistence.jpa.repositories.ClientJpaRepository;
 import com.tecnolink.tecnolink.quotes.domain.aggregates.QuoteRequest;
 import com.tecnolink.tecnolink.quotes.domain.repositories.QuoteRequestRepository;
 import com.tecnolink.tecnolink.quotes.infrastructure.persistence.jpa.mappers.QuoteRequestPersistenceMapper;
@@ -16,35 +13,15 @@ import java.util.Optional;
 public class QuoteRequestRepositoryAdapter implements QuoteRequestRepository {
     private final QuoteRequestJpaRepository repo;
     private final QuoteRequestPersistenceMapper mapper;
-    private final ClientJpaRepository clientRepo;
-    private final ProductJpaRepository productRepo;
-    private final TechServiceJpaRepository techServiceRepo;
 
-    public QuoteRequestRepositoryAdapter(
-            QuoteRequestJpaRepository repo,
-            QuoteRequestPersistenceMapper mapper,
-            ClientJpaRepository clientRepo,
-            ProductJpaRepository productRepo,
-            TechServiceJpaRepository techServiceRepo) {
+    public QuoteRequestRepositoryAdapter(QuoteRequestJpaRepository repo, QuoteRequestPersistenceMapper mapper) {
         this.repo = repo;
         this.mapper = mapper;
-        this.clientRepo = clientRepo;
-        this.productRepo = productRepo;
-        this.techServiceRepo = techServiceRepo;
     }
 
     @Override
     public QuoteRequest save(QuoteRequest quoteRequest) {
-        if (!clientRepo.existsById(quoteRequest.getClientId()))
-            throw new IllegalArgumentException("Client not found: " + quoteRequest.getClientId());
-        if (!productRepo.existsById(quoteRequest.getListingId()) && !techServiceRepo.existsById(quoteRequest.getListingId()))
-            throw new IllegalArgumentException("Listing not found: " + quoteRequest.getListingId());
         return mapper.toDomain(repo.save(mapper.toEntity(quoteRequest)));
-    }
-
-    @Override
-    public QuoteRequest update(QuoteRequest quoteRequest) {
-        return save(quoteRequest);
     }
 
     @Override
