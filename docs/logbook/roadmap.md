@@ -21,8 +21,8 @@ solo cambie de dónde lee y no cómo.
 
 Criterios de toda la API:
 - Prefijo `/api/v1`. JSON en inglés; los textos que ve el usuario se quedan en el front.
-- Arquitectura del profesor (DDD + hexagonal): cada módulo con `domain/`, `application/`,
-  `infrastructure/` e `interfaces/rest/`. Ver `marcos-de-desarrollo-web/procesado/estructura-backend.md`.
+- Arquitectura DDD + hexagonal: cada módulo con `domain/`, `application/`, `infrastructure/` e `interfaces/rest/`.
+  Se sigue el buen estándar de Spring Boot; el estilo del profesor ya no obliga.
 - **APF2 (semana 8):** datos sintéticos en repositorios en memoria, cargados con el mismo contenido de `catalog.ts`.
   **APF3 (semana 12):** MySQL con Spring Data (hoy todos los módulos ya persisten así, ver RM-029).
   **Final (semana 18):** Spring Security.
@@ -123,5 +123,13 @@ Usuario de cada petición (decidido en el plan 6): va en la ruta, `/api/v1/users
   cotizaciones propias solo el cliente). El catálogo, los proveedores y las reseñas siguen siendo públicos en lectura.
 - **Hecho cuando:** sin token, las rutas protegidas dan 401; con el rol equivocado dan 403; con el rol correcto responden.
 - **Fecha:** 2026-10-02 · **Estado:** Abierto
+
+## [RM-037] Calidad técnica del módulo `quotes`
+- **Objetivo:** dejar `quotes` correcto en DDD, hexagonal y SOLID sin agregar lo que el alcance no necesita: errores
+  consistentes, reglas entre módulos fuera de los adaptadores, consultas agrupadas por agregado y dominio completo
+  (montos como value object, vencimiento por fecha, observaciones de HU-09 y tests).
+- **Hecho cuando:** ningún dato inválido da 500, `quotes` no importa repositorios de otros módulos y las reglas del
+  dominio tienen tests que corren sin MySQL.
+- **Fecha:** 2026-11-08 · **Estado:** En progreso (2026-11-08)
 
 > Las entradas de esta página y el macro plan vienen del repo `TecnoLink-backend` del grupo, importado en `apps/api` el 2026-11-07. Se renumeraron a continuación de las del front: `RM-n` pasó a `RM-(n+18)`.

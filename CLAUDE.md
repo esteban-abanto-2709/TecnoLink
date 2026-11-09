@@ -75,19 +75,21 @@ El avance por módulo está en el macro plan de `docs/logbook/roadmap.md`.
 
 - **Lo del curso es la base, no el límite** (clases y labs resumidos en `marcos-de-desarrollo-web/procesado/`). Se
   puede usar lo que no se vio en clase, siempre que quien lo agrega lo entienda y lo sepa explicar.
-- **Estructura del profesor** (DDD + hexagonal), igual en todos los módulos:
+- **Buen estándar de Spring Boot, haciéndonos responsables del código.** El estilo del profesor ya no obliga: los
+  defectos se corrigen. El alcance está cerrado, así que se evita lo que solo serviría si el proyecto creciera. Se
+  conserva lo que califica la rúbrica de sustentación DDD (`procesado/semana-12.md`), porque hay que saber explicarlo.
+- **Arquitectura DDD + hexagonal** en cada módulo. Las dependencias apuntan al dominio:
   ```
   <modulo>/
-  ├── domain/model/{aggregates, entities, enums, valueobjects}   validación en el constructor y getters a mano
-  ├── domain/repositories/                                       interfaces (puertos)
-  ├── infrastructure/persistence/jpa/                            entities/, repositories/, mappers/, adapters/
-  ├── application/                                               un @Service, o commands/queries/handlers (CQRS)
-  └── interfaces/rest/                                           @RestController (+ dto/ con records validados)
+  ├── domain/                            agregados, entidades, value objects, excepciones y repositorios (puertos), sin Spring ni JPA
+  ├── application/                       casos de uso: un @Service, o commands/queries/handlers (CQRS)
+  ├── infrastructure/persistence/jpa/    entities/, repositories/, mappers/, adapters/
+  └── interfaces/rest/                   @RestController y requests validados con @Valid
   ```
 - Un módulo no usa repositorios ni dominio de otro: le pide las cosas a su `@Service`.
-- **Errores** como en el lab de la semana 6: `NotFoundException` → `404 {"error"}`, validación →
-  `400 {"errors": [...]}`, reglas de dominio con `IllegalArgumentException` → `400 {"error"}`, y conflictos de
-  estado con `IllegalStateException` → `409 {"error"}`.
+- **Errores** centralizados en `RestExceptionHandler` con `ApiError`: `NotFoundException` y sus subclases → `404
+  {"error"}`, validación → `400 {"errors": [...]}`, reglas de dominio con `IllegalArgumentException` → `400 {"error"}`,
+  y conflictos de estado con `IllegalStateException` → `409 {"error"}`.
 - Ids `String` tipo slug, los mismos del mock del front. Enums en mayúsculas. Precios en `double`.
 - **Persistencia en MySQL** con Spring Data JPA (`application.properties`: `localhost:3306/tecnolink`). Las tablas
   las crea Hibernate; los datos de prueba siguen el contenido de `apps/web/src/data/catalog.ts`.

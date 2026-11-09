@@ -13,6 +13,7 @@ import com.tecnolink.tecnolink.quotes.interfaces.rest.documentation.QuoteRequest
 import com.tecnolink.tecnolink.quotes.interfaces.rest.mappers.QuoteRequestRestMapper;
 import com.tecnolink.tecnolink.quotes.interfaces.rest.resources.QuoteRequestAnswerRequest;
 import com.tecnolink.tecnolink.quotes.interfaces.rest.resources.QuoteRequestCreateRequest;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,7 @@ public class QuoteRequestController implements QuoteRequestApi {
 
     @Override
     @PostMapping
-    public ResponseEntity<QuoteRequestDto> request(@RequestBody QuoteRequestCreateRequest r) {
+    public ResponseEntity<QuoteRequestDto> request(@Valid @RequestBody QuoteRequestCreateRequest r) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commands.handle(QuoteRequestRestMapper.toCommand(r)));
     }
 
@@ -53,14 +54,14 @@ public class QuoteRequestController implements QuoteRequestApi {
     }
 
     @Override
-    @GetMapping(params = "supplierId")
+    @GetMapping(params = {"supplierId", "!clientId"})
     public List<QuoteRequestDto> bySupplier(@RequestParam String supplierId) {
         return bySupplier.handle(new ListSupplierQuoteRequestsQuery(supplierId));
     }
 
     @Override
     @PostMapping("/{id}/answer")
-    public QuoteRequestDto answer(@PathVariable Long id, @RequestBody QuoteRequestAnswerRequest r) {
+    public QuoteRequestDto answer(@PathVariable Long id, @Valid @RequestBody QuoteRequestAnswerRequest r) {
         return commands.handle(QuoteRequestRestMapper.toCommand(id, r));
     }
 

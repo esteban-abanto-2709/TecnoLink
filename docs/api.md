@@ -82,7 +82,7 @@ El usuario va en la ruta. Hasta el plan 10 el front usa `demo-client`, que es el
 
 ## Cotizaciones y comparador (RM-023)
 
-Contrato definido por el backend (estilo del profesor: recurso por agregado y filtros con `?param=`). El front adapta `lib/quotes.ts` y `lib/compare.ts`.
+Contrato definido por el backend (recurso por agregado y filtros con `?param=`). El front adapta `lib/quotes.ts` y `lib/compare.ts`.
 
 | Endpoint | Reemplaza en el front | Diferencias |
 |---|---|---|
@@ -97,7 +97,7 @@ Contrato definido por el backend (estilo del profesor: recurso por agregado y fi
 | `POST /api/v1/comparisons/{id}/products` · `DELETE .../products/{productId}` | botón comparar | Agrega `{ productId }` o quita un producto |
 | `GET /api/v1/comparisons/{id}/table` | `/compare` | `{ comparisonId, productIds, rows: [{ specification, values }] }`. `values` sigue el orden de `productIds`; sin dato sale `"-"`. Menos de 2 productos da `409` |
 
-`status` va en mayúsculas (`SENT`, `ANSWERED`, `EXPIRED`). Las respuestas de error usan el formato general: `404`/`400`/`409` con `{"error": "..."}`.
+`status` va en mayúsculas (`SENT`, `ANSWERED`, `EXPIRED`). Las respuestas de error usan el formato general: `404`/`400`/`409` con `{"error": "..."}`. Los campos inválidos del body dan `400` con `{"errors": ["campo: mensaje", ...]}`, todos a la vez.
 
 ## Reseñas, pedidos y usuarios (RM-022, RM-024, RM-028)
 

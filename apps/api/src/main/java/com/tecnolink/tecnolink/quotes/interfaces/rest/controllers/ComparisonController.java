@@ -14,6 +14,7 @@ import com.tecnolink.tecnolink.quotes.interfaces.rest.documentation.ComparisonAp
 import com.tecnolink.tecnolink.quotes.interfaces.rest.mappers.ComparisonRestMapper;
 import com.tecnolink.tecnolink.quotes.interfaces.rest.resources.ComparisonCreateRequest;
 import com.tecnolink.tecnolink.quotes.interfaces.rest.resources.ComparisonProductRequest;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,7 @@ public class ComparisonController implements ComparisonApi {
 
     @Override
     @PostMapping
-    public ResponseEntity<ComparisonDto> create(@RequestBody ComparisonCreateRequest r) {
+    public ResponseEntity<ComparisonDto> create(@Valid @RequestBody ComparisonCreateRequest r) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commands.handle(ComparisonRestMapper.toCommand(r)));
     }
 
@@ -55,7 +56,7 @@ public class ComparisonController implements ComparisonApi {
 
     @Override
     @PostMapping("/{id}/products")
-    public ComparisonDto addProduct(@PathVariable Long id, @RequestBody ComparisonProductRequest r) {
+    public ComparisonDto addProduct(@PathVariable Long id, @Valid @RequestBody ComparisonProductRequest r) {
         return commands.handle(ComparisonRestMapper.toCommand(id, r));
     }
 

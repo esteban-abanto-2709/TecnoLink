@@ -13,6 +13,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [TD-011] Un id no numérico en `quotes` expone un mensaje interno (2026-11-08 23:00)
+`RestExceptionHandler` responde `400 {"error": "Invalid value for parameter id"}` cuando un parámetro no se puede
+convertir, en lugar del mensaje interno de Java.
+
 ## [RM-036] API en Docker y verificación de endpoints (2026-11-08 11:39)
 API y MySQL en Docker Compose (`apps/docker`, `apps/api/Dockerfile`), con Actuator para el healthcheck, datos de prueba
 en `scripts/seed.sql` y verificación con `curl` sin Java local ni IntelliJ.

@@ -1,3 +1,5 @@
 package com.tecnolink.tecnolink.quotes.interfaces.rest.resources;
 
-public record ComparisonProductRequest(String productId) {}
+import jakarta.validation.constraints.NotBlank;
+
+public record ComparisonProductRequest(@NotBlank String productId) {}

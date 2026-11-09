@@ -14,14 +14,22 @@ changelog y se borra de aquí.
 
 ---
 
-## [TD-011] Un id no numérico en `quotes` expone un mensaje interno
-- **Ubicación:** `apps/api/src/main/java/com/tecnolink/tecnolink/quotes/interfaces/rest/controllers/QuoteRequestController.java:45`,
-  `shared/interfaces/rest/RestExceptionHandler.java`
+## [TD-013] El handler global convierte cualquier excepción genérica de Java en respuesta de negocio
+- **Ubicación:** `apps/api/src/main/java/com/tecnolink/tecnolink/shared/interfaces/rest/RestExceptionHandler.java`
+- **Riesgo:** 3/10
+- **Problema:** `IllegalArgumentException` → 400 e `IllegalStateException` → 409 también atrapan las que lanza el
+  framework, y su mensaje interno llega al cliente. Todos los módulos usan esas dos excepciones como reglas de dominio,
+  así que no se puede cambiar solo desde `quotes`.
+- **Impacto futuro:** un fallo técnico puede verse como un 409 con nombres de clases. Se corrige con excepciones de
+  dominio propias en todos los módulos.
+- **Fecha:** 2026-11-08 · **Estado:** Abierto
+
+## [TD-012] MySQL ignora mayúsculas al validar ids
+- **Ubicación:** `apps/api/src/main/java/com/tecnolink/tecnolink/quotes/infrastructure/persistence/jpa/adapters/`
 - **Riesgo:** 2/10
-- **Problema:** `GET /api/v1/quote-requests/nope` responde `400 {"error": "For input string: \"nope\""}`. El status es
-  aceptable, pero el texto es el error interno de la conversión a `Long`. Los otros controllers de `quotes` también
-  reciben el id como `Long`.
-- **Impacto futuro:** el front mostraría un mensaje técnico si llega a usarlo; solo pasa con una URL mal formada.
+- **Problema:** la colación por defecto compara sin distinguir mayúsculas. `DEMO-CLIENT` pasa como cliente válido y
+  se guarda con otra grafía, y una comparación acepta el mismo producto escrito en mayúsculas como si fuera otro.
+- **Impacto futuro:** solo ocurre si alguien escribe el id a mano; el front siempre manda los slugs tal cual.
 - **Fecha:** 2026-11-08 · **Estado:** Abierto
 
 ## [TD-010] El único test de la API necesita MySQL levantado
