@@ -3,9 +3,7 @@ package com.tecnolink.tecnolink.quotes.interfaces.rest.controllers;
 import com.tecnolink.tecnolink.quotes.application.commands.ExpireQuoteRequestCommand;
 import com.tecnolink.tecnolink.quotes.application.dtos.QuoteRequestDto;
 import com.tecnolink.tecnolink.quotes.application.handlers.commands.QuoteRequestCommandHandler;
-import com.tecnolink.tecnolink.quotes.application.handlers.queries.GetQuoteRequestQueryHandler;
-import com.tecnolink.tecnolink.quotes.application.handlers.queries.ListClientQuoteRequestsQueryHandler;
-import com.tecnolink.tecnolink.quotes.application.handlers.queries.ListSupplierQuoteRequestsQueryHandler;
+import com.tecnolink.tecnolink.quotes.application.handlers.queries.QuoteRequestQueryHandler;
 import com.tecnolink.tecnolink.quotes.application.queries.GetQuoteRequestQuery;
 import com.tecnolink.tecnolink.quotes.application.queries.ListClientQuoteRequestsQuery;
 import com.tecnolink.tecnolink.quotes.application.queries.ListSupplierQuoteRequestsQuery;
@@ -24,15 +22,11 @@ import java.util.List;
 @RequestMapping("/api/v1/quote-requests")
 public class QuoteRequestController implements QuoteRequestApi {
     private final QuoteRequestCommandHandler commands;
-    private final GetQuoteRequestQueryHandler get;
-    private final ListClientQuoteRequestsQueryHandler byClient;
-    private final ListSupplierQuoteRequestsQueryHandler bySupplier;
+    private final QuoteRequestQueryHandler queries;
 
-    public QuoteRequestController(QuoteRequestCommandHandler commands, GetQuoteRequestQueryHandler get, ListClientQuoteRequestsQueryHandler byClient, ListSupplierQuoteRequestsQueryHandler bySupplier) {
+    public QuoteRequestController(QuoteRequestCommandHandler commands, QuoteRequestQueryHandler queries) {
         this.commands = commands;
-        this.get = get;
-        this.byClient = byClient;
-        this.bySupplier = bySupplier;
+        this.queries = queries;
     }
 
     @Override
@@ -44,19 +38,19 @@ public class QuoteRequestController implements QuoteRequestApi {
     @Override
     @GetMapping("/{id}")
     public QuoteRequestDto get(@PathVariable Long id) {
-        return get.handle(new GetQuoteRequestQuery(id));
+        return queries.handle(new GetQuoteRequestQuery(id));
     }
 
     @Override
     @GetMapping(params = "clientId")
     public List<QuoteRequestDto> byClient(@RequestParam String clientId) {
-        return byClient.handle(new ListClientQuoteRequestsQuery(clientId));
+        return queries.handle(new ListClientQuoteRequestsQuery(clientId));
     }
 
     @Override
     @GetMapping(params = {"supplierId", "!clientId"})
     public List<QuoteRequestDto> bySupplier(@RequestParam String supplierId) {
-        return bySupplier.handle(new ListSupplierQuoteRequestsQuery(supplierId));
+        return queries.handle(new ListSupplierQuoteRequestsQuery(supplierId));
     }
 
     @Override

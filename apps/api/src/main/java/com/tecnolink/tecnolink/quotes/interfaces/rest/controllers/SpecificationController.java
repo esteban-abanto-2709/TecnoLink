@@ -2,8 +2,7 @@ package com.tecnolink.tecnolink.quotes.interfaces.rest.controllers;
 
 import com.tecnolink.tecnolink.quotes.application.dtos.SpecificationDto;
 import com.tecnolink.tecnolink.quotes.application.handlers.commands.SpecificationCommandHandler;
-import com.tecnolink.tecnolink.quotes.application.handlers.queries.GetSpecificationQueryHandler;
-import com.tecnolink.tecnolink.quotes.application.handlers.queries.ListProductSpecificationsQueryHandler;
+import com.tecnolink.tecnolink.quotes.application.handlers.queries.SpecificationQueryHandler;
 import com.tecnolink.tecnolink.quotes.application.queries.GetSpecificationQuery;
 import com.tecnolink.tecnolink.quotes.application.queries.ListProductSpecificationsQuery;
 import com.tecnolink.tecnolink.quotes.interfaces.rest.documentation.SpecificationApi;
@@ -20,13 +19,11 @@ import java.util.List;
 @RequestMapping("/api/v1/specifications")
 public class SpecificationController implements SpecificationApi {
     private final SpecificationCommandHandler commands;
-    private final GetSpecificationQueryHandler get;
-    private final ListProductSpecificationsQueryHandler byProduct;
+    private final SpecificationQueryHandler queries;
 
-    public SpecificationController(SpecificationCommandHandler commands, GetSpecificationQueryHandler get, ListProductSpecificationsQueryHandler byProduct) {
+    public SpecificationController(SpecificationCommandHandler commands, SpecificationQueryHandler queries) {
         this.commands = commands;
-        this.get = get;
-        this.byProduct = byProduct;
+        this.queries = queries;
     }
 
     @Override
@@ -38,12 +35,12 @@ public class SpecificationController implements SpecificationApi {
     @Override
     @GetMapping("/{id}")
     public SpecificationDto get(@PathVariable Long id) {
-        return get.handle(new GetSpecificationQuery(id));
+        return queries.handle(new GetSpecificationQuery(id));
     }
 
     @Override
     @GetMapping(params = "productId")
     public List<SpecificationDto> byProduct(@RequestParam String productId) {
-        return byProduct.handle(new ListProductSpecificationsQuery(productId));
+        return queries.handle(new ListProductSpecificationsQuery(productId));
     }
 }

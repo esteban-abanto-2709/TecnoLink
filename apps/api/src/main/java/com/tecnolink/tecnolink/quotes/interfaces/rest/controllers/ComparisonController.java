@@ -4,9 +4,7 @@ import com.tecnolink.tecnolink.quotes.application.commands.RemoveComparisonProdu
 import com.tecnolink.tecnolink.quotes.application.dtos.ComparisonDto;
 import com.tecnolink.tecnolink.quotes.application.dtos.ComparisonTableDto;
 import com.tecnolink.tecnolink.quotes.application.handlers.commands.ComparisonCommandHandler;
-import com.tecnolink.tecnolink.quotes.application.handlers.queries.GetComparisonQueryHandler;
-import com.tecnolink.tecnolink.quotes.application.handlers.queries.GetComparisonTableQueryHandler;
-import com.tecnolink.tecnolink.quotes.application.handlers.queries.ListClientComparisonsQueryHandler;
+import com.tecnolink.tecnolink.quotes.application.handlers.queries.ComparisonQueryHandler;
 import com.tecnolink.tecnolink.quotes.application.queries.GetComparisonQuery;
 import com.tecnolink.tecnolink.quotes.application.queries.GetComparisonTableQuery;
 import com.tecnolink.tecnolink.quotes.application.queries.ListClientComparisonsQuery;
@@ -25,15 +23,11 @@ import java.util.List;
 @RequestMapping("/api/v1/comparisons")
 public class ComparisonController implements ComparisonApi {
     private final ComparisonCommandHandler commands;
-    private final GetComparisonQueryHandler get;
-    private final ListClientComparisonsQueryHandler byClient;
-    private final GetComparisonTableQueryHandler table;
+    private final ComparisonQueryHandler queries;
 
-    public ComparisonController(ComparisonCommandHandler commands, GetComparisonQueryHandler get, ListClientComparisonsQueryHandler byClient, GetComparisonTableQueryHandler table) {
+    public ComparisonController(ComparisonCommandHandler commands, ComparisonQueryHandler queries) {
         this.commands = commands;
-        this.get = get;
-        this.byClient = byClient;
-        this.table = table;
+        this.queries = queries;
     }
 
     @Override
@@ -45,13 +39,13 @@ public class ComparisonController implements ComparisonApi {
     @Override
     @GetMapping("/{id}")
     public ComparisonDto get(@PathVariable Long id) {
-        return get.handle(new GetComparisonQuery(id));
+        return queries.handle(new GetComparisonQuery(id));
     }
 
     @Override
     @GetMapping(params = "clientId")
     public List<ComparisonDto> byClient(@RequestParam String clientId) {
-        return byClient.handle(new ListClientComparisonsQuery(clientId));
+        return queries.handle(new ListClientComparisonsQuery(clientId));
     }
 
     @Override
@@ -69,6 +63,6 @@ public class ComparisonController implements ComparisonApi {
     @Override
     @GetMapping("/{id}/table")
     public ComparisonTableDto table(@PathVariable Long id) {
-        return table.handle(new GetComparisonTableQuery(id));
+        return queries.handle(new GetComparisonTableQuery(id));
     }
 }
